@@ -61,7 +61,23 @@ class ProbabilityFunction:
                 obs_token = self.probFor.values[int(prob.forVal)]
                 self.prob[obs_token] = prob.prob
 
-        #print(self.prob)
+        print(self.prob)
+
+    def get(self, kwargs):
+
+        if len(kwargs) != len(self.dependents) + 1:
+            print("Are you sure you passed the right amount of vars?")
+            print("Passed: {}".format(kwargs))
+
+        if len(self.dependents) == 0:
+            return self.prob[kwargs["value"]]
+
+        else:
+            current = self.prob
+            for j in range(len(self.dependents)):
+                current = current[kwargs[self.dependents[j].name]]
+
+            return current[kwargs["value"]]
 
 class BayesModel:
 
@@ -72,6 +88,7 @@ class BayesModel:
 
 
     def getProbabilityFunction(self, nodeName):
+        print(self.probabilities)
         return self.probabilities[nodeName]
 
 
@@ -116,7 +133,7 @@ class BayesModel:
                 # Lets get the probabilities
                 probabilities = self._getProbs(temp[(idx+1):])
                 #print("{} {} {}".format(probFor, [str(d) for d in dependant], probabilities))
-                self.probabilities[probFor] = ProbabilityFunction(probFor, dependant, probabilities)
+                self.probabilities[probFor.name] = ProbabilityFunction(probFor, dependant, probabilities)
 
 
 
