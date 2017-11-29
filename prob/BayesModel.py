@@ -8,12 +8,19 @@ class Node:
     def __str__(self):
         return "[Node name: {}, values: {}, probabilities: {}]".format(self.name,self.values,self.probabilities)
 
+
+# Is a single probability
 class Probability:
-    def __init__(self, forVal, prob, observation=None):
+
+    def __init__(self, forVal, prob, evidence=None):
+        # forVal is something like True, False, 1, 0, so whenever our variable has value X then we have prob
         self.forVal = forVal
         self.prob = prob
-        self.observation = observation
 
+        # Some probabilities have evidence
+        self.evidence = evidence
+
+# Is the full probability function for a node
 class ProbabilityFunction:
 
     def __init__(self, probFor, dependents, probabilities):
@@ -26,7 +33,7 @@ class ProbabilityFunction:
         self.dependents = dependents
 
         # what are the probabilities
-        self.probabilities = probabilities
+        #self.probabilities = probabilities
 
         self.prob = {}
         self.initProbMap(probabilities)
@@ -34,12 +41,12 @@ class ProbabilityFunction:
 
     def initProbMap(self, probabilities):
 
-        print(probabilities)
+        #print(probabilities)
         for prob in probabilities:
 
-            if prob.observation is not None:
+            if prob.evidence is not None:
                 current = self.prob
-                for i, obs in enumerate(prob.observation):
+                for i, obs in enumerate(prob.evidence):
                     obs_token = self.dependents[i].values[int(obs)]
                     if obs_token not in current:
                         current[obs_token] = {}
@@ -47,14 +54,14 @@ class ProbabilityFunction:
                     else:
                         current = current[obs_token]
 
-                    if i == len(prob.observation) - 1:
+                    if i == len(prob.evidence) - 1:
                         current[self.probFor.values[int(prob.forVal)]] = prob.prob
             else:
 
                 obs_token = self.probFor.values[int(prob.forVal)]
                 self.prob[obs_token] = prob.prob
 
-        print(self.prob)
+        #print(self.prob)
 
 class BayesModel:
 
@@ -62,7 +69,14 @@ class BayesModel:
         self.nodes = {}
         self.probabilities = {}
         self._loadFromFile(file)
-        pass
+
+
+    def getProbabilityFunction(self, nodeName):
+        return self.probabilities[nodeName]
+
+
+    def getNodes(self):
+        return self.nodes
 
     def _loadFromFile(self, file):
         f = open(file, "r")
@@ -103,6 +117,8 @@ class BayesModel:
                 probabilities = self._getProbs(temp[(idx+1):])
                 #print("{} {} {}".format(probFor, [str(d) for d in dependant], probabilities))
                 self.probabilities[probFor] = ProbabilityFunction(probFor, dependant, probabilities)
+
+
 
 
     def _getProbs(self,probs):
