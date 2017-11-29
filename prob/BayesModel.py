@@ -54,7 +54,7 @@ class ProbabilityFunction:
                     else:
                         current = current[obs_token]
 
-                    if i == len(prob.evidence) - 1:
+                    if i == (len(prob.evidence) - 1):
                         current[self.probFor.values[int(prob.forVal)]] = prob.prob
             else:
 
@@ -115,6 +115,7 @@ class BayesModel:
                 name = temp[1]
                 vals = self._getNodeInfo(temp[2:])
                 #print("{} {}".format(name, vals))
+
                 self.nodes[name] = Node(name, vals)
 
             elif temp[0] == "probability":
@@ -164,8 +165,8 @@ class BayesModel:
                 obs = split[0].strip("()").split(",")
                 prob = split[1].strip(";").split(",")
 
-                probabilities.append(Probability(0, prob[0], obs))
-                probabilities.append(Probability(1, prob[1], obs))
+                for i in range(len(prob)):
+                    probabilities.append(Probability(i, prob[i], obs))
 
         return probabilities
 
