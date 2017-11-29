@@ -91,45 +91,14 @@ class CNFEnc2(CNF):
 
                     self.paramClauses.append(ParameterClause(conj + copy.deepcopy(used_cpt),cpt.var))
 
+                for c in used_cpt:
+                    c.negate = True
 
-        #for key, vars in self.vars.items():
-        #    converted_vars = [v.value for v in vars]
+                conj = []
+                for c in used_cpt[0].conditional:
+                    conj.append(c.var)
 
-        #
-        #     for i, v in enumerate(vars[:-1]):
-        #         first_var = None
-        #         conj = []
-        #         for cpt in self.CPT:
-        #             # We have the same base var
-        #             if cpt.var.var == key:
-        #                 if first_var is None:
-        #                     first_var = [c.var for c in cpt.conditional]
-        #
-        #                     sameConditional = self._getCPTWithConditional([v.value for v in first_var],key,converted_vars,i)
-        #                     print("conditionals: {} {} {} {}".format( [v.value for v in first_var],key,converted_vars,i))
-        #                     for cond in sameConditional:
-        #                         print("cond: {}".format(cond))
-        #
-        #
-        #                 if converted_vars.index(cpt.var.value) < i:
-        #
-        #                     cpt_copy = copy.deepcopy(cpt)
-        #                     cpt_copy.negative = True
-        #                     conj.append(cpt_copy)
-        #
-        #                 elif converted_vars.index(cpt.var.value) == i:
-        #                     conj.append(copy.deepcopy(cpt))
-        #
-        #         # conj = copy.deepcopy(cpt.conditional)
-        #         # conj = [c.var for c in conj]
-        #         # if cpt.value != v.value:
-        #         #     cpt_copy = copy.deepcopy(cpt)
-        #         #     cpt_copy.negative = True
-        #         #     conj.append(cpt_copy)
-        #         # else:
-        #         #     conj.append(copy.deepcopy(cpt))
-        #
-        #         self.paramClauses.append(ParameterClause(conj + first_var,v))
+                self.paramClauses.append(ParameterClause(conj + copy.deepcopy(used_cpt), self.vars[key][-1]))
 
     def convert(self):
         self._getVars()
