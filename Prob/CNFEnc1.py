@@ -65,6 +65,8 @@ class CNFEnc1(CNF):
             for j in cpt.conditional:
                 d[j.var.var] = j.var.value
             self.weights.append(Weight(copy.deepcopy(cpt), probFunc.get(d)))
+            self.weights.append(Weight(cpt.getCopy(negate=True), probFunc.get(d)))
+
 
     def convert(self):
         self._getVars()
