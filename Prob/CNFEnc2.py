@@ -43,26 +43,14 @@ class CNFEnc2(CNF):
 
             self.indicators.append(IndicatorClause(vars))
 
+
+
+
     def _getParamClauses(self):
         #
-        # How to use this dict:
-        # assume we have rho_B_b1|a1 and rho_B_b2|a1
-        # index the dict as: dict[B][a1]
-        # this would return a list of rho_B_b1|a1 and rho_B_b2|a1
-        CPT_Dict = {}
-        for cpt in self.CPT:
-            if cpt.var.var not in CPT_Dict:
-                CPT_Dict[cpt.var.var] = {}
+        CPT_Dict = self.getSortedCPTDict()
 
-
-            textVars = " ".join([v.var.value for v in cpt.conditional])
-            if textVars not in CPT_Dict[cpt.var.var]:
-                CPT_Dict[cpt.var.var][textVars] = []
-
-            CPT_Dict[cpt.var.var][textVars].append(cpt)
-
-        print(CPT_Dict)
-
+        #print(CPT_Dict)
 
         # {'A': {'[]': [ < CNF.CPT object at 0x109582b38 >]},
         # 'B': {"['a1']": [ < CNF.CPT object at 0x109588a90 >], "['a2']": [ < CNF.CPT object at 0x109588400 >]},
@@ -100,6 +88,70 @@ class CNFEnc2(CNF):
 
                 self.paramClauses.append(ParameterClause(conj + copy.deepcopy(used_cpt), self.vars[key][-1]))
 
+    def getSortedCPTDict(self):
+        # How to use this dict:
+        # assume we have rho_B_b1|a1 and rho_B_b2|a1
+        # index the dict as: dict[B][a1]
+        # this would return a list of rho_B_b1|a1 and rho_B_b2|a1
+        CPT_Dict = {}
+        for cpt in self.CPT:
+            if cpt.var.var not in CPT_Dict:
+                CPT_Dict[cpt.var.var] = {}
+
+            textVars = " ".join([v.var.value for v in cpt.conditional])
+            if textVars not in CPT_Dict[cpt.var.var]:
+                CPT_Dict[cpt.var.var][textVars] = []
+
+            CPT_Dict[cpt.var.var][textVars].append(cpt)
+        return CPT_Dict
+
+    def _assignWeights(self):
+        for k, values in self.vars.items():
+            for v in values:
+                self.weights.append(Weight(copy.deepcopy(v), 1))
+                neg = copy.deepcopy(v)
+                neg.negate = True
+                self.weights.append(Weight(neg, 1))
+
+        sorted_CPT= self.getSortedCPTDict()
+
+        # {'A': {'[]': [ < CNF.CPT object at 0x109582b38 >]},
+        # 'B': {"['a1']": [ < CNF.CPT object at 0x109588a90 >], "['a2']": [ < CNF.CPT object at 0x109588400 >]},
+        # 'C': {"['a1']": [ < CNF.CPT object at 0x109588cc0 >, < CNF.CPT object at 0x109588128 >],
+        #        "['a2']": [ < CNF.CPT object at 0x109588c50 >, < CNF.CPT object at 0x109588358 >]}}
+
+        for key, vals in sorted_CPT.items():
+            # key = 'C'
+            # vals = {"['a1']": [ < CNF.CPT object at 0x109588cc0 >, < CNF.CPT object at 0x109588128 >],
+            #        "['a2']": [ < CNF.CPT object at 0x109588c50 >, < CNF.CPT object at 0x109588358 >]}}
+
+            for cond, cpt_rules in vals.items():
+                # cond = ['a1']
+                # cpt_rules = [ < CNF.CPT object at 0x109588cc0 >, < CNF.CPT object at 0x109588128 >]
+                probFunc = self.bayes.getProbabilityFunction(key)
+                lastProb = 0
+
+                for cpt in cpt_rules:
+                    d = {"value": cpt.value}
+                    for j in cpt.conditional:
+                        d[j.var.var] = j.var.value
+                    current_prob = float(probFunc.get(d)) / (1.0 - lastProb)
+                    lastProb += current_prob
+                    self.weights.append(Weight(copy.deepcopy(cpt), current_prob))
+                    copy_cpt_neg = copy.deepcopy(cpt)
+                    copy_cpt_neg.negate = True
+                    self.weights.append(Weight(copy_cpt_neg, 1.0 - current_prob))
+
+
+        for cpt in self.CPT:
+            probFunc = self.bayes.getProbabilityFunction(cpt.var.var)
+            d = {"value": cpt.value}
+            for j in cpt.conditional:
+                d[j.var.var] = j.var.value
+            self.weights.append(Weight(copy.deepcopy(cpt), probFunc.get(d)))
+
+
+
     def convert(self):
         self._getVars()
         self._getCPT()
@@ -108,6 +160,8 @@ class CNFEnc2(CNF):
         # We got all the cpt
         # Now we have to create the rules
         self._getParamClauses()
+        self._assignWeights()
+
 
 
     def __str__(self):

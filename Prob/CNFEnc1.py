@@ -51,8 +51,6 @@ class CNFEnc1(CNF):
             lhs.append(copy.deepcopy(cpt.var))
             self.paramClauses.append(ParameterClause(lhs, cpt))
 
-
-
     def _assignWeights(self):
         for k, values in self.vars.items():
             for v in values:
