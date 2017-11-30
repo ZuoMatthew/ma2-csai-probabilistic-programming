@@ -3,7 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="31fe492d-0607-459c-b956-418bbf030467" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CNF.py" afterPath="$PROJECT_DIR$/CNF.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CNFEnc2.py" afterPath="$PROJECT_DIR$/CNFEnc2.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/BayesModel.py" afterPath="$PROJECT_DIR$/BayesModel.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -29,8 +31,8 @@
       <file leaf-file-name="CNFEnc2.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CNFEnc2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="142">
-              <caret line="52" column="14" lean-forward="false" selection-start-line="52" selection-start-column="9" selection-end-line="52" selection-end-column="14" />
+            <state relative-caret-position="168">
+              <caret line="110" column="38" lean-forward="false" selection-start-line="110" selection-start-column="38" selection-end-line="110" selection-end-column="38" />
               <folding>
                 <element signature="e#0#17#0" expanded="true" />
               </folding>
@@ -38,10 +40,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BayesModel.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="BayesModel.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/BayesModel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="145">
+            <state relative-caret-position="53">
               <caret line="90" column="9" lean-forward="false" selection-start-line="90" selection-start-column="9" selection-end-line="90" selection-end-column="9" />
               <folding />
             </state>
@@ -58,11 +60,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CNF.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="CNF.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CNF.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="542">
-              <caret line="160" column="0" lean-forward="false" selection-start-line="160" selection-start-column="0" selection-end-line="160" selection-end-column="0" />
+            <state relative-caret-position="196">
+              <caret line="165" column="41" lean-forward="false" selection-start-line="165" selection-start-column="41" selection-end-line="165" selection-end-column="41" />
               <folding />
             </state>
           </provider>
@@ -104,10 +106,10 @@
       <list>
         <option value="$PROJECT_DIR$/BayesToCNF.py" />
         <option value="$PROJECT_DIR$/CNFEnc1.py" />
-        <option value="$PROJECT_DIR$/CNFEnc2.py" />
         <option value="$PROJECT_DIR$/files/test_file.dsc" />
-        <option value="$PROJECT_DIR$/CNF.py" />
         <option value="$PROJECT_DIR$/BayesModel.py" />
+        <option value="$PROJECT_DIR$/CNFEnc2.py" />
+        <option value="$PROJECT_DIR$/CNF.py" />
       </list>
     </option>
   </component>
@@ -118,7 +120,7 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="78" />
+    <option name="x" value="-33" />
     <option name="y" value="23" />
     <option name="width" value="1280" />
     <option name="height" value="716" />
@@ -213,11 +215,18 @@
       <option name="project" value="LOCAL" />
       <updated>1512037827118</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="dimacs">
+      <created>1512043115550</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1512043115550</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="139" y="23" width="1280" height="716" extended-state="0" />
+    <frame x="0" y="23" width="1280" height="716" extended-state="6" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2536349" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -276,7 +285,8 @@
     <MESSAGE value="Working on encodings =&gt; only need final parameter clause now" />
     <MESSAGE value="enc2 works now!" />
     <MESSAGE value="weights" />
-    <option name="LAST_COMMIT_MESSAGE" value="weights" />
+    <MESSAGE value="dimacs" />
+    <option name="LAST_COMMIT_MESSAGE" value="dimacs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -323,6 +333,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="128">
           <caret line="5209" column="8" lean-forward="false" selection-start-line="5209" selection-start-column="8" selection-end-line="5209" selection-end-column="8" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -344,24 +355,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CNF.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="542">
-          <caret line="160" column="0" lean-forward="false" selection-start-line="160" selection-start-column="0" selection-end-line="160" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CNFEnc2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="142">
-          <caret line="52" column="14" lean-forward="false" selection-start-line="52" selection-start-column="9" selection-end-line="52" selection-end-column="14" />
-          <folding>
-            <element signature="e#0#17#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/BayesToCNF.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
@@ -374,8 +367,26 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/BayesModel.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="145">
+        <state relative-caret-position="53">
           <caret line="90" column="9" lean-forward="false" selection-start-line="90" selection-start-column="9" selection-end-line="90" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CNFEnc2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="110" column="38" lean-forward="false" selection-start-line="110" selection-start-column="38" selection-end-line="110" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#17#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CNF.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="196">
+          <caret line="165" column="41" lean-forward="false" selection-start-line="165" selection-start-column="41" selection-end-line="165" selection-end-column="41" />
           <folding />
         </state>
       </provider>

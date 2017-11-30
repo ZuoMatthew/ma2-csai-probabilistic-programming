@@ -88,7 +88,7 @@ class BayesModel:
 
 
     def getProbabilityFunction(self, nodeName):
-        print(self.probabilities)
+        #print(self.probabilities)
         return self.probabilities[nodeName]
 
 

@@ -142,16 +142,6 @@ class CNFEnc2(CNF):
                     copy_cpt_neg.negate = True
                     self.weights.append(Weight(copy_cpt_neg, 1.0 - current_prob))
 
-
-        for cpt in self.CPT:
-            probFunc = self.bayes.getProbabilityFunction(cpt.var.var)
-            d = {"value": cpt.value}
-            for j in cpt.conditional:
-                d[j.var.var] = j.var.value
-            self.weights.append(Weight(copy.deepcopy(cpt), probFunc.get(d)))
-
-
-
     def convert(self):
         self._getVars()
         self._getCPT()
