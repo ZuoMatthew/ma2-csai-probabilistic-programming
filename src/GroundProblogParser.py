@@ -16,47 +16,55 @@ class GroundProblogParser():
         self._visitor = GroundProblogVisitor()
 
     def _grammar(self):
-        # statement, term, atom, conjunction, disjunction, rule
+        # A PEG grammar for ground Problog. It is written in a very weird way
+        # in order to make the visiting of the parse tree work.
         return Grammar(r"""
-            program     = _ clauses
-            clauses     = clause*
-            clause      = comment / predicate
-            predicate   = prob_decls / rule / fact
+            program          = _ clauses
+            clauses          = clause*
+            clause           = comment / not_comment
+            not_comment      = predicate dot
+            predicate        = prob_decls / rule / fact
             
-            fact        = term end_clause
+            fact             = term _
             
-            rule        = term turnstile (conjunction / disjunction / term) end_clause
-            # which conjunction to use? see later when defining visitor that will build the CNF
-            #conjunction = term (comma conjunction)?
-            #conjunction = (term comma conjunction) / term
-            conjunction = term (comma term)*
-            disjunction = (term semicolon disjunction) / term
+            rule             = term turnstile rule_body
+            rule_body        = conjunction / disjunction / term
+            conjunction      = term conjunction_opt
+            conjunction_opt  = conjunction_more?
+            conjunction_more = comma conjunction
+            disjunction      = (term semicolon disjunction) / term
 
-            prob_decls  = prob_decl (semicolon prob_decls)? end_clause
-            prob_decl   = probability doublecolon (rule / fact)
+            prob_decls       = prob_decl prob_decls_opt
+            prob_decls_opt   = prob_decls_more?
+            prob_decls_more  = semicolon prob_decls
+            prob_decl        = probability doublecolon rule_predicate
+            rule_predicate   = rule / fact
             
-            term        = negation_opt word arguments_opt
-            arguments_opt = lparen arguments rparen
-            arguments   = (term comma arguments) / term
+            term             = negation_opt word arguments_opt
+            negation_opt     = negation?
+            arguments_opt    = arguments_more?
+            arguments_more   = lparen arguments rparen
+            arguments        = (term comma arguments) / term
             
-            comment     = ~r"%[^\r\n]*" _
-            word        = ~"[a-zA-Z0-9_]+"
-            end_clause  = _ "." _
-            number      = ~"[0-9]*"
-            variable    = ~"[A-Z_][a-zA-Z0-9_]*"
-            negation_opt = (_ "\+" _)?
-            comma       = _ "," _
-            semicolon   = _ ";" _
-            doublecolon = _ "::" _
-            turnstile   = _ ":-" _
-            lparen      = _ "(" _
-            rparen      = _ ")" _
-            probability = decimal / fraction
-            decimal     = ~"[0-9]*\.[0-9]*"
-            fraction    = (number "/" number)
-
-            _ = meaninglessness*
-            meaninglessness = ~r"\s+"
+            probability      = decimal / fraction
+            fraction         = number slash number
+            comment          = ~r"%[^\r\n]*" _
+            word             = ~"[a-zA-Z0-9_]+"
+            number           = ~"[0-9]*"
+            decimal          = ~"[0-9]*\.[0-9]*"
+            variable         = ~"[A-Z_][a-zA-Z0-9_]*"
+            dot              = _ "." _
+            comma            = _ "," _
+            semicolon        = _ ";" _
+            lparen           = _ "(" _
+            rparen           = _ ")" _
+            slash            = _ "/" _
+            doublecolon      = _ "::" _
+            turnstile        = _ ":-" _
+            negation         = _ "\+" _
+            
+            _                = meaninglessness*
+            meaninglessness  = ~r"\s+"
         """)
 
     def parse(self, program):
