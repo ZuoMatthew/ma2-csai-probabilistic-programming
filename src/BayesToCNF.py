@@ -17,4 +17,4 @@ def toEnc2(bayes):
 
 enc = toEnc1(loadModel("files/cancer.dsc"))
 print("enc: \n", enc)
-print("dimac: \n", enc.toDimac())
+print("dimac:\n", enc.toWeightedDimac())
