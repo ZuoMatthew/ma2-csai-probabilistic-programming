@@ -1,5 +1,3 @@
-% Grounded with problog
-
 1/3::prize(1); 1/3::prize(2); 1/3::prize(3).
 0.5::open_door(2); 0.5::open_door(3) :- \+prize(2), \+prize(3).
 win_keep :- prize(1).
