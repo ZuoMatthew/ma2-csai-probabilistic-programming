@@ -14,3 +14,7 @@ def toEnc2(bayes):
     cnf = CNFEnc2(bayes)
     cnf.convert()
     return cnf
+
+enc = toEnc1(loadModel("files/cancer.dsc"))
+print("enc: \n", enc)
+print("dimac: \n", enc.toDimac())
