@@ -1,4 +1,4 @@
-0.3::msw(locus2,b); 0.7::msw(locus2,'B').
+0.3::msw(locus2,b); 7/10::msw(locus2,'B').
 0.8::msw(locus1,a); 0.2::msw(locus1,'A').
 genotype(locus1,a,a) :- msw(locus1,a).
 genotype(locus2,b,b) :- msw(locus2,b).
