@@ -4,7 +4,7 @@ from problog.logic import Term
 from problog.ddnnf_formula import DDNNF
 from problog.cnf_formula import CNF
 
-with open("files/task_1.2_puzzle.pl") as input_file:
+with open("files/monty_hall.pl") as input_file:
         input_code = input_file.read()
 
 p = PrologString(input_code)

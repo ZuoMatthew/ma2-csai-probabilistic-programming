@@ -10,3 +10,10 @@ from Interpretations”. In: European Conference on Machine Learning and Knowled
 (ECML/PKDD) (2011), pp. 581–596.](https://link.springer.com/content/pdf/10.1007%2F978-3-642-23780-5.pdf)
 - [Umut Oztok and Adnan Darwiche. “A top-down compiler for sentential decision diagrams”. In: Proceed-
 ings of the 24th International Conference on Artificial Intelligence (IJCAI). 2015.](http://www.ijcai.org/Proceedings/15/Papers/443.pdf)
+
+## Python dependencies
+To install the Python dependencies.
+```sh
+pip3 install --upgrade setuptools
+pip3 install -r requirements.txt
+```
