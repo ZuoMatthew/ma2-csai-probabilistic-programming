@@ -11,7 +11,7 @@ def file_to_string(filename):
         return input_file.read()
 
 
-class GroundProblogParser():
+class GroundProblogParser:
     def __init__(self):
         self._visitor = GroundProblogVisitor()
 
@@ -22,9 +22,7 @@ class GroundProblogParser():
             program          = _ clauses
             clauses          = clause*
             clause           = predicate dot
-            predicate        = prob_decls / rule / fact
-            
-            fact             = term _
+            predicate        = prob_decls / rule / term
             
             rule             = term turnstile rule_body
             rule_body        = conjunction / term
@@ -36,7 +34,7 @@ class GroundProblogParser():
             prob_decls_opt   = prob_decls_more?
             prob_decls_more  = semicolon prob_decls
             prob_decl        = probability doublecolon rule_predicate
-            rule_predicate   = rule / fact
+            rule_predicate   = rule / term
             
             term             = negation_opt word arguments_opt
             negation_opt     = negation?

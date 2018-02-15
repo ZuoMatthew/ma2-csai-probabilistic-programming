@@ -52,10 +52,6 @@ class GroundProblogVisitor(NodeVisitor):
         print("visit_predicate", visited_children)
         return visited_children[0]
 
-    def visit_fact(self, node, visited_children):
-        print("visit_fact", visited_children)
-        return visited_children[0]
-
     def visit_rule(self, node, visited_children):
         print("visit_rule", visited_children)
         return {
