@@ -15,6 +15,6 @@ def toEnc2(bayes):
     cnf.convert()
     return cnf
 
-enc = toEnc1(loadModel("files/cancer.dsc"))
+enc = toEnc1(loadModel("files/abc.dsc"))
 print("enc: \n", enc)
 print("dimac:\n", enc.toWeightedDimac())
