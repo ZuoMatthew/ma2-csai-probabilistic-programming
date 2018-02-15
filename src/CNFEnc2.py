@@ -22,12 +22,10 @@ class CNFEnc2(CNF):
                 evid.append(cond)
                 self._getCPT_part(dependants[1:], node, evid)
 
-
     def _getCPT(self):
         for node_name, node in self.bayes.getNodes().items():
             dependants = node.probabilities.dependents
             self._getCPT_part(dependants, node, [])
-
 
     def _getIndicatorClauses(self):
         for name, vars in self.vars.items():
@@ -42,9 +40,6 @@ class CNFEnc2(CNF):
                     self.indicators.append(IndicatorClause([var1, var2]))
 
             self.indicators.append(IndicatorClause(vars))
-
-
-
 
     def _getParamClauses(self):
         #
@@ -161,6 +156,9 @@ class CNFEnc2(CNF):
 
         enc += "Parameter clauses: \n"
         for p in self.paramClauses:
+            enc += str(p) + "\n"
+
+        for p in self.elimEquivClauses:
             enc += str(p) + "\n"
 
         enc += "Weights: \n"

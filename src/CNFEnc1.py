@@ -84,6 +84,9 @@ class CNFEnc1(CNF):
         for p in self.paramClauses:
             enc += str(p) + "\n"
 
+        for p in self.elimEquivClauses:
+            enc += str(p) + "\n"
+
         enc += "Weights: \n"
         for w in self.weights:
             enc += str(w) + "\n"
