@@ -214,12 +214,18 @@ class CNF:
         weights = []
         # get weights
         for key in varToInt.keys():
+
+
             for w in self.weights:
+
                 if str(w.lhs) == key:
-                    weights.append(str(w.prob))
+                    if type(w.lhs) == Variable:
+                        weights.append(str(-1))
+                    else:
+                        weights.append(str(w.prob))
 
             #for w in self.weights:
-            #    if str(w.lhs) == "~" + key:
+            #    if str(w.lhs) == "~" + key and type(w.lhs) != Variable:
             #        weights.append(str(w.prob))
 
         # write how many rules we have
