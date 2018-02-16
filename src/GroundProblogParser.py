@@ -4,6 +4,7 @@ A parser for ground ProbLog programs.
 
 from parsimonious.grammar import Grammar
 from GroundProblogVisitor import GroundProblogVisitor
+import FOLTheory
 
 
 def file_to_string(filename):
@@ -22,7 +23,7 @@ class GroundProblogParser:
             program          = _ clauses
             clauses          = clause*
             clause           = predicate dot
-            predicate        = prob_decls / rule / term
+            predicate        = prob_declss / rule / term
             
             rule             = term turnstile rule_body
             rule_body        = conjunction / term
@@ -30,6 +31,7 @@ class GroundProblogParser:
             conjunction_opt  = conjunction_more?
             conjunction_more = comma conjunction
 
+            prob_declss      = prob_decls _
             prob_decls       = prob_decl prob_decls_opt
             prob_decls_opt   = prob_decls_more?
             prob_decls_more  = semicolon prob_decls
@@ -64,11 +66,35 @@ class GroundProblogParser:
         """)
 
     def parse(self, program):
-        root_node = self._grammar().parse(program)
-        print(root_node, '\n====================================================\n')
+        """ Parses a ground problog program and returns the root node of the parse tree. """
+        return self._grammar().parse(program)
+
+    def parse_tree_to_problog(self, root_node):
+        """ Visits a ground problog program's parse tree and
+        returns a GroundProblog object that represents the program. """
         return self._visitor.visit(root_node)
+
+    def parse_to_CNF(self, program):
+        """ Converts a ground problog program to its CNF representation """
+        # parse the program
+        root_node = self.parse(program)
+        print(root_node)
+        print('\n====================================================\n')
+        # build the GroundProblog object
+        ground_problog = self.parse_tree_to_problog(root_node)
+        print(ground_problog)
+        print('\n====================================================\n')
+        # convert the GroundProblog to a FOLTheory
+        fol_theory = FOLTheory.create_from_problog(ground_problog)
+        print(fol_theory)
+        print('\n====================================================\n')
+        # convert the LogicFormula to its CNF representation
+        cnf = fol_theory.to_cnf()
+        print (cnf)
+        print('\n====================================================\n')
+        return cnf
 
 
 parser = GroundProblogParser()
 program = file_to_string("files/test.grounded.pl")
-parser.parse(program)
+cnf = parser.parse_to_CNF(program)
