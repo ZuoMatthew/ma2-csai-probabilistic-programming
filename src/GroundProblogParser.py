@@ -4,7 +4,7 @@ A parser for ground ProbLog programs.
 
 from parsimonious.grammar import Grammar
 from GroundProblogVisitor import GroundProblogVisitor
-import FOLTheory
+from FOLTheory import FOLTheory
 
 
 def file_to_string(filename):
@@ -14,7 +14,7 @@ def file_to_string(filename):
 
 class GroundProblogParser:
     def __init__(self):
-        self._visitor = GroundProblogVisitor()
+        self._visitor = GroundProblogVisitor(logging=True)
 
     def _grammar(self):
         # A PEG grammar for ground Problog. It is written in a very weird way
@@ -78,20 +78,31 @@ class GroundProblogParser:
         """ Converts a ground problog program to its CNF representation """
         # parse the program
         root_node = self.parse(program)
+        print("Parse tree:")
         print(root_node)
-        print('\n====================================================\n')
+        print("\n====================================================\n")
+
         # build the GroundProblog object
         ground_problog = self.parse_tree_to_problog(root_node)
+        print("Program")
         print(ground_problog)
-        print('\n====================================================\n')
+        print("\n====================================================\n")
+
         # convert the GroundProblog to a FOLTheory
         fol_theory = FOLTheory.create_from_problog(ground_problog)
+        print("FOL theory:")
         print(fol_theory)
-        print('\n====================================================\n')
+        print("\n====================================================\n")
+
         # convert the LogicFormula to its CNF representation
+        """
+        Converting LP rules to CNF is not simply a syntactical matter of rewriting the rules in the appropriate form. 
+        The point is that the rules and the CNF are to be interpreted according to a different semantics. (LP versus 
+        FOL). The rules under LP semantics (with Closed World Assumption) should be equivalent to the CNF under FOL 
+        semantics (without CWA).
+        """
         cnf = fol_theory.to_cnf()
-        print (cnf)
-        print('\n====================================================\n')
+        print ("CNF: \n", cnf)
         return cnf
 
 

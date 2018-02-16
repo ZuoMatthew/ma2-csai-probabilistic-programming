@@ -2,34 +2,30 @@
 This file defines classes that are used to build GroundProblog instances that represent ground problog programs.
 """
 
+
 class Term:
     """ A term has a name, can be negated, and possibly has arguments. """
     def __init__(self, name, negation, arguments):
         self.name = name
         self.negation = negation
-        if isinstance(arguments, list):
+        if arguments is None:
+            self.arguments = []
+        elif isinstance(arguments, list):
             self.arguments = arguments
         else:
             self.arguments = [arguments]
 
     def __str__(self):
-        out = ""
-        if self.negation:
-            out += "\+"
-        out += self.name
-        if self.arguments[0] is not None:
-            out += "("
-            for i in range(0, len(self.arguments)):
-                out += str(self.arguments[i])
-                if i != len(self.arguments)-1:
-                    out += ","
-            out += ")"
+        out = ("\+" if self.negation else "") + self.name
+        if len(self.arguments):
+            out += "(" + ",".join([str(arg) for arg in self.arguments]) + ")"
         return out
 
 
 class Rule:
-    """ A rule has a head and a body. The body can only be a term or a conjunction of terms
-    in the case of ground problog. """
+    """ A rule has a head and a body.
+    The head is a term. The body can only be a term or a conjunction of terms in the case of ground problog.
+    """
     def __init__(self, head, body):
         self.head = head
         if isinstance(body, list):
@@ -39,10 +35,8 @@ class Rule:
 
     def __str__(self):
         out = str(self.head) + " :- "
-        for i in range(0, len(self.body)):
-            out += str(self.body[i])
-            if i != len(self.body)-1:
-                out += ", "
+        if len(self.body):
+            out += ", ".join([str(term) for term in self.body])
         return out
 
 
@@ -53,8 +47,7 @@ class ProbabilityDeclaration:
         self.predicate = predicate
 
     def __str__(self):
-        out = str(self.probability) + "::" + str(self.predicate)
-        return out
+        return str(self.probability) + "::" + str(self.predicate)
 
 
 class ProbabilityPredicate:
@@ -66,18 +59,24 @@ class ProbabilityPredicate:
             self.declarations = [declarations]
 
     def __str__(self):
-        out = ""
-        for i in range(0, len(self.declarations)):
-            out += str(self.declarations[i])
-            if i != len(self.declarations)-1:
-                out += "; "
-        return out
+        return "; ".join([str(declaration) for declaration in self.declarations])
 
 
 class GroundProblog:
-    """ A ground problog program is a collection of clauses. """
+    """ A ground problog program is a collection of clauses.
+    A clause can be a fact (represented by just a Term here), a  Rule, or a ProbabilityPredicate.
+    """
     def __init__(self, clauses):
         self.clauses = clauses
+
+    def get_facts(self):
+        return [clause for clause in self.clauses if isinstance(clause, Term)]
+
+    def get_rules(self):
+        return [clause for clause in self.clauses if isinstance(clause, Rule)]
+
+    def get_probability_predicates(self):
+        return [clause for clause in self.clauses if isinstance(clause, ProbabilityPredicate)]
 
     def __str__(self):
         return ".\n".join([str(clause) for clause in self.clauses]) + "."
