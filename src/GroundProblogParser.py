@@ -35,9 +35,10 @@ class GroundProblogParser:
             prob_decls       = prob_decl prob_decls_opt
             prob_decls_opt   = prob_decls_more?
             prob_decls_more  = semicolon prob_decls
-            prob_decl        = probability doublecolon rule_predicate
-            rule_predicate   = rule / term
-            
+            prob_decl        = prob_rule / prob_fact
+            prob_rule        = probability doublecolon rule
+            prob_fact        = probability doublecolon term
+
             term             = negation_opt word arguments_opt
             negation_opt     = negation?
             arguments_opt    = arguments?
@@ -102,7 +103,8 @@ class GroundProblogParser:
         semantics (without CWA).
         """
         cnf = fol_theory.to_cnf()
-        print ("CNF: \n", cnf)
+        print("CNF:")
+        print(cnf)
         return cnf
 
 

@@ -84,7 +84,7 @@ class GroundProblogVisitor(NodeVisitor):
 
     def visit_prob_declss(self, node, visited_children):
         self.print("visit_prob_decls", [str(c) for c in visited_children])
-        return ProbabilityPredicate(visited_children[0])
+        return ProbabilisticClause(visited_children[0])
 
     def visit_prob_decls(self, node, visited_children):
         self.print("visit_prob_decls", [str(c) for c in visited_children])
@@ -107,7 +107,15 @@ class GroundProblogVisitor(NodeVisitor):
 
     def visit_prob_decl(self, node, visited_children):
         self.print("visit_prob_decl", [str(c) for c in visited_children])
-        return ProbabilityDeclaration(visited_children[0], visited_children[2])
+        return visited_children[0]
+
+    def visit_prob_fact(self, node, visited_children):
+        self.print("visit_prob_fact", [str(c) for c in visited_children])
+        return ProbabilisticFact(visited_children[0], visited_children[2])
+
+    def visit_prob_rule(self, node, visited_children):
+        self.print("visit_prob_rule", [str(c) for c in visited_children])
+        return ProbabilisticRule(visited_children[0], visited_children[2])
 
     def visit_rule_predicate(self, node, visited_children):
         self.print("visit_rule_predicate", [str(c) for c in visited_children])

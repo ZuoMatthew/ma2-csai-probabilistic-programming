@@ -1,14 +1,12 @@
-0.5::similar(ale,stout).
-0.25::similar(ale,gin).
-0.2::similar(ale,soda).
-query(similar(ale,stout)).
-query(similar(ale,gin)).
-query(similar(ale,soda)).
-genotype(locus1,a,a) :- msw(locus1,a), msw(locus1,b).
-genotype(locus1, a, a) :- HelloMisterBoiiii.
-w :- r, x.
-w :- s.
-x :- a.
-y :- a.
-x :- b.
-x :- c.
+win_keep :- prize(1).
+open_door(2) :- \+prize(2), prize(3).
+open_door(3) :- \+prize(3), prize(2).
+win_switch :- prize(2), \+open_door(2).
+win_switch :- prize(3), \+open_door(3).
+query(prize(1)).
+query(prize(2)).
+query(prize(3)).
+select_door(1).
+query(select_door(1)).
+query(win_keep).
+query(win_switch).

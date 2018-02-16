@@ -2,8 +2,11 @@
 This file defines classes that are used to build GroundProblog instances that represent ground problog programs.
 """
 
+class Clause:
+    """ Abstract class that represents a clause? """
 
-class Term:
+
+class Term(Clause):
     """ A term has a name, can be negated, and possibly has arguments. """
     def __init__(self, name, negation, arguments):
         self.name = name
@@ -22,7 +25,7 @@ class Term:
         return out
 
 
-class Rule:
+class Rule(Clause):
     """ A rule has a head and a body.
     The head is a term. The body can only be a term or a conjunction of terms in the case of ground problog.
     """
@@ -40,26 +43,36 @@ class Rule:
         return out
 
 
-class ProbabilityDeclaration:
-    """ Represents a predicate that has a probability assigned to it. """
-    def __init__(self, probability, predicate):
+class ProbabilisticFact:
+    """ Represents a fact annotated with a probability. """
+    def __init__(self, probability, fact):
         self.probability = probability
-        self.predicate = predicate
+        self.fact = fact
 
     def __str__(self):
-        return str(self.probability) + "::" + str(self.predicate)
+        return str(self.probability) + "::" + str(self.fact)
 
 
-class ProbabilityPredicate:
-    """ A collection of ProbabilityDeclarations. """
-    def __init__(self, declarations):
-        if isinstance(declarations, list):
-            self.declarations = declarations
+class ProbabilisticRule:
+    """ Represents a rule annotated with a probability. """
+    def __init__(self, probability, rule):
+        self.probability = probability
+        self.rule = rule
+
+    def __str__(self):
+        return str(self.probability) + "::" + str(self.rule)
+
+
+class ProbabilisticClause(Clause):
+    """ A collection of probabilistic facts and rules. """
+    def __init__(self, clauses):
+        if isinstance(clauses, list):
+            self.clauses = clauses
         else:
-            self.declarations = [declarations]
+            self.clauses = [clauses]
 
     def __str__(self):
-        return "; ".join([str(declaration) for declaration in self.declarations])
+        return "; ".join([str(clause) for clause in self.clauses])
 
 
 class GroundProblog:
@@ -75,8 +88,8 @@ class GroundProblog:
     def get_rules(self):
         return [clause for clause in self.clauses if isinstance(clause, Rule)]
 
-    def get_probability_predicates(self):
-        return [clause for clause in self.clauses if isinstance(clause, ProbabilityPredicate)]
+    def get_probabilistic_clauses(self):
+        return [clause for clause in self.clauses if isinstance(clause, ProbabilisticClause)]
 
     def __str__(self):
         return ".\n".join([str(clause) for clause in self.clauses]) + "."
