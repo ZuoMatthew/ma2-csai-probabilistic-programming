@@ -7,11 +7,6 @@ from GroundProblogVisitor import GroundProblogVisitor
 from FOLTheory import FOLTheory
 
 
-def file_to_string(filename):
-    with open(filename) as input_file:
-        return input_file.read()
-
-
 class GroundProblogParser:
     def __init__(self):
         self._visitor = GroundProblogVisitor(logging=True)
@@ -106,8 +101,3 @@ class GroundProblogParser:
         print("CNF:")
         print(cnf)
         return cnf
-
-
-parser = GroundProblogParser()
-program = file_to_string("files/test.grounded.pl")
-cnf = parser.parse_to_CNF(program)

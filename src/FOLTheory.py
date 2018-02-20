@@ -185,7 +185,7 @@ class Equivalence(LogicFormula):
         self.rhs = rhs
 
     def __str__(self):
-        return "e(" + str(self.lhs) + " ↔ " + str(self.rhs) + ")"
+        return "(" + str(self.lhs) + " ↔ " + str(self.rhs) + ")"
 
     def __eq__(self, other):
         return isinstance(other, Equivalence) and \
