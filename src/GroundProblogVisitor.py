@@ -59,19 +59,12 @@ class GroundProblogVisitor(NodeVisitor):
         self.print("visit_rule", [str(c) for c in visited_children])
         return Rule(visited_children[0], visited_children[2])
 
-    def visit_rule_body(self, node, visited_children):
-        self.print("visit_rule_body", [str(c) for c in visited_children])
-        return visited_children[0]
-
     def visit_conjunction(self, node, visited_children):
         self.print("visit_conjunction", [str(c) for c in visited_children])
         if visited_children[1] is not None:
-            if isinstance(visited_children[1], list):
-                return [visited_children[0]] + visited_children[1]
-            else:
-                return [visited_children[0], visited_children[1]]
+            return [visited_children[0]] + visited_children[1]
         else:
-            return visited_children[0]
+            return [visited_children[0]]
 
     def visit_conjunction_opt(self, node, visited_children):
         exists_conjunction = len(visited_children) != 0
@@ -82,40 +75,42 @@ class GroundProblogVisitor(NodeVisitor):
         self.print("visit_conjunction_more", [str(c) for c in visited_children])
         return visited_children[1]
 
-    def visit_prob_declss(self, node, visited_children):
-        self.print("visit_prob_decls", [str(c) for c in visited_children])
-        return ProbabilisticClause(visited_children[0])
+    def visit_prob_ann(self, node, visited_children):
+        self.print("visit__prob_ann", [str(c) for c in visited_children])
+        if len(visited_children[0]) == 1 and visited_children[1] is None:
+            return visited_children[0][0]
+        return ProbabilisticAnnotation(visited_children[0], visited_children[1])
 
-    def visit_prob_decls(self, node, visited_children):
-        self.print("visit_prob_decls", [str(c) for c in visited_children])
+    def visit_prob_ann_heads(self, node, visited_children):
+        self.print("visit__prob_ann_heads", [str(c) for c in visited_children])
         if visited_children[1] is not None:
-            if isinstance(visited_children[1], list):
-                return [visited_children[0]] + visited_children[1]
-            else:
-                return [visited_children[0], visited_children[1]]
+            return [visited_children[0]] + visited_children[1]
         else:
-            return visited_children[0]
+            return [visited_children[0]]
 
-    def visit_prob_decls_opt(self, node, visited_children):
-        exist_prob_decls = len(visited_children) != 0
-        self.print("visit_prob_decls_opt", visited_children, exist_prob_decls)
-        return visited_children[0] if exist_prob_decls else None
+    def visit_prob_fact_opt(self, node, visited_children):
+        exist_prob_facts = len(visited_children) != 0
+        self.print("visit__prob_fact_opt", [str(c) for c in visited_children])
+        return visited_children[0] if exist_prob_facts else None
 
-    def visit_prob_decls_more(self, node, visited_children):
-        self.print("visit_prob_decls_more", [str(c) for c in visited_children])
+    def visit_prob_fact_more(self, node, visited_children):
+        self.print("visit__prob_fact_more", [str(c) for c in visited_children])
         return visited_children[1]
 
-    def visit_prob_decl(self, node, visited_children):
-        self.print("visit_prob_decl", [str(c) for c in visited_children])
-        return visited_children[0]
+    def visit_prob_ann_rule_opt(self, node, visited_children):
+        exists_rule = len(visited_children) != 0
+        self.print("visit__prob_ann_rule_opt", [str(c) for c in visited_children])
+        return visited_children[0] if exists_rule else None
+
+    def visit_prob_ann_rule(self, node, visited_children):
+        self.print("visit__prob_ann_rule", [str(c) for c in visited_children])
+        return visited_children[1]
 
     def visit_prob_fact(self, node, visited_children):
         self.print("visit_prob_fact", [str(c) for c in visited_children])
-        return ProbabilisticFact(visited_children[0], visited_children[2])
-
-    def visit_prob_rule(self, node, visited_children):
-        self.print("visit_prob_rule", [str(c) for c in visited_children])
-        return ProbabilisticRule(visited_children[0], visited_children[2])
+        term = visited_children[2]
+        term.probability = visited_children[0]
+        return term
 
     def visit_rule_predicate(self, node, visited_children):
         self.print("visit_rule_predicate", [str(c) for c in visited_children])
@@ -142,12 +137,9 @@ class GroundProblogVisitor(NodeVisitor):
     def visit_arguments_list(self, node, visited_children):
         self.print("visit_arguments_list", [str(c) for c in visited_children])
         if visited_children[1] is not None:
-            if isinstance(visited_children[1], list):
-                return [visited_children[0]] + visited_children[1]
-            else:
-                return [visited_children[0], visited_children[1]]
+            return [visited_children[0]] + visited_children[1]
         else:
-            return visited_children[0]
+            return [visited_children[0]]
 
     def visit_arguments_more_o(self, node, visited_children):
         exist_more_arguments = len(visited_children) != 0

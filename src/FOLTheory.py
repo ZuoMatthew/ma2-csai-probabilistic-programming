@@ -1,19 +1,16 @@
 """
-A (limited) representation for First Order Logic theories.
+A limited representation for First Order Logic theories with weighted atoms.
 
-Theories are collections of formulas. A formula is built out of atoms using universal and existential quantifiers
-and the usual logical connectives negation, conjunction, disjunction, implication, equivalence.
+'Theories are collections of formulas. A formula is built out of atoms using universal and existential quantifiers
+and the usual logical connectives negation, conjunction, disjunction, implication, equivalence.'
+-- paper
 """
 
 
-class Term:
-    """ A term is a variable, a constant, or a functor applied on terms. """
-
-
 class LogicFormula:
-    """ Abstract class that represents a logical formula? """
+    """ Abstract class that represents a logical formula """
     def to_cnf(self):
-        return self
+        raise NotImplementedError
 
 
 class Atom(LogicFormula):
@@ -31,6 +28,9 @@ class Atom(LogicFormula):
 
     def __eq__(self, other):
         return isinstance(other, Atom) and self.predicate == other.predicate and self.terms == other.terms
+
+    def to_cnf(self):
+        return self
 
     @staticmethod
     def create_from_problog_term(term):
@@ -194,12 +194,9 @@ class Equivalence(LogicFormula):
     def to_cnf(self):
         """ Convert this formula to Conjunctive Normal Form. """
         # Formula is of form P ↔ Q
-        # a = Conjunction([self.lhs, self.rhs])                          # (P ∧ Q)
-        # b = Conjunction([Negation(self.lhs), Negation(self.rhs)])      # (¬P ∧ ¬Q)
-        # return Disjunction([a, b]).to_cnf()                            # ((P ∧ Q) ∨ (¬P ∧ ¬Q)).to_cnf()
-        a = Disjunction([self.lhs, Negation(self.rhs)])                # (P ∨ ¬Q)
-        b = Disjunction([Negation(self.lhs), self.rhs])                # (¬P ∨ Q)
-        return Conjunction([a, b]).to_cnf()                            # ((P ∨ ¬Q) ∧ (¬P ∨ Q)).to_cnf()
+        a = Disjunction([self.lhs, Negation(self.rhs)])  # (P ∨ ¬Q)
+        b = Disjunction([Negation(self.lhs), self.rhs])  # (¬P ∨ Q)
+        return Conjunction([a, b]).to_cnf()              # ((P ∨ ¬Q) ∧ (¬P ∨ Q)).to_cnf()
 
 
 class FOLTheory:
