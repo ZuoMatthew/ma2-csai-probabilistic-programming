@@ -14,12 +14,12 @@ program = util.file_to_string("../files/test.grounded.pl")
 # query(c).
 # """)
 
-formula = LogicFormula.create_from(program)
-print("PROLOG:")
+formula = LogicFormula.create_from(program, avoid_name_clash=True, label_all=True)
+print("PROGRAM:")
 print(formula.to_prolog(), "\n============================")
 
-cnf = CNF.create_from(formula)
-print("CNF:")
+cnf = CNF.create_from(formula)  # type: CNF
+print("DIMACS:")
 print(cnf.to_dimacs(weighted=True, names=True), "\n============================")
 
 ddnnf = DDNNF.create_from(cnf)

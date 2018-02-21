@@ -15,15 +15,19 @@ class LogicFormula:
 
 class Atom(LogicFormula):
     """ An atom is of the form p(t_1, ..., t_n) where p is a predicate of arity n and the t_i are terms. """
-    def __init__(self, predicate, terms=[]):
+    def __init__(self, predicate, terms=None, probability=1):
         self.predicate = predicate
-        self.terms = terms
-        self.arity = len(terms)
+        self.terms = terms if terms is not None else []
+        self.arity = len(self.terms)
+        self.probability = probability
 
     def __str__(self):
-        out = self.predicate
+        out = ""
+        if self.probability != 1:
+            out += str(self.probability) + "::"
+        out += self.predicate
         if self.arity > 0:
-            out += "(" + ", ".join([str(term) for term in self.terms]) + ")"
+            out += "(" + ", ".join(map(str, self.terms)) + ")"
         return out
 
     def __eq__(self, other):
@@ -38,7 +42,7 @@ class Atom(LogicFormula):
         if len(term.arguments):
             arguments = [Atom.create_from_problog_term(arg) for arg in term.arguments]
 
-        atom = Atom(predicate=term.name, terms=arguments)
+        atom = Atom(predicate=term.name, terms=arguments, probability=term.probability)
         return Negation(atom) if term.negation else atom
 
 
@@ -89,7 +93,7 @@ class Conjunction(LogicFormula):
                 self.formulas.append(f)
 
     def __str__(self):
-        return "(" + " ∧ ".join([str(f) for f in self.formulas]) + ")"
+        return "(" + " ∧ ".join(map(str, self.formulas)) + ")"
 
     def __eq__(self, other):
         if not isinstance(other, Conjunction):
@@ -127,7 +131,7 @@ class Disjunction(LogicFormula):
                 self.formulas.append(f)
 
     def __str__(self):
-        return "(" + " ∨ ".join([str(f) for f in self.formulas]) + ")"
+        return "(" + " ∨ ".join(map(str, self.formulas)) + ")"
 
     def __eq__(self, other):
         if not isinstance(other, Disjunction):
@@ -203,14 +207,27 @@ class FOLTheory:
     """
     A FOL theory is a set of formulas that implicitly form a conjunction.
     """
-    def __init__(self, formulas=[]):
-        self.formulas = formulas
+    def __init__(self, formulas=None, queries=None):
+        self.formulas = formulas if formulas is not None else []
+        self.queries = queries if queries is not None else []
 
     def __str__(self):
-        return "\n".join([str(f) for f in self.formulas])
+        out = "Formulas:\n" + "\n".join(map(str, self.formulas))
+        if len(self.queries):
+            out += "\nQueries:\n" + "\n".join(map(str, self.queries))
+        return out
 
     def add_formula(self, formula):
         self.formulas.append(formula)
+
+    def add_query(self, query):
+        self.queries.append(query)
+
+    def get_formulas(self):
+        return self.formulas
+
+    def get_queries(self):
+        return self.queries
 
     def to_cnf(self):
         return FOLTheory([f.to_cnf() for f in self.formulas])
@@ -223,6 +240,9 @@ class FOLTheory:
         # Problog facts can just be converted to FOL Atoms
         for fact in ground_problog.get_facts():
             theory.add_formula(Atom.create_from_problog_term(fact))
+
+        for query in ground_problog.get_queries():
+            theory.add_query(query)
 
         # Problog rules are converted to FOL formulas by applying Clark's completion. This is done by grouping rule
         # bodies of rules with equal heads into disjunctions.

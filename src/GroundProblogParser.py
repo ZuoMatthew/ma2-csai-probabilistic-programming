@@ -4,13 +4,11 @@ A parser for ground ProbLog programs.
 
 from parsimonious.grammar import Grammar
 from GroundProblogVisitor import GroundProblogVisitor
-from FOLTheory import FOLTheory
-from CNF2 import CNF as CNF
 
 
 class GroundProblogParser:
     def __init__(self):
-        self._visitor = GroundProblogVisitor(logging=True)
+        self._visitor = GroundProblogVisitor(logging=False)
 
     def _grammar(self):
         # A PEG grammar for ground Problog. It is written in a very weird way
@@ -70,34 +68,6 @@ class GroundProblogParser:
         returns a GroundProblog object that represents the program. """
         return self._visitor.visit(root_node)
 
-    def parse_to_CNF(self, program):
-        """ Converts a ground problog program to its CNF representation """
-        # parse the program
-        root_node = self.parse(program)
-        print("Parse tree:")
-        print(root_node)
-        print("\n====================================================\n")
-
-        # build the GroundProblog object
-        ground_problog = self.parse_tree_to_problog(root_node)
-        print("Program")
-        print(ground_problog)
-        print("\n====================================================\n")
-
-        # convert the GroundProblog to a FOLTheory
-        fol_theory = FOLTheory.create_from_problog(ground_problog)
-        print("FOL theory:")
-        print(fol_theory)
-        print("\n====================================================\n")
-
-        # convert the LogicFormula to its CNF representation
-        """
-        Converting LP rules to CNF is not simply a syntactical matter of rewriting the rules in the appropriate form. 
-        The point is that the rules and the CNF are to be interpreted according to a different semantics. (LP versus 
-        FOL). The rules under LP semantics (with Closed World Assumption) should be equivalent to the CNF under FOL 
-        semantics (without CWA).
-        """
-        cnf = CNF.create_from_fol_theory(fol_theory)
-        print("CNF:")
-        print(cnf)
-        return cnf
+    def program_to_problog(self, program):
+        """ Takes a ground problog program and returns a GroundProblog object that represents the program. """
+        return self.parse_tree_to_problog(self.parse(program))

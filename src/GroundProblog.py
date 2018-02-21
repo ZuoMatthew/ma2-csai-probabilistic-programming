@@ -18,7 +18,7 @@ class Term(Clause):
         out = (str(self.probability) + "::") if self.probability != 1.0 else ""
         out += ("\+" if self.negation else "") + self.name
         if len(self.arguments):
-            out += "(" + ",".join([str(arg) for arg in self.arguments]) + ")"
+            out += "(" + ",".join(map(str, self.arguments)) + ")"
         return out
 
 
@@ -31,7 +31,7 @@ class Rule(Clause):
         self.body = body
 
     def __str__(self):
-        out = str(self.head) + " :- " + ", ".join([str(term) for term in self.body])
+        out = str(self.head) + " :- " + ", ".join(map(str, self.body))
         return out
 
 
@@ -42,9 +42,9 @@ class ProbabilisticAnnotation(Clause):
         self.body = body if body is not None else []
 
     def __str__(self):
-        out = "; ".join([str(c) for c in self.heads])
+        out = "; ".join(map(str, self.heads))
         if len(self.body):
-            out += " :- " + ", ".join([str(term) for term in self.body])
+            out += " :- " + ", ".join(map(str, self.body))
         return out
 
 
@@ -57,13 +57,16 @@ class GroundProblog:
         self.clauses = clauses
 
     def __str__(self):
-        return ".\n".join([str(clause) for clause in self.clauses]) + "."
+        return ".\n".join(map(str, self.clauses)) + "."
 
     def get_facts(self):
-        return [clause for clause in self.clauses if isinstance(clause, Term)]
+        return [c for c in self.clauses if isinstance(c, Term) and c.name != "query"]
+
+    def get_queries(self):
+        return [c for c in self.clauses if isinstance(c, Term) and c.name == "query"]
 
     def get_rules(self):
-        return [clause for clause in self.clauses if isinstance(clause, Rule)]
+        return [c for c in self.clauses if isinstance(c, Rule)]
 
     def get_probabilistic_clauses(self):
-        return [clause for clause in self.clauses if isinstance(clause, ProbabilisticAnnotation)]
+        return [c for c in self.clauses if isinstance(c, ProbabilisticAnnotation)]
