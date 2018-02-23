@@ -1,14 +1,14 @@
-import problog
-from CNF2 import CNF
+import problog.formula
+from CNF import CNF
 from FOLTheory import FOLTheory
-from GroundProblogParser import GroundProblogParser
-from wmc.WeightedModelCounter import WeightedModelCounter
+from ground_problog.GroundProblogParser import GroundProblogParser
+from wmc.factory import create as create_weighted_model_counter
 
 
 class InferenceEngine:
     def __init__(self):
         self.problog_parser = GroundProblogParser()
-        self.weighted_model_counter = WeightedModelCounter.factory("MiniC2D")
+        self.weighted_model_counter = create_weighted_model_counter("MiniC2D")
 
     def evaluate_problog_program(self, program):
         """ Evaluates a problog program.
@@ -18,7 +18,7 @@ class InferenceEngine:
         ground_program = self.ground_problog_program(program)
         problog_program = self.problog_parser.program_to_problog(ground_program)
         print("PROGRAM")
-        print(problog)
+        print(problog_program)
         print("====================================================")
 
         # convert the GroundProblog to a FOLTheory
@@ -39,7 +39,6 @@ class InferenceEngine:
         print(result)
 
         return result
-
 
     def evaluate_bayesian_network(self, network):
         """ Evaluates a Bayesian network by converting it to a Problog program and evaluating that program. """

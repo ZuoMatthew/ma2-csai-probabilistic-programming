@@ -1,10 +1,10 @@
-from CNF import *
+from enc.CNF import *
 import copy
-class CNFEnc1(CNF):
 
 
+class ENC1(CNF):
     def __init__(self, bayes):
-        super(CNFEnc1, self).__init__(bayes)
+        super(ENC1, self).__init__(bayes)
 
     def _getVars(self):
         for node_name, node in self.bayes.getNodes().items():
@@ -23,12 +23,10 @@ class CNFEnc1(CNF):
                 evid.append(cond)
                 self._getCPT_part(dependants[1:], node, evid)
 
-
     def _getCPT(self):
         for node_name, node in self.bayes.getNodes().items():
             dependants = node.probabilities.dependents
             self._getCPT_part(dependants, node, [])
-
 
     def _getIndicatorClauses(self):
         for name, vars in self.vars.items():
@@ -67,7 +65,6 @@ class CNFEnc1(CNF):
             self.weights.append(Weight(copy.deepcopy(cpt), probFunc.get(d)))
             self.weights.append(Weight(cpt.getCopy(negate=True), 1))
 
-
     def convert(self):
         self._getVars()
         self._getCPT()
@@ -90,6 +87,5 @@ class CNFEnc1(CNF):
         enc += "Weights: \n"
         for w in self.weights:
             enc += str(w) + "\n"
-
 
         return enc

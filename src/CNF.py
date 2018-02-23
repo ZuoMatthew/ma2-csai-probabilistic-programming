@@ -1,292 +1,101 @@
-import copy
+import FOLTheory
 
-class Variable:
 
-    def __init__(self, var, value, negate=False):
-        self.var = var
-        self.value = value
-        self.negate = negate
-
-    def getBaseRepr(self):
-        base = self.var[0] + "_" + self.value
-        return """\lambda_{}""".format(base)
+class Literal:
+    """ A literal of a CNF formula. """
+    def __init__(self, name, negated=False, weight=1, number=-1):
+        self.name = name
+        self.negated = negated
+        self.weight = weight
+        self.number = number
 
     def __str__(self):
-        base = self.getBaseRepr()
-        if self.negate:
-            return """~{}""".format(base)
+        return ("-" if self.negated else "") + self.name
 
-        return base
+    def __eq__(self, other):
+        return self.name == other.name and self.negated == other.negated and self.weight == other.weight
 
-    def toggleNegate(self):
-        self.negate = not self.negate
-
-    def getCopy(self, negate=False):
-        c = copy.deepcopy(self)
-        if negate:
-            c.toggleNegate()
-        return c
-
-    def toLATEX(self):
-        return str(self)
-
-
-class Weight:
-
-    def __init__(self, lhs, prob):
-        self.lhs = lhs
-        self.prob = prob
-
-    def __str__(self):
-        return """W({}) = {}""".format(self.lhs, self.prob)
-
-
-
-class Conditional:
-
-    def __init__(self, var):
-        self.var = var
-
-    def __str__(self):
-        base = self.var.var[0] + "_" + self.var.value
-        return """{}""".format(base)
-
-    def asVar(self):
-        return self.var
-
-    def toLATEX(self):
-        return str(self)
-
-
-class CPT:
-
-    def __init__(self, var, value, conditional, token="\\theta", negate=False):
-        self.var = var
-        self.value = value
-        self.conditional = conditional
-        self.token = token
-        self.negate = negate
-
-    def toggleNegate(self):
-        self.negate = not self.negate
-
-
-    def getBaseRepr(self):
-        if len(self.conditional) > 0:
-            base = self.var.var[0] + "_" + self.var.value + "|" + " ".join([c.toLATEX() for c in self.conditional])
-        else:
-            base = self.var.var[0] + "_" + self.var.value
-
-        return """{}_{}""".format(self.token, base)
-
-    def __str__(self):
-        base = self.getBaseRepr()
-        if self.negate:
-            return """~{}""".format(base)
-
-        return base
-
-    def getCopy(self, negate=False):
-        c = copy.deepcopy(self)
-        if negate:
-            c.toggleNegate()
-        return c
-
-    def toLATEX(self):
-        return str(self)
-
-
-class IndicatorClause:
-
-    def __init__(self, vars):
-        self.vars = vars
-
-    def __str__(self):
-        return " v ".join([str(v) for v in self.vars])
-
-    def toLATEX(self):
-        return str(self)
-
-class RemovedEquivClause:
-
-    def __init__(self, P, Q, negateP):
-        self.P = P
-        self.Q = Q
-        self.negateP = negateP
-        self.negateQ = not negateP
-        self.applyNegation()
-
-    def applyNegation(self):
-        if self.negateP:
-            copied = []
-            for v in self.P:
-                copied.append(v.getCopy(negate=True))
-            self.P = copied
-
-        else:
-            self.Q = self.Q.getCopy(negate=True)
-
-    def __str__(self):
-        if self.negateP:
-            conj = " v ".join([str(l) for l in self.P])
-        else:
-            conj = " ∧ ".join([str(l) for l in self.P])
-        return """{} v {}""".format(conj, self.Q)
-
-class ParameterClause:
-    def __init__(self,lhs, rhs):
-        self.lhs = lhs
-        self.rhs = rhs
-
-    # Gets the clause as
-    # a => b
-    # instead of a <=> b
-    def simplified(self):
-        ret = []
-        conj = "∧".join([str(l) for l in self.lhs])
-        ret.append(conj + " => " + str(self.rhs))
-
-        for l in self.lhs:
-            ret.append(str(self.rhs) + " => " + str(l))
-
-        return ret
-
-    def removeEquiv(self):
-        """removes P <=> Q in the parameter clauses and converts it to (~P v Q) & (P v ~Q)"""
-
-        distributed_Or = []
-        for v in self.lhs:
-            distributed_Or.append(IndicatorClause([v.getCopy(), self.rhs.getCopy(negate=True)]))
-
-        #return [RemovedEquivClause(self.lhs, neg_rhs_copy, False), RemovedEquivClause(self.lhs, rhs_copy, True)]
-        return [RemovedEquivClause(self.lhs, self.rhs, True)] + distributed_Or
-
-    def __str__(self):
-        conj = " ∧ ".join([str(l) for l in self.lhs])
-        return """{} <=> {}""".format(conj, self.rhs)
 
 class CNF:
+    """ A formula in Conjunctive Normal Form with support for weights. """
+    def __init__(self, literals=None, clauses=None, queries=None):
+        # Literals is a list of Literal.
+        self.literals = literals if literals is not None else []
+        # Clauses is a list of lists of Literal, which represents a conjunction of disjunctions of literals.
+        self.clauses = clauses if clauses is not None else []
+        # Queries is a list of Literal.
+        self.queries = queries if queries is not None else []
 
-    def __init__(self, bayes):
-        self.vars = {}
-        self.CPT = []
-        self.bayes = bayes
-        self.indicators = []
-        self.paramClauses = []
-        self.elimEquivClauses = []
-        self.weights = []
+    def __str__(self):
+        out = "\n∧ ".join(map(str, self.literals))
+        if len(self.clauses):
+            out += "\n∧ " + "\n∧ ".join([" ∨ ".join(map(str, disjunction)) for disjunction in self.clauses])
+        if len(self.queries):
+            out += "\nQueries:\n" + "\n".join(map(str, self.queries))
+        return out
 
-    def elimEquiv(self):
-        """
-            https://en.wikipedia.org/wiki/Conjunctive_normal_form
+    def add_literal(self, literal):
+        if literal not in self.literals:
+            literal.number = len(self.literals) + 1
+            self.literals.append(literal)
 
-            removes P <=> Q in the parameter clauses and converts it to (~P v Q) & (P v ~Q)
-        """
-        newParamClauses = []
-        for clause in self.paramClauses:
-            print("Converting: {}".format(clause))
-            newParamClauses += clause.removeEquiv()
-            print("into: {}".format("\n".join(str(p) for p in clause.removeEquiv())))
+    def add_clause(self, clause):
+        self.clauses.append(clause)
 
-        self.elimEquivClauses = newParamClauses
-        self.paramClauses = []
-        return self
+    def add_query(self, query):
+        self.queries.append(query)
 
-    def toDimac(self, toCachet=False):
+    def to_dimacs(self):
+        out = "p wcnf " + str(len(self.literals)) + " " + str(len(self.clauses)) + " SOMENUMBERHERE\n"
+        out += "\n".join(["c " + str(lit.number) + " " + lit.name for lit in self.literals]) + "\n"
 
-        varToInt = {}
-        i = 1
+        for lit in self.literals:
+            out += str(1 - lit.weight) + " -" + str(lit.number) + " 0\n"
+            out += str(lit.weight) + " " + str(lit.number) + " 0\n"
 
-        for k, vars in self.vars.items():
-            for v in vars:
-                varToInt[str(v)] = i
-                i += 1
+        for disjunction in self.clauses:
+            out += "SOMENUMBER "
+            for literal in disjunction:
+                lit = next((lit for lit in self.literals if lit == literal), None)
+                if lit:
+                    out += ("-" if lit.negated else "") + lit.number + " "
+                else:
+                    s = "Unknown literal '" + str(literal) + "' found in clause '" + " ∨ ".join(map(str, disjunction))
+                    s += "' for CNF:\n" + str(self)
+                    raise Exception(s)
+            out += " 0\n"
 
-        for c in self.CPT:
-            varToInt[str(c)] = i
-            i += 1
+        return out
 
-        if not toCachet:
-            weights = ""
-            # get weights
-            for key in varToInt.keys():
-                for w in self.weights:
-                    if str(w.lhs) == key:
-                        weights += str(w.prob) + " "
+    @staticmethod
+    def create_from_fol_theory(theory):
+        cnf = CNF()
 
-                for w in self.weights:
-                    if str(w.lhs) == "~" + key:
-                        weights += str(w.prob) + " "
+        for formula in theory.to_cnf().formulas:
+            # A formula in CNF consists of literals or of disjunctions of literals
+            if isinstance(formula, FOLTheory.Atom):
+                lit = Literal(str(formula), False, formula.probability)
+                cnf.add_literal(lit)
 
-            dimac = """\nc\nc Auto generated by script for cachet\nc\nc weights {}\np cnf {} {}\n""".format(
-                weights, len(varToInt), len(self.indicators) + len(self.paramClauses)
-            )
-        else:
+            elif isinstance(formula, FOLTheory.Conjunction):
+                for f in formula.formulas:
+                    if isinstance(f, FOLTheory.Atom):
+                        print("IS THIS POSSIBLE??????????????????????????????????????????? WHATAMGONNADOOOO ??????????")
+                    elif isinstance(f, FOLTheory.Negation):
+                        print("IS THIS POSSIBLE??????????????????????????????????????????? WHATAMGONNADOOOO ??????????")
+                    elif isinstance(f, FOLTheory.Disjunction):
+                        literals = []
+                        for ff in f.formulas:
+                            if isinstance(ff, FOLTheory.Negation):
+                                literals.append(Literal(str(ff.formula), True, ff.formula.probability))
+                            else:
+                                literals.append(Literal(str(ff), False, ff.probability))
+                        cnf.add_clause(literals)
 
-            weights = []
-            # get weights
-            for key in varToInt.keys():
-
-                for w in self.weights:
-
-                    if str(w.lhs) == key:
-                        if type(w.lhs) == Variable:
-                            weights.append(str(-1))
-                        else:
-                            weights.append(str(w.prob))
-
-            dimac = """\nc\nc Auto generated by script\nc\np cnf {} {}\n""".format(
-                len(varToInt), len(self.indicators) + len(self.paramClauses)
-            )
-
-            for i, w in enumerate(weights):
-                dimac += "w {} {}\n".format((i + 1), w)
-
-        for ind in self.indicators:
-            for v in ind.vars:
-                copy = v.getCopy()
-                value = varToInt[copy.getBaseRepr()]
-                if copy.negate:
-                    value *= -1
-                dimac += "{} ".format(value)
-
-            dimac += "0\n"
-
-        for p in self.paramClauses:
-            rule_copy = []
-            for v in p.lhs:
-                copy = v.getCopy(negate=True)
-                value = varToInt[copy.getBaseRepr()]
-                if copy.negate:
-                    value *= -1
-                rule_copy.append(value)
-
-            rule_copy.append(varToInt[str(p.rhs)])
-            dimac += " ".join([str(v) for v in rule_copy])
-            dimac += " 0\n"
-
-        for clause in self.elimEquivClauses:
-            if type(clause) is RemovedEquivClause:
-                rule_copy = []
-                for v in clause.P:
-                    copy = v.getCopy()
-                    value = varToInt[copy.getBaseRepr()]
-                    if copy.negate:
-                        value *= -1
-                    rule_copy.append(value)
-
-                val_Q = -varToInt[str(clause.Q.getCopy(negate=True))] if clause.Q.negate else varToInt[str(clause.Q)]
-                rule_copy.append(val_Q)
-                dimac += " ".join([str(v) for v in rule_copy])
-                dimac += " 0\n"
             else:
-                for v in clause.vars:
-                    copy = v.getCopy()
-                    value = varToInt[copy.getBaseRepr()]
-                    if copy.negate:
-                        value *= -1
-                    dimac += "{} ".format(value)
+                raise Exception("Unexpected formula type")
 
-                dimac += "0\n"
+        for query in theory.get_queries():
+            cnf.add_query(Literal(str(query)))
 
-        return dimac
+        return cnf

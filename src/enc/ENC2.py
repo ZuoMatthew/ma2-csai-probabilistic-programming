@@ -1,9 +1,10 @@
-from CNF import *
+from enc.CNF import *
 import copy
-class CNFEnc2(CNF):
 
+
+class ENC2(CNF):
     def __init__(self, bayes):
-        super(CNFEnc2, self).__init__(bayes)
+        super(ENC2, self).__init__(bayes)
 
     def _getVars(self):
         for node_name, node in self.bayes.getNodes().items():
@@ -147,8 +148,6 @@ class CNFEnc2(CNF):
         self._getParamClauses()
         self._assignWeights()
 
-
-
     def __str__(self):
         enc = "Indicator clauses: \n"
         for i in self.indicators:
@@ -164,6 +163,5 @@ class CNFEnc2(CNF):
         enc += "Weights: \n"
         for w in self.weights:
             enc += str(w) + "\n"
-
 
         return enc

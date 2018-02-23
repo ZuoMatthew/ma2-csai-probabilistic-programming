@@ -3,7 +3,7 @@ A parser for ground ProbLog programs.
 """
 
 from parsimonious.grammar import Grammar
-from GroundProblogVisitor import GroundProblogVisitor
+from ground_problog.GroundProblogVisitor import GroundProblogVisitor
 
 
 class GroundProblogParser:

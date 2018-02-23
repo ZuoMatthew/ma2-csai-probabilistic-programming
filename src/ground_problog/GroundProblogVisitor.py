@@ -1,7 +1,7 @@
 from sys import exc_info
 from six import reraise
 from parsimonious import NodeVisitor, VisitationError, UndefinedLabel
-from GroundProblog import *
+from ground_problog.GroundProblog import *
 
 
 # noinspection PyAbstractClass,PyMethodMayBeStatic

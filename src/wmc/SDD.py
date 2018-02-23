@@ -8,4 +8,4 @@ class SDD(WeightedModelCounter):
         pass
 
     def evaluate_cnf(self, cnf):
-        pass
+        return "SDD result"

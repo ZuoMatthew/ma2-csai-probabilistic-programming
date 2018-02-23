@@ -1,4 +1,8 @@
 # represents a node in the network
+from enc.ENC1 import ENC1
+from enc.ENC2 import ENC2
+
+
 class Node:
     def __init__(self, name, values):
         self.name = name
@@ -20,6 +24,7 @@ class Probability:
         # Some probabilities have evidence
         self.evidence = evidence
 
+
 # Is the full probability function for a node
 class ProbabilityFunction:
 
@@ -38,10 +43,8 @@ class ProbabilityFunction:
         self.prob = {}
         self.initProbMap(probabilities)
 
-
     def initProbMap(self, probabilities):
-
-        #print(probabilities)
+        # print(probabilities)
         for prob in probabilities:
 
             if prob.evidence is not None:
@@ -79,31 +82,38 @@ class ProbabilityFunction:
 
             return current[kwargs["value"]]
 
-class BayesModel:
 
-    def __init__(self, file):
-        self.nodes = {}
-        self.probabilities = {}
-        self._loadFromFile(file)
+class BayesianNetwork:
 
+    def __init__(self, nodes=None, probabilities=None):
+        self.nodes = nodes if nodes is not None else {}
+        self.probabilities = probabilities if probabilities is not None else {}
 
     def getProbabilityFunction(self, nodeName):
-        #print(self.probabilities)
+        # print(self.probabilities)
         return self.probabilities[nodeName]
-
 
     def getNodes(self):
         return self.nodes
 
-    def _loadFromFile(self, file):
-        f = open(file, "r")
+    def to_enc1(self):
+        return ENC1(self)
+
+    def to_enc2(self):
+        return ENC2(self)
+
+    @staticmethod
+    def create_from_file(filename):
+        network = BayesianNetwork()
+
+        f = open(filename, "r")
         lines = f.readlines()
 
         # Strip \n
         stripped = " ".join([line.strip("\n") for line in lines[1:]])
 
         # Split file on }
-        splitted = self._splitLinesOnLastParenth(stripped)
+        splitted = network._splitLinesOnLastParenth(stripped)
 
         # Now we need to do pattern matching
         for split in splitted:
@@ -113,14 +123,14 @@ class BayesModel:
 
             if temp[0] == "node":
                 name = temp[1]
-                vals = self._getNodeInfo(temp[2:])
+                vals = network._getNodeInfo(temp[2:])
                 #print("{} {}".format(name, vals))
 
-                self.nodes[name] = Node(name, vals)
+                network.nodes[name] = Node(name, vals)
 
             elif temp[0] == "probability":
                 # there is a '(' before
-                probFor = self.nodes[temp[2]]
+                probFor = network.nodes[temp[2]]
                 dependant = []
                 idx = 3
 
@@ -128,16 +138,15 @@ class BayesModel:
                     # dependant on some probabilities
                     idx += 1
                     while temp[idx] != ")":
-                        dependant.append(self.nodes[temp[idx].replace(",", "")])
+                        dependant.append(network.nodes[temp[idx].replace(",", "")])
                         idx += 1
 
                 # Lets get the probabilities
-                probabilities = self._getProbs(temp[(idx+1):])
+                probabilities = network._getProbs(temp[(idx+1):])
                 #print("{} {} {}".format(probFor, [str(d) for d in dependant], probabilities))
-                self.probabilities[probFor.name] = ProbabilityFunction(probFor, dependant, probabilities)
+                network.probabilities[probFor.name] = ProbabilityFunction(probFor, dependant, probabilities)
 
-
-
+        return network
 
     def _getProbs(self,probs):
         temp_recombined_strings = []
@@ -194,7 +203,6 @@ class BayesModel:
             index += 1
 
         return values
-
 
     def _splitLinesOnLastParenth(self, lines):
         splitted = []

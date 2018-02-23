@@ -8,4 +8,4 @@ class MiniC2D(WeightedModelCounter):
         pass
 
     def evaluate_cnf(self, cnf):
-        pass
+        return "MiniC2D result"
