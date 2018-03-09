@@ -1,0 +1,34 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{cite}
+
+%opening
+\title{Inference for SRL}
+\author{Armin Halilovic \& Thierry Deruyttere (r0660485)}
+
+\begin{document}
+
+\maketitle
+
+\section{1.3}
+\subsection{1}
+\subsection{2. Difference between WMC's}
+The differences between the different WMC's come from \cite{CHAVIRA2008772}.
+\subsubsection{Cachet vs jointree and recursive conditioning}
+Jointree and recursive conditioning only exploit topological structure thus they take no advantage of the massive determinism available in networks whilst Cachet does this.
+
+\subsubsection{C2D Vs Cachet}
+
+The biggest difference between C2D and Cachet is that C2D keeps a track of the operation it has performed. This means that Cachet is not a compiler but C2D is. In \cite{CHAVIRA2008772} they note that Cachet could easily be transformed into a compiler. There are some other minor differences like they have a different way to implement decompositions but they also do variable splitting and caching in a different way.
+
+\subsubsection{ACE Vs Cachet}
+The biggest difference between them is that Cachet is a WMC by search and ACE is a WMC by compilation. In \cite{CHAVIRA2008772} they say that ACE and Cachet are almost equal in speed. They mention that they had to dissable some of ACE's built-in ways to optimze the search to make the comparisson fair. It can for example encode equal parameters, use structured resolutions, eclauses, ... \cite{CHAVIRA2008772} which optimize the search.
+They also differ in some other ways like the way they do decompositions, variable splitting and caching \cite{CHAVIRA2008772}.
+In \cite{CHAVIRA2008772} they note though that by enabling all the speed up features ACE has, that it is not always faster than Cachet. 
+
+\subsection{3 Overview of computational requirements}
+copy tables from \cite{CHAVIRA2008772}?
+
+\bibliography{biblio}
+\bibliographystyle{plain}
+\end{document}
