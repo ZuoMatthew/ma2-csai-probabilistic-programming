@@ -73,7 +73,7 @@ class ENC2(CNF):
                     for c in cpt.conditional:
                         conj.append(c.var)
 
-                    self.paramClauses.append(ParameterClause(conj + copy.deepcopy(used_cpt),cpt.var))
+                    self.paramClauses.append(ImplicationClause(conj + copy.deepcopy(used_cpt),cpt.var))
 
                 for c in used_cpt:
                     c.negate = True
@@ -82,7 +82,7 @@ class ENC2(CNF):
                 for c in used_cpt[0].conditional:
                     conj.append(c.var)
 
-                self.paramClauses.append(ParameterClause(conj + copy.deepcopy(used_cpt), self.vars[key][-1]))
+                self.paramClauses.append(ImplicationClause(conj + copy.deepcopy(used_cpt), self.vars[key][-1]))
 
     def getSortedCPTDict(self):
         # How to use this dict:

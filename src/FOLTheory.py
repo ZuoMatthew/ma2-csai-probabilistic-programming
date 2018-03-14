@@ -202,7 +202,6 @@ class Equivalence(LogicFormula):
         b = Disjunction([Negation(self.lhs), self.rhs])  # (¬P ∨ Q)
         return Conjunction([a, b]).to_cnf()              # ((P ∨ ¬Q) ∧ (¬P ∨ Q)).to_cnf()
 
-
 class FOLTheory:
     """
     A FOL theory is a set of formulas that implicitly form a conjunction.
