@@ -1,7 +1,7 @@
 from BayesianNetwork import BayesianNetwork
 
 if __name__ == '__main__':
-    filename = "files/abc.dsc"
+    filename = "files/cancer.dsc"
     network = BayesianNetwork.create_from_file(filename)
 
     enc1_cnf = network.to_enc1()
