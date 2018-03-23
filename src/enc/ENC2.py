@@ -150,18 +150,42 @@ class ENC2(CNF):
 
     def __str__(self):
         enc = "Indicator clauses: \n"
-        for i in self.indicators:
-            enc += str(i) + "\n"
+        enc += "\\begin{displaymath}\\begin{center}\n"
+        enc += " \land \n".join(["(" + str(i) + ")" for i in self.indicators])
+        enc += "\n\end{center}\end{displaymath}"
+
+        # enc = "Indicator clauses: \n"
+        # for i in self.indicators:
+        #     enc += str(i) + "\n"
+
+        enc += "\n"
 
         enc += "Parameter clauses: \n"
-        for p in self.paramClauses:
-            enc += str(p) + "\n"
+        if len(self.paramClauses) > 0:
+            enc += "\\begin{displaymath}\\begin{center}\n"
+            for p in self.paramClauses:
+                enc += str(p) + "\n"
+            enc += "\n\end{center}\end{displaymath}"
+            enc += "\n"
 
-        for p in self.elimEquivClauses:
-            enc += str(p) + "\n"
+        if len(self.elimEquivClauses) > 0:
+            enc += "\\begin{displaymath}\\begin{center}\n"
+            enc += " \land \n ".join(["(" + str(i) + ")" for i in self.elimEquivClauses])
+
+            # for p in self.elimEquivClauses:
+            #    enc += str(p) + "\n"
+            enc += "\n\end{center}\end{displaymath}"
+            enc += "\n"
+
+        # enc += "Parameter clauses: \n"
+        # for p in self.paramClauses:
+        #     enc += str(p) + "\n"
+        #
+        # for p in self.elimEquivClauses:
+        #     enc += str(p) + "\n"
 
         enc += "Weights: \n"
         for w in self.weights:
-            enc += str(w) + "\n"
+            enc += str(w) + "\\\\ \n"
 
         return enc
