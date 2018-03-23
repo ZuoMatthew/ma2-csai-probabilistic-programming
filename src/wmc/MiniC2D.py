@@ -7,5 +7,5 @@ class MiniC2D(WeightedModelCounter):
     def __init__(self, options):
         pass
 
-    def evaluate_cnf(self, cnf):
-        return "MiniC2D result"
+    def do_model_count(self, cnf):
+        return "TODO: MiniC2D probability result"

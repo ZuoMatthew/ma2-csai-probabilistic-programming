@@ -52,7 +52,6 @@ class GroundProblog:
     """ A ground problog program is a collection of clauses.
     A clause can be a fact (represented by just a Term here), a  Rule, or a ProbabilityPredicate.
     """
-
     def __init__(self, clauses):
         self.clauses = clauses
 
@@ -63,7 +62,8 @@ class GroundProblog:
         return [c for c in self.clauses if isinstance(c, Term) and c.name != "query"]
 
     def get_queries(self):
-        return [c for c in self.clauses if isinstance(c, Term) and c.name == "query"]
+        # Queries have only 1 argument, no probability, and cannot be negated. TODO: check this again
+        return [c.arguments[0] for c in self.clauses if isinstance(c, Term) and c.name == "query"]
 
     def get_rules(self):
         return [c for c in self.clauses if isinstance(c, Rule)]

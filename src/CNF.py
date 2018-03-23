@@ -1,13 +1,14 @@
 import FOLTheory
+from util import IncrementingDict
 
 
 class Literal:
     """ A literal of a CNF formula. """
-    def __init__(self, name, negated=False, weight=1, number=-1):
+
+    def __init__(self, name, negated=False, weight=1):
         self.name = name
         self.negated = negated
         self.weight = weight
-        self.number = number
 
     def __str__(self):
         return ("-" if self.negated else "") + self.name
@@ -18,13 +19,16 @@ class Literal:
 
 class CNF:
     """ A formula in Conjunctive Normal Form with support for weights. """
+
     def __init__(self, literals=None, clauses=None, queries=None):
-        # Literals is a list of Literal.
+        # List of Literal.
         self.literals = literals if literals is not None else []
-        # Clauses is a list of lists of Literal, which represents a conjunction of disjunctions of literals.
+        # List of lists of Literal, which represents a conjunction of disjunctions of literals.
         self.clauses = clauses if clauses is not None else []
-        # Queries is a list of Literal.
+        # List of Literal.
         self.queries = queries if queries is not None else []
+        # Dictionary that keeps track of the numbers that have been assigned to literals.
+        self.dimacs_assignments = IncrementingDict()
 
     def __str__(self):
         out = "\n∧ ".join(map(str, self.literals))
@@ -36,7 +40,6 @@ class CNF:
 
     def add_literal(self, literal):
         if literal not in self.literals:
-            literal.number = len(self.literals) + 1
             self.literals.append(literal)
 
     def add_clause(self, clause):
@@ -45,27 +48,29 @@ class CNF:
     def add_query(self, query):
         self.queries.append(query)
 
-    def to_dimacs(self):
-        out = "p wcnf " + str(len(self.literals)) + " " + str(len(self.clauses)) + " SOMENUMBERHERE\n"
-        out += "\n".join(["c " + str(lit.number) + " " + lit.name for lit in self.literals]) + "\n"
+    def get_queries_with_dimacs_numbers(self):
+        return [(lit, self.dimacs_assignments.get(lit.name)) for lit in self.queries]
 
+    def to_dimacs(self):
+        header = "p wcnf {} {} {}\n".format(len(self.literals), len(self.clauses), "SOMENUMBERHERE")
+
+        dimacs = ""
         for lit in self.literals:
-            out += str(1 - lit.weight) + " -" + str(lit.number) + " 0\n"
-            out += str(lit.weight) + " " + str(lit.number) + " 0\n"
+            dimacs += "{} -{} 0\n".format(1 - lit.weight, self.dimacs_assignments.get(lit.name))
+            dimacs += "{} {} 0\n".format(lit.weight, self.dimacs_assignments.get(lit.name))
 
         for disjunction in self.clauses:
-            out += "SOMENUMBER "
-            for literal in disjunction:
-                lit = next((lit for lit in self.literals if lit == literal), None)
-                if lit:
-                    out += ("-" if lit.negated else "") + lit.number + " "
-                else:
-                    s = "Unknown literal '" + str(literal) + "' found in clause '" + " ∨ ".join(map(str, disjunction))
-                    s += "' for CNF:\n" + str(self)
-                    raise Exception(s)
-            out += " 0\n"
+            dimacs += "WEIGHT? "
+            for lit in disjunction:
+                dimacs += "{}{} ".format("-" if lit.negated else "", self.dimacs_assignments.get(lit.name))
+            dimacs += " 0\n"
 
-        return out
+        # Add a comment to check assignments of numbers to literals
+        comment = "\n".join(["c {:>2}  {}".format(num, k) for k, num in self.dimacs_assignments.items()]) + "\n"
+        comment += "c QUERIES: "
+        comment += ", ".join([str(self.dimacs_assignments.get(lit.name)) for lit in self.queries]) + "\n"
+
+        return header + comment + dimacs
 
     @staticmethod
     def create_from_fol_theory(theory):

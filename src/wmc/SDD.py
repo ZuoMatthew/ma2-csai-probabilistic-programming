@@ -7,5 +7,5 @@ class SDD(WeightedModelCounter):
     def __init__(self, options):
         pass
 
-    def evaluate_cnf(self, cnf):
-        return "SDD result"
+    def do_model_count(self, cnf):
+        return "TODO: SDD probability result"
