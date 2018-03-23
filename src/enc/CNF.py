@@ -1,5 +1,8 @@
 import copy
 
+def firstToUpper(strToUpper):
+    return strToUpper[0].upper() + strToUpper[1:]
+
 class Variable:
 
     def __init__(self, var, value, negate=False):
@@ -8,13 +11,13 @@ class Variable:
         self.negate = negate
 
     def getBaseRepr(self):
-        base = self.var + "_" + self.value
-        return """\lambda_{}""".format(base)
+        base = self.var + firstToUpper(self.value)
+        return "$\lambda_{" + "{}".format(base) + "}$"
 
     def __str__(self):
         base = self.getBaseRepr()
         if self.negate:
-            return """~{}""".format(base)
+            return """\\neg {}""".format(base)
 
         return base
 
@@ -38,7 +41,7 @@ class Weight:
         self.prob = prob
 
     def __str__(self):
-        return """W({}) = {:.2f}""".format(self.lhs, float(self.prob))
+        return """W({}) = ${:.2f}$""".format(self.lhs, float(self.prob))
 
 
 
@@ -48,7 +51,7 @@ class Conditional:
         self.var = var
 
     def __str__(self):
-        base = self.var.var[0] + "_" + self.var.value
+        base = self.var.var + firstToUpper(self.var.value)
         return """{}""".format(base)
 
     def asVar(self):
@@ -73,16 +76,16 @@ class CPT:
 
     def getBaseRepr(self):
         if len(self.conditional) > 0:
-            base = self.var.var[0] + "_" + self.var.value + "|" + " ".join([c.toLATEX() for c in self.conditional])
+            base = self.var.var + firstToUpper(self.var.value) + "|" + ",".join([c.toLATEX() for c in self.conditional])
         else:
-            base = self.var.var[0] + "_" + self.var.value
+            base = self.var.var + firstToUpper(self.var.value)
 
-        return """{}_{}""".format(self.token, base)
+        return """${}_""".format(self.token) + "{" + "{}".format(base) + "}$"
 
     def __str__(self):
         base = self.getBaseRepr()
         if self.negate:
-            return """~{}""".format(base)
+            return """\\neg{}""".format(base)
 
         return base
 
@@ -102,7 +105,7 @@ class IndicatorClause:
         self.vars = vars
 
     def __str__(self):
-        return " v ".join([str(v) for v in self.vars])
+        return " \lor ".join([str(v) for v in self.vars])
 
     def toLATEX(self):
         return str(self)
@@ -128,10 +131,10 @@ class RemovedEquivClause:
 
     def __str__(self):
         if self.negateP:
-            conj = " v ".join([str(l) for l in self.P])
+            conj = " \lor ".join([str(l) for l in self.P])
         else:
-            conj = " ∧ ".join([str(l) for l in self.P])
-        return """{} v {}""".format(conj, self.Q)
+            conj = " \land ".join([str(l) for l in self.P])
+        return """{} \lor {}""".format(conj, self.Q)
 
 class RemovedImplicClause(RemovedEquivClause):
 
@@ -149,11 +152,11 @@ class ParameterClause:
     # instead of a <=> b
     def simplified(self):
         ret = []
-        conj = "∧".join([str(l) for l in self.lhs])
-        ret.append(conj + " => " + str(self.rhs))
+        conj = "\land".join([str(l) for l in self.lhs])
+        ret.append(conj + " \Rightarrow " + str(self.rhs))
 
         for l in self.lhs:
-            ret.append(str(self.rhs) + " => " + str(l))
+            ret.append(str(self.rhs) + " \Rightarrow " + str(l))
 
         return ret
 
@@ -168,8 +171,8 @@ class ParameterClause:
         return [RemovedEquivClause(self.lhs, self.rhs, True)] + distributed_Or
 
     def __str__(self):
-        conj = " ∧ ".join([str(l) for l in self.lhs])
-        return """{} <=> {}""".format(conj, self.rhs)
+        conj = " \land ".join([str(l) for l in self.lhs])
+        return """{} \Leftrightarrow {}""".format(conj, self.rhs)
 
 
 class ImplicationClause(ParameterClause):
@@ -181,8 +184,8 @@ class ImplicationClause(ParameterClause):
         return [RemovedImplicClause(self.lhs, self.rhs)]
 
     def __str__(self):
-        conj = " ∧ ".join([str(l) for l in self.lhs])
-        return """{} => {}""".format(conj, self.rhs)
+        conj = " \land ".join([str(l) for l in self.lhs])
+        return """{} \Rightarrow {}""".format(conj, self.rhs)
 
 class CNF:
 
