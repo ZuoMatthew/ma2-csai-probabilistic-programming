@@ -148,10 +148,10 @@ class ENC2(CNF):
         self._getParamClauses()
         self._assignWeights()
 
-    def __str__(self):
+    def to_latex(self):
         enc = "Indicator clauses: \n"
         enc += "\\begin{displaymath}\\begin{center}\n"
-        enc += " $\land$ \n".join(["(" + str(i) + ")" for i in self.indicators])
+        enc += " $\land$ \n".join(["(" + i.to_latex() + ")" for i in self.indicators])
         enc += "\n\end{center}\end{displaymath}"
 
         # enc = "Indicator clauses: \n"
@@ -164,17 +164,45 @@ class ENC2(CNF):
         if len(self.paramClauses) > 0:
             enc += "\\begin{displaymath}\\begin{center}\n"
             for p in self.paramClauses:
-                enc += str(p) + "\n"
+                enc += p.to_latex() + "\n"
             enc += "\n\end{center}\end{displaymath}"
             enc += "\n"
 
         if len(self.elimEquivClauses) > 0:
             enc += "\\begin{displaymath}\\begin{center}\n"
-            enc += " $\land$ \n ".join(["(" + str(i) + ")" for i in self.elimEquivClauses])
+            enc += " $\land$ \n ".join(["(" + i.to_latex() + ")" for i in self.elimEquivClauses])
 
             # for p in self.elimEquivClauses:
             #    enc += str(p) + "\n"
             enc += "\n\end{center}\end{displaymath}"
+            enc += "\n"
+
+        # enc += "Parameter clauses: \n"
+        # for p in self.paramClauses:
+        #     enc += str(p) + "\n"
+        #
+        # for p in self.elimEquivClauses:
+        #     enc += str(p) + "\n"
+
+        enc += "Weights: \n"
+        for w in self.weights:
+            enc += w.to_latex() + "\\\\ \n"
+
+        return enc
+
+    def __str__(self):
+        enc = "Indicator clauses: \n"
+        enc += " ∧ \n".join(["(" + str(i) + ")" for i in self.indicators])
+        enc += "\n"
+
+        enc += "Parameter clauses: \n"
+        if len(self.paramClauses) > 0:
+            for p in self.paramClauses:
+                enc += str(p) + "\n"
+            enc += "\n"
+
+        if len(self.elimEquivClauses) > 0:
+            enc += " ∧ \n ".join(["(" + str(i) + ")" for i in self.elimEquivClauses])
             enc += "\n"
 
         # enc += "Parameter clauses: \n"
