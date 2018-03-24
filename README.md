@@ -12,11 +12,13 @@ from Interpretations”. In: European Conference on Machine Learning and Knowled
 ings of the 24th International Conference on Artificial Intelligence (IJCAI). 2015.](http://www.ijcai.org/Proceedings/15/Papers/443.pdf)
 
 ## Dependencies
-    graphviz
+* Python >= 3.6
+* graphviz
 
 ## Python dependencies
-To install the Python dependencies.
+To install most of the Python dependencies.
 ```sh
 pip3 install --upgrade setuptools
 pip3 install -r requirements.txt
 ```
+To install PySDD, see the [compilation instructions](https://github.com/wannesm/PySDD).
