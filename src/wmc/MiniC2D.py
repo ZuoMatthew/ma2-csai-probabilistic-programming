@@ -23,7 +23,7 @@ class MiniC2D(WeightedModelCounter):
     def create_vtree(self, filename):
         filename = os.path.abspath(filename)
         dir = os.path.dirname(filename)
-        vtree_f = os.path.join(dir, "vtree.")
+        vtree_f = os.path.join(dir, "vtree-minic2d.")
 
         cnf_params = "--cnf {}".format(filename)
         vtree_params = self.vtree_params.format(vtree_f + "txt", vtree_f + "dot")
@@ -35,7 +35,7 @@ class MiniC2D(WeightedModelCounter):
     def do_model_count(self, filename):
         filename = os.path.abspath(filename)
         dir = os.path.dirname(filename)
-        vtree_file = os.path.join(dir, "vtree.")
+        vtree_file = os.path.join(dir, "vtree-minic2d.")
 
         cnf_params = "--model_counter --cnf {}".format(filename)
         vtree_params = self.vtree_params.format(vtree_file + "txt", vtree_file + "dot")
