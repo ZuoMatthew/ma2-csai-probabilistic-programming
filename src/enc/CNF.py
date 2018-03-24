@@ -17,7 +17,7 @@ class Variable:
     def __str__(self):
         base = self.getBaseRepr()
         if self.negate:
-            return """\\neg {}""".format(base)
+            return """$\\neg$ {}""".format(base)
 
         return base
 
@@ -85,7 +85,7 @@ class CPT:
     def __str__(self):
         base = self.getBaseRepr()
         if self.negate:
-            return """\\neg{}""".format(base)
+            return """\\neg {}""".format(base)
 
         return base
 
@@ -105,7 +105,7 @@ class IndicatorClause:
         self.vars = vars
 
     def __str__(self):
-        return " \lor ".join([str(v) for v in self.vars])
+        return " $\lor$ ".join([str(v) for v in self.vars])
 
     def toLATEX(self):
         return str(self)
@@ -131,10 +131,10 @@ class RemovedEquivClause:
 
     def __str__(self):
         if self.negateP:
-            conj = " \lor ".join([str(l) for l in self.P])
+            conj = " $\lor$ ".join([str(l) for l in self.P])
         else:
-            conj = " \land ".join([str(l) for l in self.P])
-        return """{} \lor {}""".format(conj, self.Q)
+            conj = " $\land$ ".join([str(l) for l in self.P])
+        return """{} $\lor$ {}""".format(conj, self.Q)
 
 class RemovedImplicClause(RemovedEquivClause):
 
@@ -240,7 +240,10 @@ class CNF:
 
                 # then add its weight for var ~X (the negation of x)
                 for w in self.weights:
-                    if str(w.lhs) == "~" + key:
+
+                    if w.lhs.negate and key in str(w.lhs):
+                    #if str(w.lhs) == "\\neg " + key:
+
                         #str(w.prob) + " "
                         weights += "{:.3f} ".format(float(w.prob))
 

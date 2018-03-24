@@ -19,95 +19,27 @@
 Indicator clauses: 
 \begin{center}
 \begin{displaymath}
-
-(\neg \lambda_{PollutionLow} \lor \neg \lambda_{PollutionHigh})
-\land
-(\lambda_{PollutionLow} \lor \lambda_{PollutionHigh}) \land
-(\neg \lambda_{SmokerTrue} \lor \neg \lambda_{SmokerFalse})\land 
-(\lambda_{SmokerTrue} \lor \lambda_{SmokerFalse}) \land
-(\neg \lambda_{CancerTrue} \lor \neg \lambda_{CancerFalse})\land 
-(\lambda_{CancerTrue} \lor \lambda_{CancerFalse}) \land
-(\neg \lambda_{XrayPositive} \lor \neg \lambda_{XrayNegative})\land
-(\lambda_{XrayPositive} \lor \lambda_{XrayNegative}) \land
-(\neg \lambda_{DyspnoeaTrue} \lor \neg \lambda_{DyspnoeaFalse})\land
-(\lambda_{DyspnoeaTrue} \lor \lambda_{DyspnoeaFalse})
+($\neg$ $\lambda_{PollutionLow}$ $\lor$ $\neg$ $\lambda_{PollutionHigh}$) $\land$ 
+($\lambda_{PollutionLow}$ $\lor$ $\lambda_{PollutionHigh}$) $\land$ 
+($\neg$ $\lambda_{SmokerTrue}$ $\lor$ $\neg$ $\lambda_{SmokerFalse}$) $\land$ 
+($\lambda_{SmokerTrue}$ $\lor$ $\lambda_{SmokerFalse}$) $\land$ 
+($\neg$ $\lambda_{CancerTrue}$ $\lor$ $\neg$ $\lambda_{CancerFalse}$) $\land$ 
+($\lambda_{CancerTrue}$ $\lor$ $\lambda_{CancerFalse}$) $\land$ 
+($\neg$ $\lambda_{XrayPositive}$ $\lor$ $\neg$ $\lambda_{XrayNegative}$) $\land$ 
+($\lambda_{XrayPositive}$ $\lor$ $\lambda_{XrayNegative}$) $\land$ 
+($\neg$ $\lambda_{DyspnoeaTrue}$ $\lor$ $\neg$ $\lambda_{DyspnoeaFalse}$) $\land$ 
+($\lambda_{DyspnoeaTrue}$ $\lor$ $\lambda_{DyspnoeaFalse}$)
 \end{displaymath}
 \end{center}
-\newline
 Parameter clauses: 
 \begin{center}
 \begin{displaymath}
-	
-(\neg \lambda_{PollutionLow} \lor \theta_{PollutionLow}) \land 
- (\lambda_{PollutionLow} \lor \neg\theta_{PollutionLow}) \land 
- (\neg \lambda_{PollutionHigh} \lor \theta_{PollutionHigh}) \land 
- (\lambda_{PollutionHigh} \lor \neg\theta_{PollutionHigh}) \land 
- (\neg \lambda_{SmokerTrue} \lor \theta_{SmokerTrue}) \land 
- (\lambda_{SmokerTrue} \lor \neg\theta_{SmokerTrue}) \land 
- (\neg \lambda_{SmokerFalse} \lor \theta_{SmokerFalse}) \land 
- (\lambda_{SmokerFalse} \lor \neg\theta_{SmokerFalse}) \land 
- (\neg \lambda_{PollutionLow} \lor \neg \lambda_{SmokerTrue} \lor \neg \lambda_{CancerTrue} \lor \theta_{CancerTrue|PollutionLow,SmokerTrue}}) \land 
- (\lambda_{PollutionLow} \lor \neg\theta_{CancerTrue|PollutionLow,SmokerTrue}}) \land 
- (\lambda_{SmokerTrue} \lor \neg\theta_{CancerTrue|PollutionLow,SmokerTrue}}) \land 
- (\lambda_{CancerTrue} \lor \neg\theta_{CancerTrue|PollutionLow,SmokerTrue}}) \land 
- (\neg \lambda_{PollutionLow} \lor \neg \lambda_{SmokerTrue} \lor \neg \lambda_{CancerFalse} \lor \theta_{CancerFalse|PollutionLow,SmokerTrue}}) \land 
- (\lambda_{PollutionLow} \lor \neg\theta_{CancerFalse|PollutionLow,SmokerTrue}}) \land 
- (\lambda_{SmokerTrue} \lor \neg\theta_{CancerFalse|PollutionLow,SmokerTrue}}) \land 
- (\lambda_{CancerFalse} \lor \neg\theta_{CancerFalse|PollutionLow,SmokerTrue}}) \land 
- (\neg \lambda_{PollutionLow} \lor \neg \lambda_{SmokerFalse} \lor \neg \lambda_{CancerTrue} \lor \theta_{CancerTrue|PollutionLow,SmokerFalse}}) \land 
- (\lambda_{PollutionLow} \lor \neg\theta_{CancerTrue|PollutionLow,SmokerFalse}}) \land 
- (\lambda_{SmokerFalse} \lor \neg\theta_{CancerTrue|PollutionLow,SmokerFalse}}) \land 
- (\lambda_{CancerTrue} \lor \neg\theta_{CancerTrue|PollutionLow,SmokerFalse}}) \land 
- (\neg \lambda_{PollutionLow} \lor \neg \lambda_{SmokerFalse} \lor \neg \lambda_{CancerFalse} \lor \theta_{CancerFalse|PollutionLow,SmokerFalse}}) \land 
- (\lambda_{PollutionLow} \lor \neg\theta_{CancerFalse|PollutionLow,SmokerFalse}}) \land 
- (\lambda_{SmokerFalse} \lor \neg\theta_{CancerFalse|PollutionLow,SmokerFalse}}) \land 
- (\lambda_{CancerFalse} \lor \neg\theta_{CancerFalse|PollutionLow,SmokerFalse}}) \land 
- (\neg \lambda_{PollutionHigh} \lor \neg \lambda_{SmokerTrue} \lor \neg \lambda_{CancerTrue} \lor \theta_{CancerTrue|PollutionHigh,SmokerTrue}}) \land 
- (\lambda_{PollutionHigh} \lor \neg\theta_{CancerTrue|PollutionHigh,SmokerTrue}}) \land 
- (\lambda_{SmokerTrue} \lor \neg\theta_{CancerTrue|PollutionHigh,SmokerTrue}}) \land 
- (\lambda_{CancerTrue} \lor \neg\theta_{CancerTrue|PollutionHigh,SmokerTrue}}) \land 
- (\neg \lambda_{PollutionHigh} \lor \neg \lambda_{SmokerTrue} \lor \neg \lambda_{CancerFalse} \lor \theta_{CancerFalse|PollutionHigh,SmokerTrue}}) \land 
- (\lambda_{PollutionHigh} \lor \neg\theta_{CancerFalse|PollutionHigh,SmokerTrue}}) \land 
- (\lambda_{SmokerTrue} \lor \neg\theta_{CancerFalse|PollutionHigh,SmokerTrue}}) \land 
- (\lambda_{CancerFalse} \lor \neg\theta_{CancerFalse|PollutionHigh,SmokerTrue}}) \land 
- (\neg \lambda_{PollutionHigh} \lor \neg \lambda_{SmokerFalse} \lor \neg \lambda_{CancerTrue} \lor \theta_{CancerTrue|PollutionHigh,SmokerFalse}}) \land 
- (\lambda_{PollutionHigh} \lor \neg\theta_{CancerTrue|PollutionHigh,SmokerFalse}}) \land 
- (\lambda_{SmokerFalse} \lor \neg\theta_{CancerTrue|PollutionHigh,SmokerFalse}}) \land 
- (\lambda_{CancerTrue} \lor \neg\theta_{CancerTrue|PollutionHigh,SmokerFalse}}) \land 
- (\neg \lambda_{PollutionHigh} \lor \neg \lambda_{SmokerFalse} \lor \neg \lambda_{CancerFalse} \lor \theta_{CancerFalse|PollutionHigh,SmokerFalse}}) \land 
- (\lambda_{PollutionHigh} \lor \neg\theta_{CancerFalse|PollutionHigh,SmokerFalse}}) \land 
- (\lambda_{SmokerFalse} \lor \neg\theta_{CancerFalse|PollutionHigh,SmokerFalse}}) \land 
- (\lambda_{CancerFalse} \lor \neg\theta_{CancerFalse|PollutionHigh,SmokerFalse}}) \land 
- (\neg \lambda_{CancerTrue} \lor \neg \lambda_{XrayPositive} \lor \theta_{XrayPositive|CancerTrue}}) \land 
- (\lambda_{CancerTrue} \lor \neg\theta_{XrayPositive|CancerTrue}}) \land 
- (\lambda_{XrayPositive} \lor \neg\theta_{XrayPositive|CancerTrue}}) \land 
- (\neg \lambda_{CancerTrue} \lor \neg \lambda_{XrayNegative} \lor \theta_{XrayNegative|CancerTrue}}) \land 
- (\lambda_{CancerTrue} \lor \neg\theta_{XrayNegative|CancerTrue}}) \land 
- (\lambda_{XrayNegative} \lor \neg\theta_{XrayNegative|CancerTrue}}) \land 
- (\neg \lambda_{CancerFalse} \lor \neg \lambda_{XrayPositive} \lor \theta_{XrayPositive|CancerFalse}}) \land 
- (\lambda_{CancerFalse} \lor \neg\theta_{XrayPositive|CancerFalse}}) \land 
- (\lambda_{XrayPositive} \lor \neg\theta_{XrayPositive|CancerFalse}}) \land 
- (\neg \lambda_{CancerFalse} \lor \neg \lambda_{XrayNegative} \lor \theta_{XrayNegative|CancerFalse}}) \land 
- (\lambda_{CancerFalse} \lor \neg\theta_{XrayNegative|CancerFalse}}) \land 
- (\lambda_{XrayNegative} \lor \neg\theta_{XrayNegative|CancerFalse}}) \land 
- (\neg \lambda_{CancerTrue} \lor \neg \lambda_{DyspnoeaTrue} \lor \theta_{DyspnoeaTrue|CancerTrue}}) \land 
- (\lambda_{CancerTrue} \lor \neg\theta_{DyspnoeaTrue|CancerTrue}}) \land 
- (\lambda_{DyspnoeaTrue} \lor \neg\theta_{DyspnoeaTrue|CancerTrue}}) \land 
- (\neg \lambda_{CancerTrue} \lor \neg \lambda_{DyspnoeaFalse} \lor \theta_{DyspnoeaFalse|CancerTrue}}) \land 
- (\lambda_{CancerTrue} \lor \neg\theta_{DyspnoeaFalse|CancerTrue}}) \land 
- (\lambda_{DyspnoeaFalse} \lor \neg\theta_{DyspnoeaFalse|CancerTrue}}) \land 
- (\neg \lambda_{CancerFalse} \lor \neg \lambda_{DyspnoeaTrue} \lor \theta_{DyspnoeaTrue|CancerFalse}}) \land 
- (\lambda_{CancerFalse} \lor \neg\theta_{DyspnoeaTrue|CancerFalse}}) \land 
- (\lambda_{DyspnoeaTrue} \lor \neg\theta_{DyspnoeaTrue|CancerFalse}}) \land 
- (\neg \lambda_{CancerFalse} \lor \neg \lambda_{DyspnoeaFalse} \lor \theta_{DyspnoeaFalse|CancerFalse}}) \land 
- (\lambda_{CancerFalse} \lor \neg\theta_{DyspnoeaFalse|CancerFalse}}) \land 
- (\lambda_{DyspnoeaFalse} \lor \neg\theta_{DyspnoeaFalse|CancerFalse}})
+
  \end{displaymath}
 \end{center}
-
 Weights
-\begin{displaymath}
 
+\begin{displaymath}
 W($\lambda_{PollutionLow}$) = $1.00$\\ 
 W($\neg \lambda_{PollutionLow}$) = $1.00$\\ 
 W($\lambda_{PollutionHigh}$) = $1.00$\\ 
@@ -267,15 +199,40 @@ The CNF of the monty hall problem is given in image \ref{CNF}
   \label{CNF}
   \caption{Grounder problog cnf}
 \end{figure}
+TODO WEIGHTS
 
 \section*{1.3}
 
-\subsection*{1}
+\subsection*{1.3.1}
 We will use mini2CD and Cachet as WMC counters.
 
 \subsubsection*{mini2CD}
 
+\begin{itemize}
+	\item ENC1:
+\begin{figure}[h!]
+  \includegraphics[width=7.5cm]{minic2d-ENC1.png}
+  \label{CNF}
+  \caption{Grounder problog cnf}
+\end{figure}
+	\item ENC2:
+	\begin{figure}[h!]
+  \includegraphics[width=7.5cm]{minic2d-ENC2.png}
+  \label{CNF}
+  \caption{Grounder problog cnf}
+\end{figure}
+
+	\item Prolog first:
+\end{itemize}
+
 \subsubsection*{Cachet}
+
+\begin{itemize}
+	\item ENC1:
+	\item ENC2:
+	\item Prolog first:
+\end{itemize}
+
 
 \subsection*{2. Difference between WMC's}
 The three WMC we will compare are C2D, Cachet and SharpSAT.
