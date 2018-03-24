@@ -73,8 +73,8 @@ class CNF:
         return header + comment + dimacs
 
     def to_minic2d(self):
-        weights = ""
-        
+        weights = "c weights"
+
         for lit in self.literals:
             weights += "{} ".format(lit.weight)
             weights += "{} ".format(1 - lit.weight)
