@@ -1,0 +1,14 @@
+pysdd/lib/libsdd*
+#pysdd/lib/sdd*
+.idea
+build
+pysdd/sdd.c
+pysdd/*.so
+.ipynb_checkpoints
+examples/output
+.python-version
+cython_debug
+*.swo
+*.swp
+_build
+
