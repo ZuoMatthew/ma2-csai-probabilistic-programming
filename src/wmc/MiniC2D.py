@@ -9,6 +9,8 @@ class MiniC2D(WeightedModelCounter):
 
     def __init__(self, options):
         self.counter_path = os.path.abspath("../../model_counters/miniC2D-1.0.0/bin/linux/miniC2D")
+        if not os.path.exists(self.counter_path):
+            raise Exception("Could not find miniC2D installation. Expected location: {}".format(self.counter_path))
         self.options = options
         pass
 
