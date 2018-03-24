@@ -30,8 +30,11 @@ class MiniC2D(WeightedModelCounter):
 
         # convert the new vtree.dot file to a png file
         subprocess.check_call(["dot", "-Tpng", dir+"/vtree.dot", "-o", dir+"/vtree.png"])
-
-        match = re.search(r"Count\s\t(.*)", output)
+        if platform == "darwin":
+            match = re.search(r"Count/Probability\s\t(.*)", output)
+        else:
+            match = re.search(r"Count\s\t(.*)", output)
+        print(output)
         if match is None:
             return None
         return match.group(1)
