@@ -10,16 +10,27 @@ class Variable:
         self.value = value
         self.negate = negate
 
-    def getBaseRepr(self):
+    def getBaseRepr(self, isLatex=True):
         base = self.var + firstToUpper(self.value)
-        return "$\lambda_{" + "{}".format(base) + "}$"
+        if isLatex:
+            return "$\lambda_{" + "{}".format(base) + "}$"
+        else:
+            return "\lambda_{" + "{}".format(base) + "}"
 
-    def __str__(self):
+    def to_latex(self):
         base = self.getBaseRepr()
         if self.negate:
             return """$\\neg$ {}""".format(base)
 
         return base
+
+    def __str__(self):
+        base = self.getBaseRepr(False)
+        if self.negate:
+            return """~{}""".format(base)
+
+        return base
+
 
     def toggleNegate(self):
         self.negate = not self.negate
@@ -30,25 +41,26 @@ class Variable:
             c.toggleNegate()
         return c
 
-    def toLATEX(self):
-        return str(self)
-
-
 class Weight:
 
     def __init__(self, lhs, prob):
         self.lhs = lhs
         self.prob = prob
 
+    def to_latex(self):
+        return """W({}) = ${:.2f}$""".format(self.lhs.to_latex(), float(self.prob))
+
     def __str__(self):
-        return """W({}) = ${:.2f}$""".format(self.lhs, float(self.prob))
-
-
+        return """W({}) = {:.2f}""".format(self.lhs, float(self.prob))
 
 class Conditional:
 
     def __init__(self, var):
         self.var = var
+
+    def to_latex(self):
+        base = self.var.var + firstToUpper(self.var.value)
+        return """{}""".format(base)
 
     def __str__(self):
         base = self.var.var + firstToUpper(self.var.value)
@@ -56,9 +68,6 @@ class Conditional:
 
     def asVar(self):
         return self.var
-
-    def toLATEX(self):
-        return str(self)
 
 
 class CPT:
@@ -74,18 +83,31 @@ class CPT:
         self.negate = not self.negate
 
 
-    def getBaseRepr(self):
+    def getBaseRepr(self, isLatex=True):
         if len(self.conditional) > 0:
-            base = self.var.var + firstToUpper(self.var.value) + "|" + ",".join([c.toLATEX() for c in self.conditional])
+            if isLatex:
+                base = self.var.var + firstToUpper(self.var.value) + "|" + ",".join([c.to_latex() for c in self.conditional])
+            else:
+                base = self.var.var + firstToUpper(self.var.value) + "|" + ",".join([str(c) for c in self.conditional])
+
         else:
             base = self.var.var + firstToUpper(self.var.value)
+        if isLatex:
+            return """${}_""".format(self.token) + "{" + "{}".format(base) + "}$"
+        else:
+            return """{}_""".format(self.token) + "{" + "{}".format(base) + "}"
 
-        return """${}_""".format(self.token) + "{" + "{}".format(base) + "}$"
-
-    def __str__(self):
+    def to_latex(self):
         base = self.getBaseRepr()
         if self.negate:
             return """$\\neg$ {}""".format(base)
+
+        return base
+
+    def __str__(self):
+        base = self.getBaseRepr(False)
+        if self.negate:
+            return """~{}""".format(base)
 
         return base
 
@@ -95,20 +117,17 @@ class CPT:
             c.toggleNegate()
         return c
 
-    def toLATEX(self):
-        return str(self)
-
-
 class IndicatorClause:
 
     def __init__(self, vars):
         self.vars = vars
 
-    def __str__(self):
-        return " $\lor$ ".join([str(v) for v in self.vars])
+    def to_latex(self):
+        return " $\lor$ ".join([v.to_latex() for v in self.vars])
 
-    def toLATEX(self):
-        return str(self)
+    def __str__(self):
+        return " ∨ ".join([str(v) for v in self.vars])
+
 
 class RemovedEquivClause:
 
@@ -129,12 +148,19 @@ class RemovedEquivClause:
         else:
             self.Q = self.Q.getCopy(negate=True)
 
+    def to_latex(self):
+        if self.negateP:
+            conj = " $\lor$ ".join([l.to_latex() for l in self.P])
+        else:
+            conj = " $\land$ ".join([l.to_latex() for l in self.P])
+        return """{} $\lor$ {}""".format(conj, self.Q)
+
     def __str__(self):
         if self.negateP:
-            conj = " $\lor$ ".join([str(l) for l in self.P])
+            conj = " ∨ ".join([str(l) for l in self.P])
         else:
-            conj = " $\land$ ".join([str(l) for l in self.P])
-        return """{} $\lor$ {}""".format(conj, self.Q)
+            conj = " ∧ ".join([str(l) for l in self.P])
+        return """{} ∨ {}""".format(conj, self.Q)
 
 class RemovedImplicClause(RemovedEquivClause):
 
@@ -170,9 +196,13 @@ class ParameterClause:
         #return [RemovedEquivClause(self.lhs, neg_rhs_copy, False), RemovedEquivClause(self.lhs, rhs_copy, True)]
         return [RemovedEquivClause(self.lhs, self.rhs, True)] + distributed_Or
 
-    def __str__(self):
-        conj = " \land ".join([str(l) for l in self.lhs])
+    def to_latex(self):
+        conj = " \land ".join([l.to_latex() for l in self.lhs])
         return """{} \Leftrightarrow {}""".format(conj, self.rhs)
+
+    def __str__(self):
+        conj = " ∧ ".join([str(l) for l in self.lhs])
+        return """{} ↔ {}""".format(conj, self.rhs)
 
 
 class ImplicationClause(ParameterClause):
@@ -183,9 +213,13 @@ class ImplicationClause(ParameterClause):
         """removes P => Q in the parameter clauses and converts it to ~P v Q"""
         return [RemovedImplicClause(self.lhs, self.rhs)]
 
-    def __str__(self):
-        conj = " \land ".join([str(l) for l in self.lhs])
+    def to_latex(self):
+        conj = " \land ".join([l.to_latex() for l in self.lhs])
         return """{} \Rightarrow {}""".format(conj, self.rhs)
+
+    def __str__(self):
+        conj = " ∧ ".join([str(l) for l in self.lhs])
+        return """{} ↔ {}""".format(conj, self.rhs)
 
 class CNF:
 
@@ -259,7 +293,7 @@ class CNF:
                 for w in self.weights:
 
                     if str(w.lhs) == key:
-                        if type(w.lhs) == Variable:
+                        if type(w.lhs) is Variable:
                             weights.append(str(-1))
                         else:
                             weights.append(str(w.prob))
@@ -277,7 +311,7 @@ class CNF:
         for ind in self.indicators:
             for v in ind.vars:
                 copy = v.getCopy()
-                value = varToInt[copy.getBaseRepr()]
+                value = varToInt[copy.getBaseRepr(False)]
                 if copy.negate:
                     value *= -1
                 dimac += "{} ".format(value)
@@ -302,7 +336,7 @@ class CNF:
                 rule_copy = []
                 for v in clause.P:
                     copy = v.getCopy()
-                    value = varToInt[copy.getBaseRepr()]
+                    value = varToInt[copy.getBaseRepr(False)]
                     if copy.negate:
                         value *= -1
                     rule_copy.append(value)
@@ -314,7 +348,7 @@ class CNF:
             else:
                 for v in clause.vars:
                     copy = v.getCopy()
-                    value = varToInt[copy.getBaseRepr()]
+                    value = varToInt[copy.getBaseRepr(False)]
                     if copy.negate:
                         value *= -1
                     dimac += "{} ".format(value)
