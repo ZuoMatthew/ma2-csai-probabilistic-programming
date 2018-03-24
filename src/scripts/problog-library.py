@@ -5,7 +5,7 @@ from problog.ddnnf_formula import DDNNF
 from problog.cnf_formula import CNF
 import util
 
-program = util.file_to_string("../files/test.grounded.pl")
+program = util.file_to_string("../files/test.pl")
 # program = PrologString("""
 # 0.3::a.
 # 0.6::b.

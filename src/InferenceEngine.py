@@ -35,7 +35,7 @@ class InferenceEngine:
 
         # convert the CNF to dimacs format for the weighted model counter
         print("DIMACS")
-        print(cnf.to_minic2d() + "====================================================")
+        print(cnf.to_dimacs() + "====================================================")
 
         # do the model counting
         results = self.weighted_model_counter.evaluate_cnf(cnf)

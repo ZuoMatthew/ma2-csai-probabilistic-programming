@@ -10,6 +10,8 @@ class WeightedModelCounter:
         for literal, number in queries:
             cnf_with_query = dimacs + "1.0 {}{} 0\n".format("-" if literal.negated else "", number)
             probability = self.do_model_count(cnf_with_query)
+            print("DOING QUERY:")
+            print(cnf_with_query, "----------------------------------------------------")
             results.append((str(literal), probability))
 
         return results

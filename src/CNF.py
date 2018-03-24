@@ -51,40 +51,27 @@ class CNF:
     def get_queries_with_dimacs_numbers(self):
         return [(lit, self.dimacs_assignments.get(lit.name)) for lit in self.queries]
 
-    def to_dimacs(self):
-        header = "p wcnf {} {} {}\n".format(len(self.literals), len(self.clauses), "SOMENUMBERHERE")
-
+    def to_dimacs(self, to_minic2d=True):
         dimacs = ""
-        for lit in self.literals:
-            dimacs += "{} -{} 0\n".format(1 - lit.weight, self.dimacs_assignments.get(lit.name))
-            dimacs += "{} {} 0\n".format(lit.weight, self.dimacs_assignments.get(lit.name))
-
-        for disjunction in self.clauses:
-            dimacs += "WEIGHT? "
-            for lit in disjunction:
-                dimacs += "{}{} ".format("-" if lit.negated else "", self.dimacs_assignments.get(lit.name))
-            dimacs += " 0\n"
-
-        # Add a comment to check assignments of numbers to literals
-        comment = "\n".join(["c {:>2}  {}".format(num, k) for k, num in self.dimacs_assignments.items()]) + "\n"
-        comment += "c QUERIES: "
-        comment += ", ".join([str(self.dimacs_assignments.get(lit.name)) for lit in self.queries]) + "\n"
-
-        return header + comment + dimacs
-
-    def to_minic2d(self):
-        weights = "c weights"
+        if to_minic2d:
+            weights = "c weights "
+            header = "p cnf {} {}\n".format(len(self.literals), len(self.clauses))
+        else:
+            weights = ""
+            header = "p wcnf {} {} {}\n".format(len(self.literals), len(self.clauses), "SOMENUMBERHERE")
 
         for lit in self.literals:
-            weights += "{} ".format(lit.weight)
-            weights += "{} ".format(1 - lit.weight)
+            if to_minic2d:
+                weights += "{} ".format(lit.weight)
+                weights += "{} ".format(1 - lit.weight)
+            else:
+                dimacs += "{} -{} 0\n".format(1 - lit.weight, self.dimacs_assignments.get(lit.name))
+                dimacs += "{} {} 0\n".format(lit.weight, self.dimacs_assignments.get(lit.name))
         weights += "\n"
 
-        header = "p cnf {} {}\n".format(len(self.literals), len(self.clauses))
-
-        dimacs = ""
-
         for disjunction in self.clauses:
+            if not to_minic2d:
+                dimacs += "WEIGHT? "
             for lit in disjunction:
                 dimacs += "{}{} ".format("-" if lit.negated else "", self.dimacs_assignments.get(lit.name))
             dimacs += " 0\n"
