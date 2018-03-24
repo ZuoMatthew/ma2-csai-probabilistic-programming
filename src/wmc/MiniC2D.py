@@ -17,6 +17,17 @@ class MiniC2D(WeightedModelCounter):
         self.options = options
         pass
 
+    def create_vtree(self, filename):
+        dir = os.path.abspath(os.path.dirname(filename))
+
+        cnf_params = "--cnf {}".format(os.path.abspath(filename))
+        vtree_params = "--vtree_method 0 --vtree_out {dir}/vtree.txt --vtree_dot {dir}/vtree.dot".format(dir=dir)
+        command = "{} {} {} {}".format(self.counter_path, cnf_params, vtree_params, self.options)
+
+        completed_process = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+        return "{dir}/vtree.txt".format(dir=dir)
+
     def do_model_count(self, filename):
         dir = os.path.abspath(os.path.dirname(filename))
         print("Will save vtree files in dir:", dir)
