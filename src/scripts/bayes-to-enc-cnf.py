@@ -1,7 +1,8 @@
+import os.path
 from BayesianNetwork import BayesianNetwork
 
 if __name__ == '__main__':
-    filename = "files/cancer.dsc"
+    filename = os.path.join(os.path.dirname(__file__), "..", "files", "cancer.dsc")
     network = BayesianNetwork.create_from_file(filename)
 
     enc1_cnf = network.to_enc1()
