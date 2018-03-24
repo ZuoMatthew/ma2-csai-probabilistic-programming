@@ -151,7 +151,7 @@ class ENC2(CNF):
     def __str__(self):
         enc = "Indicator clauses: \n"
         enc += "\\begin{displaymath}\\begin{center}\n"
-        enc += " \land \n".join(["(" + str(i) + ")" for i in self.indicators])
+        enc += " $\land$ \n".join(["(" + str(i) + ")" for i in self.indicators])
         enc += "\n\end{center}\end{displaymath}"
 
         # enc = "Indicator clauses: \n"
@@ -170,7 +170,7 @@ class ENC2(CNF):
 
         if len(self.elimEquivClauses) > 0:
             enc += "\\begin{displaymath}\\begin{center}\n"
-            enc += " \land \n ".join(["(" + str(i) + ")" for i in self.elimEquivClauses])
+            enc += " $\land$ \n ".join(["(" + str(i) + ")" for i in self.elimEquivClauses])
 
             # for p in self.elimEquivClauses:
             #    enc += str(p) + "\n"
