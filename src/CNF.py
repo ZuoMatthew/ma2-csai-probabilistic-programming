@@ -72,6 +72,30 @@ class CNF:
 
         return header + comment + dimacs
 
+    def to_minic2d(self):
+        weights = ""
+        
+        for lit in self.literals:
+            weights += "{} ".format(lit.weight)
+            weights += "{} ".format(1 - lit.weight)
+        weights += "\n"
+
+        header = "p cnf {} {}\n".format(len(self.literals), len(self.clauses))
+
+        dimacs = ""
+
+        for disjunction in self.clauses:
+            for lit in disjunction:
+                dimacs += "{}{} ".format("-" if lit.negated else "", self.dimacs_assignments.get(lit.name))
+            dimacs += " 0\n"
+
+        # Add a comment to check assignments of numbers to literals
+        comment = "\n".join(["c {:>2}  {}".format(num, k) for k, num in self.dimacs_assignments.items()]) + "\n"
+        comment += "c QUERIES: "
+        comment += ", ".join([str(self.dimacs_assignments.get(lit.name)) for lit in self.queries]) + "\n"
+
+        return weights + header + comment + dimacs
+
     @staticmethod
     def create_from_fol_theory(theory):
         cnf = CNF()

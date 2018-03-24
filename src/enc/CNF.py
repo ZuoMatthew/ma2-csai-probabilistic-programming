@@ -233,10 +233,12 @@ class CNF:
             # get weights
 
             for key, _ in sorted(varToInt.items(), key=lambda x: x[1]):
+                # First add the weight for var X
                 for w in self.weights:
                     if str(w.lhs) == key:
-                        weights += "{:.3f} ".format(float(w.prob))#str(w.prob) + " "
+                        weights += "{:.3f} ".format(float(w.prob))
 
+                # then add its weight for var ~X (the negation of x)
                 for w in self.weights:
                     if str(w.lhs) == "~" + key:
                         #str(w.prob) + " "
