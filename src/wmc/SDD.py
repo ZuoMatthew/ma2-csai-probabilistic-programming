@@ -1,7 +1,7 @@
 import os.path
+from wmc import factory as CounterFactory
 from wmc.WeightedModelCounter import WeightedModelCounter
 from pysdd.sdd import SddManager, Vtree, WmcManager
-from wmc.MiniC2D import MiniC2D
 
 
 class SDD(WeightedModelCounter):
@@ -27,7 +27,7 @@ class SDD(WeightedModelCounter):
     def do_model_count(self, filename):
         print(filename)
         # 1. create VTREE
-        vtree_path = MiniC2D("").create_vtree(filename)
+        vtree_path = CounterFactory.create("minic2d").create_vtree(filename)
         vtree = Vtree.from_file(bytes(vtree_path.encode('utf-8')))
 
         sdd = SddManager.from_vtree(vtree)

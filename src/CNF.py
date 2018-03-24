@@ -58,30 +58,18 @@ class CNF:
     def get_queries_with_dimacs_numbers(self):
         return [(lit, self.dimacs_assignments.get(lit.name)) for lit in self.queries]
 
-    def to_dimacs(self, to_minic2d=True):
+    def to_dimacs(self):
         """ Converts the CNF to dimacs format that can be parsed by the minic2d or sdd packages."""
         dimacs = ""
-        if to_minic2d:
-            weights = "c weights "
-            header = "p cnf {} {}\n".format(len(self.literals), len(self.clauses))
-        else:
-            weights = ""
-            header = "p wcnf {} {} {}\n".format(len(self.literals), len(self.clauses), "SOMENUMBERHERE")
+        weights = "c weights "
 
         for lit in self.literals:
-            if to_minic2d:
-                weights += "{} ".format(lit.weight)
-                weights += "{} ".format(1 - lit.weight)
-                self.dimacs_assignments.get(lit.name)
-            else:
-                dimacs += "{} -{} 0\n".format(1 - lit.weight, self.dimacs_assignments.get(lit.name))
-                dimacs += "{} {} 0\n".format(lit.weight, self.dimacs_assignments.get(lit.name))
+            weights += "{} ".format(lit.weight)
+            weights += "{} ".format(1 - lit.weight)
+            self.dimacs_assignments.get(lit.name)
         weights += "\n"
 
         for disjunction in self.clauses:
-            if not to_minic2d:
-                dimacs += "WEIGHT? "
-
             for lit in disjunction:
                 dimacs += "{}{} ".format("-" if lit.negated else "", self.dimacs_assignments.get(lit.name))
 
@@ -93,6 +81,7 @@ class CNF:
         comment = "\n".join(["c {:>2}  {}".format(num, k) for k, num in self.dimacs_assignments.items()]) + "\n"
         comment += "c QUERIES: "
         comment += ", ".join([str(self.dimacs_assignments.get(lit.name)) for lit in self.queries]) + "\n"
+        header = "p cnf {} {}\n".format(len(self.dimacs_assignments.items()), len(self.clauses))
 
         return weights + header + comment + dimacs
 

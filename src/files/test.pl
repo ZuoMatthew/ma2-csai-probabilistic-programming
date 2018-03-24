@@ -1,34 +1,36 @@
-0.5::similar(ale,stout).
-0.25::similar(ale,gin).
-0.2::similar(ale,soda).
-query(similar(ale,stout)).
-query(similar(ale,gin)).
-query(similar(ale,soda)).
+% Based on Monty Hall problem on http://cplint.lamping.unife.it/example/monty.cpl
 
-%PROBLOG OUTPUT
-%PROGRAM:
-%0.5::similar(ale,stout).
-%0.25::similar(ale,gin).
-%0.2::similar(ale,soda).
-%query(similar(ale,stout)).
-%query(similar(ale,gin)).
-%query(similar(ale,soda)).
-%============================
-%DIMACS:
-%p wcnf 3 6 48929
-%c 1  similar(ale,stout)
-%c 2  similar(ale,gin)
-%c 3  similar(ale,soda)
-%c 1  similar(ale,stout)
-%c 2  similar(ale,gin)
-%c 3  similar(ale,soda)
-%6931 -1 0
-%6931 1 0
-%13862 -2 0
-%2876 2 0
-%16094 -3 0
-%2231 3 0
-%============================
-%EVALUATION:
-%{similar(ale,stout): 0.5000000000000001, similar(ale,gin): 0.25, similar(ale,soda): 0.2}
-%============================
+1/3::prize(1) ; 1/3::prize(2) ; 1/3::prize(3).
+
+select_door(1).
+
+member(X,[X|T]).
+member(X,[H|T]) :- member(X,T).
+
+0.5::open_door(A) ; 0.5::open_door(B) :-
+  member(A, [1,2,3]),
+  member(B, [1,2,3]),
+  A < B,
+  \+ prize(A), \+ prize(B),
+  \+ select_door(A), \+ select_door(B).
+
+open_door(A) :-
+  member(A, [1,2,3]),
+  member(B, [1,2,3]),
+  \+ prize(A), prize(B),
+  \+ select_door(A), \+ select_door(B).
+
+win_keep :-
+  select_door(A),
+  prize(A).
+
+win_switch :-
+  member(A, [1,2,3]),
+  \+ select_door(A),
+  prize(A),
+  \+ open_door(A).
+
+query(prize(_)).
+query(select_door(_)).
+query(win_keep).
+query(win_switch).
