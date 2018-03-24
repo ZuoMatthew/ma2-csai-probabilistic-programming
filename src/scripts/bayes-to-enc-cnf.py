@@ -7,9 +7,9 @@ if __name__ == '__main__':
     enc1_cnf = network.to_enc1()
     enc1_cnf.convert()
     print("converted enc1: \n", enc1_cnf.elimEquiv())
-    #print("dimac:\n", enc1_cnf.toDimac(toCachet=False))
+    print("dimac:\n", enc1_cnf.toDimac(toCachet=True))
 
     enc2_cnf = network.to_enc2()
     enc2_cnf.convert()
     print("converted enc2: \n", enc2_cnf.elimEquiv())
-    #print("dimac:\n", enc2_cnf.toDimac(toCachet=False))
+    print("dimac:\n", enc2_cnf.toDimac(toCachet=True))
