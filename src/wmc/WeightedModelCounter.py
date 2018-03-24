@@ -1,5 +1,6 @@
 import copy
 import util
+import os.path
 
 
 class WeightedModelCounter:
@@ -8,7 +9,7 @@ class WeightedModelCounter:
     def evaluate_cnf(self, cnf):
         """ Executes queries in a given weighted CNF and returns the results. """
         results = {}
-        cnf_filename = "files/test.cnf"
+        cnf_filename = os.path.join(os.path.dirname(__file__), "..", "files", "test.cnf")
 
         queries = cnf.get_queries_with_dimacs_numbers()
         for literal, number in queries:
