@@ -9,12 +9,14 @@ and the usual logical connectives negation, conjunction, disjunction, implicatio
 
 class LogicFormula:
     """ Abstract class that represents a logical formula """
+
     def to_cnf(self):
         raise NotImplementedError
 
 
 class Atom(LogicFormula):
     """ An atom is of the form p(t_1, ..., t_n) where p is a predicate of arity n and the t_i are terms. """
+
     def __init__(self, predicate, terms=None, probability=1):
         self.predicate = predicate
         self.terms = terms if terms is not None else []
@@ -48,6 +50,7 @@ class Atom(LogicFormula):
 
 class Negation(LogicFormula):
     """ Represents the logical connective '¬'. """
+
     def __init__(self, formula):
         self.formula = formula
 
@@ -83,6 +86,7 @@ class Negation(LogicFormula):
 
 class Conjunction(LogicFormula):
     """ Represents the logical connective '∧'. """
+
     def __init__(self, formulas):
         self.formulas = []
         # Lift nested Conjunctions' formulas up into this one.
@@ -121,6 +125,7 @@ class Conjunction(LogicFormula):
 
 class Disjunction(LogicFormula):
     """ Represents the logical connective '∨'. """
+
     def __init__(self, formulas):
         self.formulas = []
         # Lift nested Disjunction' formulas up into this one.
@@ -184,6 +189,7 @@ class Disjunction(LogicFormula):
 
 class Equivalence(LogicFormula):
     """ Represents the logical connective '↔'. E.g. "w ↔ r ∨ s" """
+
     def __init__(self, lhs, rhs):
         self.lhs = lhs
         self.rhs = rhs
@@ -202,10 +208,12 @@ class Equivalence(LogicFormula):
         b = Disjunction([Negation(self.lhs), self.rhs])  # (¬P ∨ Q)
         return Conjunction([a, b]).to_cnf()              # ((P ∨ ¬Q) ∧ (¬P ∨ Q)).to_cnf()
 
+
 class FOLTheory:
     """
     A FOL theory is a set of formulas that implicitly form a conjunction.
     """
+
     def __init__(self, formulas=None, queries=None):
         self.formulas = formulas if formulas is not None else []
         self.queries = queries if queries is not None else []
@@ -241,7 +249,7 @@ class FOLTheory:
             theory.add_formula(Atom.create_from_problog_term(fact))
 
         for query in ground_problog.get_queries():
-            theory.add_query(query)
+            theory.add_query(Atom.create_from_problog_term(query))
 
         # Problog rules are converted to FOL formulas by applying Clark's completion. This is done by grouping rule
         # bodies of rules with equal heads into disjunctions.

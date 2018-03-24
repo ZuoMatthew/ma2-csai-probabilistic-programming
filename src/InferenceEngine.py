@@ -8,7 +8,7 @@ from wmc.factory import create as create_weighted_model_counter
 class InferenceEngine:
     def __init__(self):
         self.problog_parser = GroundProblogParser()
-        self.weighted_model_counter = create_weighted_model_counter("MiniC2D")
+        self.weighted_model_counter = create_weighted_model_counter("SDD")
 
     def evaluate_problog_program(self, program):
         """ Evaluates a problog program.
@@ -32,13 +32,20 @@ class InferenceEngine:
         print("CNF:")
         print(cnf)
         print("====================================================")
+
+        # convert the CNF to dimacs format for the weighted model counter
         print("DIMACS")
         print(cnf.to_dimacs() + "====================================================")
-        result = self.weighted_model_counter.evaluate_cnf(cnf)
-        print("RESULT:")
-        print(result)
 
-        return result
+        # do the model counting
+        results = self.weighted_model_counter.evaluate_cnf(cnf)
+        print("RESULT:")
+        for query, probability in results:
+            print("Query:", query)
+            print("Probability:", probability)
+            print()
+
+        return results
 
     def evaluate_bayesian_network(self, network):
         """ Evaluates a Bayesian network by converting it to a Problog program and evaluating that program. """
