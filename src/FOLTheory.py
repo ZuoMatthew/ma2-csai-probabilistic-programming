@@ -35,6 +35,12 @@ class Atom(LogicFormula):
     def __eq__(self, other):
         return isinstance(other, Atom) and self.predicate == other.predicate and self.terms == other.terms
 
+    def str_no_probability(self):
+        out = self.predicate
+        if self.arity > 0:
+            out += "(" + ", ".join(map(str, self.terms)) + ")"
+        return out
+
     def to_cnf(self):
         return self
 

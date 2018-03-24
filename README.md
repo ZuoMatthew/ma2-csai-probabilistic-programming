@@ -11,6 +11,9 @@ from Interpretations”. In: European Conference on Machine Learning and Knowled
 - [Umut Oztok and Adnan Darwiche. “A top-down compiler for sentential decision diagrams”. In: Proceed-
 ings of the 24th International Conference on Artificial Intelligence (IJCAI). 2015.](http://www.ijcai.org/Proceedings/15/Papers/443.pdf)
 
+## Dependencies
+    graphviz
+
 ## Python dependencies
 To install the Python dependencies.
 ```sh
