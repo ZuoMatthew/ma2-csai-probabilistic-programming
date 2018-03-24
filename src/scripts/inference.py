@@ -3,7 +3,7 @@ import os.path
 from InferenceEngine import InferenceEngine
 
 if __name__ == '__main__':
-    filename = os.path.join(os.path.dirname(__file__), "..", "files", "test.pl")
+    filename = os.path.join(os.path.dirname(__file__), "..", "files", "monty_hall.pl")
     program = util.file_to_string(filename)
 
     engine = InferenceEngine()

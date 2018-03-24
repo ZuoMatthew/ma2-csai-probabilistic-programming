@@ -3,7 +3,6 @@ from wmc import factory as CounterFactory
 from wmc.WeightedModelCounter import WeightedModelCounter
 from pysdd.sdd import SddManager, Vtree, WmcManager
 
-
 class SDD(WeightedModelCounter):
     """ WMC using the SDD package, which allows users to construct, manipulate, and optimize SDDs. """
 
@@ -17,7 +16,8 @@ class SDD(WeightedModelCounter):
         for line in lines:
             if "weight" in line:
                 splitted = line.strip("\n").split(" ")
-                weights = splitted[2:-1]
+                weights = splitted[2:]
+                weights = [w for w in weights if len(w) > 0]
                 # print(weights)
                 weights = [float(w) for w in weights]
 
@@ -42,7 +42,8 @@ class SDD(WeightedModelCounter):
         # Add weights
         lits = [sdd.literal(i) for i in range(1, sdd.var_count() + 1)]
         weights = self.get_weights_from_cnf(filename)
-
+        #print(weights)
+        #print(len(weights))
         for i in range(len(lits)):
             wmc.set_literal_weight(lits[i], weights[2 * i])
             wmc.set_literal_weight(-lits[i], weights[2 * i + 1])

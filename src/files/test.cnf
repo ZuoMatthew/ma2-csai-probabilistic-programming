@@ -1,4 +1,4 @@
-c weights 1.0 0.0 
+c weights 1.0 0.0 1.0 0.0 1.0 0.0 1.0 0.0 1.0 0.0 1.0 0.0 1.0 0.0 1.0 0.0
 p cnf 8 15
 c  1  select_door(1)
 c  2  win_keep
