@@ -1,27 +1,7 @@
-from problog.program import PrologString
-from problog.formula import LogicFormula, LogicDAG
-from problog.logic import Term
-from problog.ddnnf_formula import DDNNF
-from problog.cnf_formula import CNF
 import util
 
-program = util.file_to_string("../files/test.pl")
-# program = PrologString("""
-# 0.3::a.
-# 0.6::b.
-# 0.1::c :- a.
-# c :- b.
-# query(c).
-# """)
+if __name__ == '__main__':
+    filename = "../files/test.pl"
+    program = util.file_to_string(filename)
 
-formula = LogicFormula.create_from(program, avoid_name_clash=True, label_all=True)
-print("PROGRAM:")
-print(formula.to_prolog(), "\n============================")
-
-cnf = CNF.create_from(formula)  # type: CNF
-print("DIMACS:")
-print(cnf.to_dimacs(weighted=True, names=True), "\n============================")
-
-ddnnf = DDNNF.create_from(cnf)
-print("EVALUATION:")
-print(ddnnf.evaluate(), "\n============================")
+    util.evaluate_using_problog(program, print_steps=True)

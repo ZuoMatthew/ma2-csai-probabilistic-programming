@@ -1,4 +1,7 @@
 model_counters/
+*.tmp
+*.nnf
+vtree*
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template

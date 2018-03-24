@@ -3,9 +3,10 @@ from wmc.SDD import SDD
 
 
 def create(package):
-    if package == "SDD":
+    package = package.lower()
+    if package == "sdd":
         return SDD("")
-    elif package == "MiniC2D":
+    elif package == "minic2d":
         return MiniC2D("")
     else:
         raise Exception("Unknown model counter")
