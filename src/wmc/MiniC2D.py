@@ -2,13 +2,16 @@ import re
 import os.path
 import subprocess
 from wmc.WeightedModelCounter import WeightedModelCounter
-
+from sys import platform
 
 class MiniC2D(WeightedModelCounter):
     """ WMC using the miniC2D package, which does knowledge compilation and model counting based on exhaustive DPLL. """
 
     def __init__(self, options):
-        self.counter_path = os.path.abspath("../../model_counters/miniC2D-1.0.0/bin/linux/miniC2D")
+        if platform == "linux" or platform == "linux2":
+            self.counter_path = os.path.abspath("../../model_counters/miniC2D-1.0.0/bin/linux/miniC2D")
+        elif platform == "darwin":
+            self.counter_path = os.path.abspath("../../model_counters/miniC2D-1.0.0/bin/darwin/miniC2D")
         if not os.path.exists(self.counter_path):
             raise Exception("Could not find miniC2D installation. Expected location: {}".format(self.counter_path))
         self.options = options
