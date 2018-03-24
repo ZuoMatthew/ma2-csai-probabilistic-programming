@@ -1,17 +1,14 @@
-import re
 import os.path
-import subprocess
-from sys import platform
 from wmc.WeightedModelCounter import WeightedModelCounter
-from lib.PySDD.pysdd.sdd import SddManager, Vtree, WmcManager
+from pysdd.sdd import SddManager, Vtree, WmcManager
 from wmc.MiniC2D import MiniC2D
+
 
 class SDD(WeightedModelCounter):
     """ WMC using the SDD package, which allows users to construct, manipulate, and optimize SDDs. """
 
     def __init__(self):
         pass
-
 
     def get_weights_from_cnf(self, filename):
         cnf = open(os.path.abspath(filename), "r")
@@ -21,7 +18,7 @@ class SDD(WeightedModelCounter):
             if "weight" in line:
                 splitted = line.strip("\n").split(" ")
                 weights = splitted[2:-1]
-                #print(weights)
+                # print(weights)
                 weights = [float(w) for w in weights]
 
         return weights
@@ -35,7 +32,7 @@ class SDD(WeightedModelCounter):
 
         sdd = SddManager.from_vtree(vtree)
 
-        #print(filename)
+        # print(filename)
         # 2. read CNF
         root = sdd.read_cnf_file(bytes(os.path.abspath(filename).encode('utf-8')))
 
@@ -43,13 +40,11 @@ class SDD(WeightedModelCounter):
         wmc = root.wmc(log_mode=False)
 
         # Add weights
-
         lits = [sdd.literal(i) for i in range(1, sdd.var_count() + 1)]
         weights = self.get_weights_from_cnf(filename)
 
         for i in range(len(lits)):
-
-            wmc.set_literal_weight(lits[i], weights[2*i])
+            wmc.set_literal_weight(lits[i], weights[2 * i])
             wmc.set_literal_weight(-lits[i], weights[2 * i + 1])
 
         w = wmc.propagate()
