@@ -42,7 +42,7 @@ class MiniC2D(WeightedModelCounter):
         output = completed_process.stdout.decode()
 
         # convert the new vtree.dot file to a png file
-        subprocess.check_call(["dot", "-Tpng", vtree_f + "dot", "-o", vtree_f + "png"])
+        #subprocess.check_call(["dot", "-Tpng", vtree_f + "dot", "-o", vtree_f + "png"])
         match = re.search(r"Count(/Probability)?\s\t(.*)", output)
 
         if match is None:

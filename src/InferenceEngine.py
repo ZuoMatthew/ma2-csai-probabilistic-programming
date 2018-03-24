@@ -8,7 +8,7 @@ from wmc.factory import create as create_weighted_model_counter
 class InferenceEngine:
     def __init__(self):
         self.problog_parser = GroundProblogParser()
-        self.weighted_model_counter = create_weighted_model_counter("minic2d")
+        self.weighted_model_counter = create_weighted_model_counter("sdd")
 
     def evaluate_problog_program(self, program):
         """ Evaluates a problog program.
