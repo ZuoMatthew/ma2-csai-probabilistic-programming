@@ -85,7 +85,7 @@ class CPT:
     def __str__(self):
         base = self.getBaseRepr()
         if self.negate:
-            return """\\neg {}""".format(base)
+            return """$\\neg$ {}""".format(base)
 
         return base
 
