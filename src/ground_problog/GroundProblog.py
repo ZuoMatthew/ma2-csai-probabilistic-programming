@@ -62,11 +62,11 @@ class GroundProblog:
         return [c for c in self.clauses if isinstance(c, Term) and c.name != "query"]
 
     def get_queries(self):
-        # Queries have only 1 argument, no probability, and cannot be negated. TODO: check this again
+        # Queries have only 1 argument TODO: check this again
         return [c.arguments[0] for c in self.clauses if isinstance(c, Term) and c.name == "query"]
 
     def get_rules(self):
         return [c for c in self.clauses if isinstance(c, Rule)]
 
-    def get_probabilistic_clauses(self):
+    def get_probabilistic_annotations(self):
         return [c for c in self.clauses if isinstance(c, ProbabilisticAnnotation)]

@@ -4,17 +4,26 @@ import FOLTheory
 class Literal:
     """ A literal of a CNF formula. """
 
-    def __init__(self, name, negated=False, weight=1.0, dimacs_assignment=None):
+    def __init__(self, name, negated=False, weight_true=1.0, weight_false=1.0, dimacs_assignment=None):
         self.name = name
         self.negated = negated
-        self.weight = weight
+        self.weight_true = weight_true
+        self.weight_false = weight_false
         self.dimacs_int = dimacs_assignment
 
     def __str__(self):
-        return (str(self.weight)+"::" if self.weight != 1.0 else "") + ("-" if self.negated else "") + self.name
+        return (str(self.weight_true)+"::" if self.weight_true != 1.0 else "") + ("-" if self.negated else "") + self.name
 
     def __eq__(self, other):
-        return self.name == other.name and self.negated == other.negated and self.weight == other.weight
+        return self.name == other.name and self.negated == other.negated and \
+               self.weight_true == other.weight_true and self.weight_false == other.weight_false
+
+    @staticmethod
+    def create_from_fol_formula(formula):
+        if isinstance(formula, FOLTheory.Negation):
+            return Literal(str(formula.formula), True, formula.formula.weight_true, formula.formula.weight_false)
+        else:
+            return Literal(str(formula.str_no_weights()), False, formula.weight_true, formula.weight_false)
 
 
 class CNF:
@@ -47,13 +56,8 @@ class CNF:
             raise Exception("Adding literal of wrong type")
         
         if literal.name not in self.literals:
-            if literal.weight != 1.0:
-                new_weight = literal.weight if not literal.negated else (1.0 - literal.weight)
-            else:
-                new_weight = 1.0
             dimacs_assignment = len(self.literals) + 1
-            new_literal = Literal(literal.name, False, new_weight, dimacs_assignment)
-
+            new_literal = Literal(literal.name, False, literal.weight_true, literal.weight_false, dimacs_assignment)
             self.literals[literal.name] = new_literal
             return new_literal
         else:
@@ -95,7 +99,7 @@ class CNF:
         comment += "c QUERIES: " + ", ".join([str(l.dimacs_int) for l in self.queries]) + "\n"
 
         weights = "c weights "
-        weights += " ".join(["{} {}".format(l.weight, 1.0 - l.weight) for l in literals]) + "\n"
+        weights += " ".join(["{} {}".format(l.weight_true, l.weight_false) for l in literals]) + "\n"
 
         dimacs = ""
         for disjunction in self.clauses:
@@ -110,30 +114,22 @@ class CNF:
     @staticmethod
     def create_from_fol_theory(theory):
         cnf = CNF()
+        theory = theory.to_cnf()
 
-        for formula in theory.to_cnf().formulas:
-            # A formula in CNF consists of literals or of disjunctions of literals
-            if isinstance(formula, FOLTheory.Atom):
-                lit = Literal(name=formula.str_no_probability(), negated=False, weight=formula.probability)
-                cnf.get_or_add_literal(lit)
+        # A formula in CNF consists of literals or of disjunctions of literals
+        conjunction = theory.formulas
+        literals = [f for f in conjunction.formulas if isinstance(f, FOLTheory.Atom)]
+        disjunctions = [f for f in conjunction.formulas if isinstance(f, FOLTheory.Disjunction)]
 
-            elif isinstance(formula, FOLTheory.Conjunction):
-                for f in formula.formulas:
-                    if isinstance(f, FOLTheory.Disjunction):
-                        clause = []
-                        for ff in f.formulas:
-                            if isinstance(ff, FOLTheory.Negation):
-                                clause.append(Literal(str(ff.formula), True, ff.formula.probability))
-                            else:
-                                clause.append(Literal(str(ff), False, ff.probability))
-                        cnf.add_clause(clause)
-                    else:
-                        raise Exception("Unexpected formula type in FOL CNF Conjunction:", type(f))
+        # First go through literals so that all the declarations with weights are registered first in self.literals
+        for formula in literals:
+            cnf.get_or_add_literal(Literal.create_from_fol_formula(formula))
 
-            else:
-                raise Exception("Unexpected formula type in FOL CNF:", type(formula))
+        for formula in disjunctions:
+            clause = [Literal.create_from_fol_formula(f) for f in formula.formulas]
+            cnf.add_clause(clause)
 
         for query in theory.get_queries():
-            cnf.add_query(Literal(str(query)))
+            cnf.add_query(Literal.create_from_fol_formula(query))
 
         return cnf

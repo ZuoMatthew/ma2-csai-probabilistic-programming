@@ -3,7 +3,7 @@ A limited representation for First Order Logic theories with weighted atoms.
 
 'Theories are collections of formulas. A formula is built out of atoms using universal and existential quantifiers
 and the usual logical connectives negation, conjunction, disjunction, implication, equivalence.'
--- paper
+-- Inference in Probabilistic Logic Programs using Weighted CNF's
 """
 
 
@@ -17,16 +17,17 @@ class LogicFormula:
 class Atom(LogicFormula):
     """ An atom is of the form p(t_1, ..., t_n) where p is a predicate of arity n and the t_i are terms. """
 
-    def __init__(self, predicate, terms=None, probability=1):
+    def __init__(self, predicate, terms=None, weight_true=1, weight_false=1):
         self.predicate = predicate
         self.terms = terms if terms is not None else []
         self.arity = len(self.terms)
-        self.probability = probability
+        self.weight_true = weight_true
+        self.weight_false = weight_false
 
     def __str__(self):
         out = ""
-        if self.probability != 1:
-            out += str(self.probability) + "::"
+        if self.weight_true != 1:
+            out += str(self.weight_true) + "::"
         out += self.predicate
         if self.arity > 0:
             out += "(" + ", ".join(map(str, self.terms)) + ")"
@@ -35,7 +36,7 @@ class Atom(LogicFormula):
     def __eq__(self, other):
         return isinstance(other, Atom) and self.predicate == other.predicate and self.terms == other.terms
 
-    def str_no_probability(self):
+    def str_no_weights(self):
         out = self.predicate
         if self.arity > 0:
             out += "(" + ", ".join(map(str, self.terms)) + ")"
@@ -45,12 +46,12 @@ class Atom(LogicFormula):
         return self
 
     @staticmethod
-    def create_from_problog_term(term):
+    def create_from_problog_term(term, weight_true, weight_false):
         arguments = []
         if len(term.arguments):
-            arguments = [Atom.create_from_problog_term(arg) for arg in term.arguments]
+            arguments = [Atom.create_from_problog_term(arg, 1, 1) for arg in term.arguments]
 
-        atom = Atom(predicate=term.name, terms=arguments, probability=term.probability)
+        atom = Atom(predicate=term.name, terms=arguments, weight_true=weight_true, weight_false=weight_false)
         return Negation(atom) if term.negation else atom
 
 
@@ -237,17 +238,37 @@ class FOLTheory:
     def add_formula(self, formula):
         self.formulas.append(formula)
 
-    def add_query(self, query):
-        self.queries.append(query)
-
     def get_formulas(self):
         return self.formulas
+
+    def add_query(self, query):
+        self.queries.append(query)
 
     def get_queries(self):
         return self.queries
 
     def to_cnf(self):
-        return FOLTheory([f.to_cnf() for f in self.formulas])
+        cnf = Conjunction([f.to_cnf() for f in self.formulas])
+
+        for formula in cnf.formulas:
+            # A formula in CNF consists of literals or of disjunctions of literals
+            if not isinstance(formula, Atom) and not isinstance(formula, Disjunction):
+                raise Exception("Unexpected formula type in FOL CNF: {}\n{}\nCNF:\n{}\n"
+                                .format(type(formula), str(cnf), str(cnf)))
+
+            if isinstance(formula, Disjunction):
+                for f in formula.formulas:
+                    if isinstance(f, Conjunction):
+                        raise Exception("Unexpected Conjunction inside CNF Disjunction: {}\nCNF:\n{}\n"
+                                        .format(str(formula), str(cnf)))
+
+        return FOLTheory(Conjunction([cnf]), self.queries)
+
+    def get_atoms(self):
+        return [f for f in self.formulas if isinstance(f, Atom)]
+
+    def get_conjunctions(self):
+        return [f for f in self.formulas if isinstance(f, Conjunction)]
 
     @staticmethod
     def create_from_problog(ground_problog):
@@ -256,18 +277,18 @@ class FOLTheory:
 
         # Problog facts can just be converted to FOL Atoms
         for fact in ground_problog.get_facts():
-            theory.add_formula(Atom.create_from_problog_term(fact))
+            theory.add_formula(Atom.create_from_problog_term(fact, fact.probability, 1-fact.probability))
 
         for query in ground_problog.get_queries():
-            theory.add_query(Atom.create_from_problog_term(query))
+            theory.add_query(Atom.create_from_problog_term(query, 1, 1))
 
         # Problog rules are converted to FOL formulas by applying Clark's completion. This is done by grouping rule
         # bodies of rules with equal heads into disjunctions.
         rules = []  # a list of (head, body) tuples
         for rule in ground_problog.get_rules():
             # Create the corresponding head and body as FOL formulas.
-            head = Atom.create_from_problog_term(rule.head)
-            body_atoms = [Atom.create_from_problog_term(term) for term in rule.body]
+            head = Atom.create_from_problog_term(rule.head, 1, 1)
+            body_atoms = [Atom.create_from_problog_term(term, 1, 1) for term in rule.body]
             body = Conjunction(body_atoms) if len(body_atoms) > 1 else body_atoms[0]
 
             # Add the rule in the rules list. If the rule already exists, extend the disjunction of its body.
@@ -279,5 +300,18 @@ class FOLTheory:
 
         for (head, body) in rules:
             theory.add_formula(Equivalence(head, body))
+
+        for annotation in ground_problog.get_probabilistic_annotations():
+            if not annotation.body:
+                disjunction1 = []
+                disjunction2 = []
+
+                for head in annotation.heads:
+                    theory.add_formula(Atom.create_from_problog_term(head, head.probability, 1))
+                    disjunction1.append(Atom.create_from_problog_term(head, 1, 1))
+                    disjunction2.append(Negation(Atom.create_from_problog_term(head, 1, 1)))
+
+                theory.add_formula(Disjunction(disjunction1))
+                theory.add_formula(Disjunction(disjunction2))
 
         return theory

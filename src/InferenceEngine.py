@@ -41,7 +41,7 @@ class InferenceEngine:
         # do the model counting
         results = self.weighted_model_counter.evaluate_cnf(cnf)
         print("EVALUATION:")
-        query_str_len = max([len(q) for q, _ in results])
+        query_str_len = max([len(q) for q, _ in results]) if results else None
         for query, probability in results:
             print("{:<{}}: {}".format(query, query_str_len, probability))
 
