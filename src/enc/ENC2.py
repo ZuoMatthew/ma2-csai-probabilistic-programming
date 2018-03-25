@@ -131,7 +131,7 @@ class ENC2(CNF):
                     d = {"value": cpt.value}
                     for j in cpt.conditional:
                         d[j.var.var] = j.var.value
-                    current_prob = float(probFunc.get(d)) / (1.0 - lastProb)
+                    current_prob = float(probFunc.get(d)) / (1.0 - lastProb) if lastProb < 1 else 1
                     lastProb += current_prob
                     self.weights.append(Weight(copy.deepcopy(cpt), current_prob))
                     copy_cpt_neg = copy.deepcopy(cpt)
