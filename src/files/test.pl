@@ -1,6 +1,10 @@
-0.5::similar(ale,stout).
-0.25::similar(ale,gin).
-0.2::similar(ale,soda).
-query(similar(ale,stout)).
-query(similar(ale,gin)).
-query(similar(ale,soda)).
+% Probabilistic facts:
+0.5::heads1.
+0.6::heads2.
+
+% Rules:
+someHeads :- heads1.
+someHeads :- heads2.
+
+% Queries:
+query(someHeads).

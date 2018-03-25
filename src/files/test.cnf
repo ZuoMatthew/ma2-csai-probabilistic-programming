@@ -1,7 +1,10 @@
-c weights 0.5 0.5 0.25 0.75 0.2 0.8 
-p cnf 3 1
-c  1  similar(ale, stout)
-c  2  similar(ale, gin)
-c  3  similar(ale, soda)
-c QUERIES: 1, 2, 3
+c weights 0.5 0.5 0.6 0.4 1.0 0.0
+p cnf 3 4
+c  1  heads1
+c  2  heads2
+c  3  someHeads
+c QUERIES: 3
+3 -1 0
+3 -2 0
+-3 1 2 0
 3 0

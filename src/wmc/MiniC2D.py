@@ -43,6 +43,7 @@ class MiniC2D(WeightedModelCounter):
 
         completed_process = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output = completed_process.stdout.decode()
+        # print(output)
 
         # convert the new vtree.dot file to a png file
         (graph,) = pydot.graph_from_dot_file(vtree_file + "dot")

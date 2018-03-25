@@ -49,5 +49,6 @@ class InferenceEngine:
 
     def evaluate_bayesian_network(self, network):
         """ Evaluates a Bayesian network by converting it to a Problog program and evaluating that program. """
+        # https://github.com/jordn/ProbLog/blob/master/conversions/bn2problog.py
         # return self.evaluate_problog_program(program)
         raise NotImplementedError
