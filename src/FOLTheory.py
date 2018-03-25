@@ -225,9 +225,13 @@ class FOLTheory:
         self.queries = queries if queries is not None else []
 
     def __str__(self):
-        out = "Formulas:\n" + "\n".join(map(str, self.formulas))
+        out = "Formulas ({}):\n\t".format(len(self.formulas))
+        out += "\n\t".join(map(str, self.formulas))
+
         if len(self.queries):
-            out += "\nQueries:\n" + "\n".join(map(str, self.queries))
+            out += "\nQueries ({}):\n\t".format(len(self.queries))
+            out += "\n\t".join(map(str, self.queries))
+
         return out
 
     def add_formula(self, formula):
