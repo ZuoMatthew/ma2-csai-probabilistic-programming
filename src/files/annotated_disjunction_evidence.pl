@@ -1,11 +1,18 @@
 0.3::a; 0.54::b.
+%0.4::c; 0.4::d; 0.2::e.
 
 evidence(b, false).
+%evidence(e, true).
 
 query(a).
-query(b).
+%query(c).
+%query(d).
 
-% PROBLOG CNF:
+
+% PROGRAM:
+% 0.3::a; 0.54::b.
+% query(a).
+% evidence(\+b).
 % ====================================================
 % DIMACS:
 % p wcnf 3 7 36528
@@ -24,3 +31,5 @@ query(b).
 % ====================================================
 % EVALUATION:
 % a: 0.6521739130434782
+%
+% Process finished with exit code 0

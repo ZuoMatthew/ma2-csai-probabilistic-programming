@@ -102,10 +102,13 @@ class CNF:
 
     def to_dimacs(self):
         """ Converts the CNF to a dimacs format that can be parsed by the minic2d package."""
+        for l in self.evidence:
+            self.literals[l.name].weight_true = 0 if l.negated else 1
+            self.literals[l.name].weight_false = 1 if l.negated else 0
         literals = self.get_literals()
 
         # Add a comment to check assignments of numbers to literals
-        header = "p cnf {} {}\n".format(len(literals), len(self.clauses)+len(self.evidence))
+        header = "p cnf {} {}\n".format(len(literals), len(self.clauses))
         comment = "\n".join(["c {:>2}  {}".format(l.dimacs_int, l.name) for l in literals]) + "\n"
         comment += "c QUERIES: " + ", ".join([str(l.dimacs_int) for l in self.queries]) + "\n"
 
@@ -119,9 +122,6 @@ class CNF:
 
             if disjunction != self.clauses[-1]:
                 dimacs += "\n"
-
-        dimacs += "\nc EVIDENCE:\n"
-        dimacs += "\n".join(["{}{} 0".format("-" if l.negated else "", l.dimacs_int) for l in self.evidence])
 
         return weights + header + comment + dimacs
 

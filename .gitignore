@@ -1,6 +1,7 @@
 model_counters/
 *.tmp
 *.nnf
+test.cnf
 */files/vtree*
 */files/sdd*
 
