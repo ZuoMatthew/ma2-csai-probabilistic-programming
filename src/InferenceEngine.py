@@ -25,6 +25,10 @@ class InferenceEngine:
         fol_theory = FOLTheory.create_from_problog(problog_program)
         print("FOL theory:")
         print(fol_theory)
+        print(util.separator_2)
+
+        print("FOL theory in CNF:")
+        print(fol_theory.to_cnf().formulas[0])
         print(util.separator_1)
 
         # convert the LogicFormula to its CNF representation

@@ -1,35 +1,10 @@
-c weights 0.3 0.7 0.2 1 0.8 1 1 1 1 1 1 1 1 1 1 1
-p cnf 8 24
-c  1  msw(locus2, b)
-c  2  msw(locus1, 'A')
-c  3  msw(locus1, a)
-c  4  genotype(locus1, 'A', 'A')
-c  5  genotype(locus2, b, b)
-c  6  genotype(locus1, 'A', a)
-c  7  genotype(locus1, a, 'A')
-c  8  bloodtype(a)
-c QUERIES: 8
-4 -2 0
--4 2 0
-5 -1 0
--5 1 0
-6 -2 -3 0
--6 2 0
--6 3 0
-7 -3 -2 0
--7 3 0
--7 2 0
-8 -4 -5 0
-8 -6 -5 0
-8 -7 -5 0
--8 4 6 7 0
--8 4 6 5 0
--8 4 5 7 0
--8 4 5 5 0
--8 5 6 7 0
--8 5 6 5 0
--8 5 5 7 0
--8 5 5 5 0
-2 3 0
--2 -3 0
-8 0
+c weights 0.3 1 0.54 1
+p cnf 2 4
+c  1  a
+c  2  b
+c QUERIES: 1
+1 2 0
+-1 -2 0
+1 0
+c EVIDENCE:
+-2 0
