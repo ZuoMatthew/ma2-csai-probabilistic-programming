@@ -240,9 +240,9 @@ class CNF:
         """
         newParamClauses = []
         for clause in self.paramClauses:
-            print("Converting: {}".format(clause))
+            #print("Converting: {}".format(clause))
             newParamClauses += clause.removeEquiv()
-            print("into: {}".format("\n".join(str(p) for p in clause.removeEquiv())))
+            #print("into: {}".format("\n".join(str(p) for p in clause.removeEquiv())))
 
         self.elimEquivClauses = newParamClauses
         self.paramClauses = []
