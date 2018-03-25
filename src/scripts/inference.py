@@ -13,6 +13,6 @@ if __name__ == '__main__':
 
     print(util.separator_1)
     print("EVALUATION USING PROBLOG LIBRARY:")
-    query_str_len = max([len(q) for q, _ in problog_results])
+    query_str_len = max([len(q) for q, _ in problog_results]) if problog_results else None
     for query, probability in problog_results:
         print("{:<{}}: {}".format(query, query_str_len, probability))
