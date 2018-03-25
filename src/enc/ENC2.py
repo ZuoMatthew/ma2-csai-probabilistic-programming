@@ -1,5 +1,6 @@
 from enc.CNF import *
 import copy
+import numpy as np
 
 
 class ENC2(CNF):
@@ -133,10 +134,10 @@ class ENC2(CNF):
                         d[j.var.var] = j.var.value
                     current_prob = float(probFunc.get(d)) / (1.0 - lastProb) if lastProb < 1 else 1
                     lastProb += current_prob
-                    self.weights.append(Weight(copy.deepcopy(cpt), current_prob))
+                    self.weights.append(Weight(copy.deepcopy(cpt), np.clip(current_prob, 0, 1)))
                     copy_cpt_neg = copy.deepcopy(cpt)
                     copy_cpt_neg.negate = True
-                    self.weights.append(Weight(copy_cpt_neg, 1.0 - current_prob))
+                    self.weights.append(Weight(copy_cpt_neg, np.clip(1.0 - current_prob, 0)))
 
     def convert(self):
         self._getVars()
