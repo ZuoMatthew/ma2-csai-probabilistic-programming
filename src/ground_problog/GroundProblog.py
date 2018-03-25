@@ -59,11 +59,14 @@ class GroundProblog:
         return ".\n".join(map(str, self.clauses)) + "."
 
     def get_facts(self):
-        return [c for c in self.clauses if isinstance(c, Term) and c.name != "query"]
+        return [c for c in self.clauses if isinstance(c, Term) and c.name != "query" and c.name != "evidence"]
 
     def get_queries(self):
         # Queries have only 1 argument TODO: check this again
         return [c.arguments[0] for c in self.clauses if isinstance(c, Term) and c.name == "query"]
+
+    def get_evidence(self):
+        return [c.arguments[0] for c in self.clauses if isinstance(c, Term) and c.name == "evidence"]
 
     def get_rules(self):
         return [c for c in self.clauses if isinstance(c, Rule)]

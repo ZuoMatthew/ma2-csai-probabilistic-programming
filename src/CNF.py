@@ -29,11 +29,13 @@ class Literal:
 class CNF:
     """ A formula in Conjunctive Normal Form with support for weights. """
 
-    def __init__(self, literals=None, clauses=None, queries=None):
+    def __init__(self, literals=None, clauses=None, evidence=None, queries=None):
         # Dictionary of all the literals that are used in the clauses.
         self.literals = literals if literals is not None else {}
         # List of lists of Literal, which represents a conjunction of disjunctions of literals.
         self.clauses = clauses if clauses is not None else []
+        # List of Literal.
+        self.evidence = evidence if evidence is not None else []
         # List of Literal.
         self.queries = queries if queries is not None else []
 
@@ -41,13 +43,14 @@ class CNF:
         out = "Literals ({}):\n\t".format(len(self.get_literals()))
         out += "\n\t".join(map(str, self.get_literals()))
 
-        if len(self.clauses):
-            out += "\nClauses ({}):\n\t".format(len(self.clauses))
-            out += "\n\t".join([" ∨ ".join(map(str, disjunction)) for disjunction in self.clauses])
+        out += "\nClauses ({}):\n\t".format(len(self.clauses))
+        out += "\n\t".join([" ∨ ".join(map(str, disjunction)) for disjunction in self.clauses])
 
-        if len(self.queries):
-            out += "\nQueries ({}):\n\t".format(len(self.queries))
-            out += "\n\t".join(map(str, self.queries))
+        out += "\nEvidence ({}):\n\t".format(len(self.evidence))
+        out += "\n\t".join(map(str, self.evidence))
+
+        out += "\nQueries ({}):\n\t".format(len(self.queries))
+        out += "\n\t".join(map(str, self.queries))
 
         return out
 
@@ -78,6 +81,14 @@ class CNF:
         self.clauses.append(clause)
         return clause
 
+    def add_evidence(self, evidence):
+        if not isinstance(evidence, Literal):
+            raise Exception("Adding evidence of wrong type")
+
+        evidence.dimacs_int = self.get_or_add_literal(evidence).dimacs_int
+        self.evidence.append(evidence)
+        return evidence
+
     def add_query(self, query):
         if not isinstance(query, Literal):
             raise Exception("Adding query of wrong type")
@@ -94,7 +105,7 @@ class CNF:
         literals = self.get_literals()
 
         # Add a comment to check assignments of numbers to literals
-        header = "p cnf {} {}\n".format(len(literals), len(self.clauses))
+        header = "p cnf {} {}\n".format(len(literals), len(self.clauses)+len(self.evidence))
         comment = "\n".join(["c {:>2}  {}".format(l.dimacs_int, l.name) for l in literals]) + "\n"
         comment += "c QUERIES: " + ", ".join([str(l.dimacs_int) for l in self.queries]) + "\n"
 
@@ -109,6 +120,9 @@ class CNF:
             if disjunction != self.clauses[-1]:
                 dimacs += "\n"
 
+        dimacs += "\nc EVIDENCE:\n"
+        dimacs += "\n".join(["{}{} 0".format("-" if l.negated else "", l.dimacs_int) for l in self.evidence])
+
         return weights + header + comment + dimacs
 
     @staticmethod
@@ -117,7 +131,7 @@ class CNF:
         theory = theory.to_cnf()
 
         # A formula in CNF consists of literals or of disjunctions of literals
-        conjunction = theory.formulas
+        conjunction = theory.formulas[0]
         literals = [f for f in conjunction.formulas if isinstance(f, FOLTheory.Atom)]
         disjunctions = [f for f in conjunction.formulas if isinstance(f, FOLTheory.Disjunction)]
 
@@ -128,6 +142,9 @@ class CNF:
         for formula in disjunctions:
             clause = [Literal.create_from_fol_formula(f) for f in formula.formulas]
             cnf.add_clause(clause)
+
+        for evidence in theory.get_evidence():
+            cnf.add_evidence(Literal.create_from_fol_formula(evidence))
 
         for query in theory.get_queries():
             cnf.add_query(Literal.create_from_fol_formula(query))

@@ -221,17 +221,20 @@ class FOLTheory:
     A FOL theory is a set of formulas that implicitly form a conjunction.
     """
 
-    def __init__(self, formulas=None, queries=None):
+    def __init__(self, formulas=None, evidence=None, queries=None):
         self.formulas = formulas if formulas is not None else []
+        self.evidence = evidence if evidence is not None else []
         self.queries = queries if queries is not None else []
 
     def __str__(self):
         out = "Formulas ({}):\n\t".format(len(self.formulas))
         out += "\n\t".join(map(str, self.formulas))
 
-        if len(self.queries):
-            out += "\nQueries ({}):\n\t".format(len(self.queries))
-            out += "\n\t".join(map(str, self.queries))
+        out += "\nEvidence ({}):\n\t".format(len(self.evidence))
+        out += "\n\t".join(map(str, self.evidence))
+
+        out += "\nQueries ({}):\n\t".format(len(self.queries))
+        out += "\n\t".join(map(str, self.queries))
 
         return out
 
@@ -240,6 +243,12 @@ class FOLTheory:
 
     def get_formulas(self):
         return self.formulas
+
+    def add_evidence(self, evidence):
+        self.evidence.append(evidence)
+
+    def get_evidence(self):
+        return self.evidence
 
     def add_query(self, query):
         self.queries.append(query)
@@ -262,7 +271,7 @@ class FOLTheory:
                         raise Exception("Unexpected Conjunction inside CNF Disjunction: {}\nCNF:\n{}\n"
                                         .format(str(formula), str(cnf)))
 
-        return FOLTheory(Conjunction([cnf]), self.queries)
+        return FOLTheory(formulas=[Conjunction([cnf])], evidence=self.evidence, queries=self.queries)
 
     def get_atoms(self):
         return [f for f in self.formulas if isinstance(f, Atom)]
@@ -278,6 +287,9 @@ class FOLTheory:
         # Problog facts can just be converted to FOL Atoms
         for fact in ground_problog.get_facts():
             theory.add_formula(Atom.create_from_problog_term(fact, fact.probability, 1-fact.probability))
+
+        for evidence in ground_problog.get_evidence():
+            theory.add_evidence(Atom.create_from_problog_term(evidence, 1, 1))
 
         for query in ground_problog.get_queries():
             theory.add_query(Atom.create_from_problog_term(query, 1, 1))
