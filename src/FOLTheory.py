@@ -314,16 +314,22 @@ class FOLTheory:
             theory.add_formula(Equivalence(head, body))
 
         for annotation in ground_problog.get_probabilistic_annotations():
-            if not annotation.body:
-                disjunction1 = []
-                disjunction2 = []
+            atoms = []
+            predicate = "none_of"
+            weight_sum = 0
 
-                for head in annotation.heads:
-                    theory.add_formula(Atom.create_from_problog_term(head, head.probability, 1))
-                    disjunction1.append(Atom.create_from_problog_term(head, 1, 1))
-                    disjunction2.append(Negation(Atom.create_from_problog_term(head, 1, 1)))
+            for head in annotation.heads:
+                predicate += "_" + head.name
+                weight_sum += head.probability
+                atoms.append(Atom.create_from_problog_term(head, 1, 1))
+                theory.add_formula(Atom.create_from_problog_term(head, head.probability, 1))
 
-                theory.add_formula(Disjunction(disjunction1))
-                theory.add_formula(Disjunction(disjunction2))
+            atoms.append(Atom(predicate=predicate, terms=None, weight_true=1, weight_false=1))
+            theory.add_formula(Atom(predicate=predicate, terms=None, weight_true=1-weight_sum, weight_false=1))
+
+            for i in range(len(atoms)):
+                for j in range(i+1, len(atoms)):
+                    theory.add_formula(Disjunction([Negation(atoms[i]), Negation(atoms[j])]))
+            theory.add_formula(Disjunction(atoms))
 
         return theory
