@@ -73,6 +73,8 @@ class ProbabilityFunction:
             print("Passed: {}".format(kwargs))
 
         if len(self.dependents) == 0:
+            #print(self.prob)
+            #print(self.probFor)
             return self.prob[kwargs["value"]]
 
         else:
@@ -166,8 +168,9 @@ class BayesianNetwork:
         if len(temp_recombined_strings) == 1:
             # Only 1 entry so we can just ge it out
             prob = temp_recombined_strings[0].strip(";").split(",")
-            probabilities.append(Probability(0, prob[0]))
-            probabilities.append(Probability(1, prob[1]))
+            for j in range(len(prob)):
+                probabilities.append(Probability(j, prob[j]))
+            #probabilities.append(Probability(1, prob[1]))
         else:
             for recombined in temp_recombined_strings:
                 split = recombined.split(":")

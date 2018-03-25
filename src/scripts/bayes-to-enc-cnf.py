@@ -2,15 +2,30 @@ import os.path
 from BayesianNetwork import BayesianNetwork
 
 if __name__ == '__main__':
-    filename = os.path.join(os.path.dirname(__file__), "..", "files", "cancer.dsc")
+    file = "alarm"
+    filename = os.path.join(os.path.dirname(__file__), "..", "files", f"{file}.dsc")
     network = BayesianNetwork.create_from_file(filename)
+    output_folder = "/Users/thierryderuyttere/Desktop/Unif_2e_master/capita_selecta/csai-probabilistic-programming/solutions/tests/"
+    toCachet = False
+    if toCachet:
+        output_folder = output_folder + file + "/cachet"
+    else:
+        output_folder = output_folder + file + "/minic2d"
 
     enc1_cnf = network.to_enc1()
     enc1_cnf.convert()
     print("converted enc1: \n", enc1_cnf.elimEquiv())
-    print("dimac:\n", enc1_cnf.toDimac(toCachet=True))
+    enc1 = enc1_cnf.toDimac(toCachet=toCachet)
+    print("dimac:\n", enc1)
+    f = open(f"{output_folder}/enc1.dimac", "w")
+    f.write(enc1)
+    f.close()
 
     enc2_cnf = network.to_enc2()
     enc2_cnf.convert()
     print("converted enc2: \n", enc2_cnf.elimEquiv())
-    print("dimac:\n", enc2_cnf.toDimac(toCachet=True))
+    enc2 = enc2_cnf.toDimac(toCachet=toCachet)
+    print("dimac:\n",enc2)
+    f = open(f"{output_folder}/enc2.dimac", "w")
+    f.write(enc2)
+    f.close()
