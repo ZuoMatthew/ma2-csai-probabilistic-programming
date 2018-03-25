@@ -4,20 +4,19 @@ import FOLTheory
 class Literal:
     """ A literal of a CNF formula. """
 
-    def __init__(self, name, negated=False, weight=1):
+    def __init__(self, name, negated=False, weight=1.0, dimacs_assignment=None):
         self.name = name
         self.negated = negated
         self.weight = weight
-        self.dimacs_int = None
+        self.dimacs_int = dimacs_assignment
 
     def __str__(self):
-        return (str(self.weight)+"::" if self.weight != 1 else "") + ("-" if self.negated else "") + self.name
+        return (str(self.weight)+"::" if self.weight != 1.0 else "") + ("-" if self.negated else "") + self.name
 
     def __eq__(self, other):
         return self.name == other.name and self.negated == other.negated and self.weight == other.weight
 
 
-# return sorted(self.d.items(), key=lambda kv: kv[1])
 class CNF:
     """ A formula in Conjunctive Normal Form with support for weights. """
 
@@ -48,10 +47,17 @@ class CNF:
             raise Exception("Adding literal of wrong type")
         
         if literal.name not in self.literals:
-            literal.dimacs_int = len(self.literals) + 1
-            self.literals[literal.name] = literal
-            
-        return self.literals[literal.name]
+            if literal.weight != 1.0:
+                new_weight = literal.weight if not literal.negated else (1.0 - literal.weight)
+            else:
+                new_weight = 1.0
+            dimacs_assignment = len(self.literals) + 1
+            new_literal = Literal(literal.name, False, new_weight, dimacs_assignment)
+
+            self.literals[literal.name] = new_literal
+            return new_literal
+        else:
+            return self.literals[literal.name]
 
     def get_literals(self):
         return sorted(self.literals.values(), key=lambda lit: lit.dimacs_int)
@@ -89,7 +95,7 @@ class CNF:
         comment += "c QUERIES: " + ", ".join([str(l.dimacs_int) for l in self.queries]) + "\n"
 
         weights = "c weights "
-        weights += " ".join(["{} {}".format(l.weight, 1 - l.weight) for l in literals]) + "\n"
+        weights += " ".join(["{} {}".format(l.weight, 1.0 - l.weight) for l in literals]) + "\n"
 
         dimacs = ""
         for disjunction in self.clauses:
