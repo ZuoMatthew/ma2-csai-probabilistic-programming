@@ -89,6 +89,9 @@ class CNF:
         self.evidence.append(evidence)
         return evidence
 
+    def get_evidence_with_dimacs_numbers(self):
+        return [(lit, lit.dimacs_int) for lit in self.evidence]
+
     def add_query(self, query):
         if not isinstance(query, Literal):
             raise Exception("Adding query of wrong type")

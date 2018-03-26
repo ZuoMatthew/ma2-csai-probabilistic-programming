@@ -313,20 +313,29 @@ class FOLTheory:
         for (head, body) in rules:
             theory.add_formula(Equivalence(head, body))
 
+        # ONLY HANDLES PROBABILISTIC ANNOTATIONS WITHOUT RULES FOR NOW
+        # TODO: add support for probabilistic annotations with rules, see https://dtai.cs.kuleuven.be/problog/tutorial/basic/02_bayes.html
+        # TODO: maybe split up logic formulas into atoms and formulas. atoms are then declarations of the atoms that are used in formulas.
         for annotation in ground_problog.get_probabilistic_annotations():
             atoms = []
-            predicate = "none_of"
+
+            # create a new predicate for the case where all heads of the annotated disjunction are false
+            new_predicate = "none_of"
             weight_sum = 0
 
             for head in annotation.heads:
-                predicate += "_" + head.name
+                new_predicate += "_" + head.name
                 weight_sum += head.probability
-                atoms.append(Atom.create_from_problog_term(head, 1, 1))
-                theory.add_formula(Atom.create_from_problog_term(head, head.probability, 1))
+                # add atom with correct weight to FOL Theory
+                theory.add_formula(Atom.create_from_problog_term(head, weight_true=head.probability, weight_false=1))
+                # add atom to local list with weights 1, 1
+                atoms.append(Atom.create_from_problog_term(head, weight_true=1, weight_false=1))
 
-            atoms.append(Atom(predicate=predicate, terms=None, weight_true=1, weight_false=1))
-            theory.add_formula(Atom(predicate=predicate, terms=None, weight_true=1-weight_sum, weight_false=1))
+            theory.add_formula(Atom(predicate=new_predicate, terms=None, weight_true=1-weight_sum, weight_false=1))
+            atoms.append(Atom(predicate=new_predicate, terms=None, weight_true=1, weight_false=1))
 
+            # create constraints that make sure only one of the values can be true
+            # e.g. 0.1::a; 0.2::b; 0.3::c => (¬a ∨ ¬b) ∧ (¬a ∨ ¬c) ∧ (¬b ∨ ¬c) ∧ (a ∨ b v c ∨ none_of_a_b_c)
             for i in range(len(atoms)):
                 for j in range(i+1, len(atoms)):
                     theory.add_formula(Disjunction([Negation(atoms[i]), Negation(atoms[j])]))

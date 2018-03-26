@@ -1,6 +1,10 @@
 model_counters/
+!model_counters/*.pdf
+!model_counters/*.zip
 *.tmp
 *.nnf
+test.cnf
+test_no_query.cnf
 */files/vtree*
 */files/sdd*
 

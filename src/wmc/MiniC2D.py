@@ -53,4 +53,4 @@ class MiniC2D(WeightedModelCounter):
         match = re.search(r"Count(/Probability)?\s\t(.*)", output)
         if match is None:
             return None
-        return match.group(2)
+        return float(match.group(2))

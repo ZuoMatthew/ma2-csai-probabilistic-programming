@@ -1,4 +1,4 @@
-import util
+import util as util
 from CNF import CNF
 from FOLTheory import FOLTheory
 from ground_problog.GroundProblogParser import GroundProblogParser
