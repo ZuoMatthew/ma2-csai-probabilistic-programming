@@ -9,23 +9,38 @@ class WeightedModelCounter:
     def evaluate_cnf(self, cnf):
         """ Executes queries in a given weighted CNF and returns the results. """
         results = {}
-        cnf_filename = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "files", "test.cnf"))
 
+        cnf_filename = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "files", "test{}.cnf"))
+        cnf_query_filename = cnf_filename.format("")
+        cnf_no_query_filename = cnf_filename.format("_no_query")
+
+        evidence = cnf.get_evidence_with_dimacs_numbers()
         queries = cnf.get_queries_with_dimacs_numbers()
+
         for literal, number in queries:
             cnf_with_query = copy.deepcopy(cnf)
             cnf_with_query.add_clause([literal])
-            dimacs = cnf_with_query.to_dimacs()
             print("DIMACS WITH QUERY:")
-            print(dimacs)
+            print(cnf_with_query.to_dimacs())
+            with open(cnf_query_filename, "w") as file:
+                file.write(cnf_with_query.to_dimacs())
+
+            probability = self.do_model_count(cnf_query_filename)
+            print("RESULT: {}".format(probability))
+
+            # model count just done is of (theory + evidence + query)
+            # if CNF has evidence, then need to divide probability by modelcount of (theory + evidence)
+            if len(evidence):
+                with open(cnf_no_query_filename, "w") as file:
+                    file.write(cnf.to_dimacs())
+                probability_no_query = self.do_model_count(cnf_no_query_filename)
+                print("RESULT WITHOUT QUERY: {}".format(probability_no_query))
+                probability = probability / probability_no_query
+
+            results[str(literal)] = probability
+
             if literal != queries[-1][0]:
                 print(util.separator_2)
-
-            with open(cnf_filename, "w") as file:
-                file.write(dimacs)
-
-            probability = self.do_model_count(cnf_filename)
-            results[str(literal)] = probability
 
         print(util.separator_1)
         return sorted(results.items(), key=lambda kv: kv[0])

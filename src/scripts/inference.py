@@ -1,5 +1,7 @@
-import util
 import os.path
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+import util as util
 from InferenceEngine import InferenceEngine
 
 if __name__ == '__main__':
