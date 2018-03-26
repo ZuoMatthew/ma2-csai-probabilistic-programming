@@ -137,7 +137,7 @@ class ENC2(CNF):
                     self.weights.append(Weight(copy.deepcopy(cpt), np.clip(current_prob, 0, 1)))
                     copy_cpt_neg = copy.deepcopy(cpt)
                     copy_cpt_neg.negate = True
-                    self.weights.append(Weight(copy_cpt_neg, np.clip(1.0 - current_prob, 0)))
+                    self.weights.append(Weight(copy_cpt_neg, np.clip(1.0 - current_prob, 0, 1)))
 
     def convert(self):
         self._getVars()
