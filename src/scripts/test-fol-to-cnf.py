@@ -36,3 +36,7 @@ expected = Conjunction([
     Disjunction([Atom('U'), Atom('Q'), Atom('R'), Atom('P')]), Disjunction([Atom('U'), Atom('Q'), Atom('S'), Atom('P')])
 ])
 compare(formula, expected)
+
+
+formula = Equivalence(Atom("Alarm"), Conjunction([Atom('burglary'), Atom("earthquake"), Atom("alarmp1")]))
+compare(formula, expected)

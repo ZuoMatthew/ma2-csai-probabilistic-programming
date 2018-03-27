@@ -1,9 +1,15 @@
-0.3::a; 0.54::b.
+0.9::a.
 
-evidence(b, false).
+
+0.3::b :- a.
+0.8::c :- b.
+
+query(b).
+%evidence(b, false).
 
 query(a).
 query(b).
+query(c).
 
 % PROBLOG CNF:
 % ====================================================

@@ -88,7 +88,7 @@ class Negation(LogicFormula):
             return Conjunction(negated_subformulas).to_cnf()
 
         else:
-            raise Exception("Unexpected formula type")
+            raise Exception("Unexpected formula type {}".format(type(self.formula)))
 
 
 class Conjunction(LogicFormula):
@@ -289,6 +289,7 @@ class FOLTheory:
             theory.add_formula(Atom.create_from_problog_term(fact, fact.probability, 1-fact.probability))
 
         for evidence in ground_problog.get_evidence():
+            print(Atom.create_from_problog_term(evidence, 1, 1))
             theory.add_evidence(Atom.create_from_problog_term(evidence, 1, 1))
 
         for query in ground_problog.get_queries():
@@ -316,20 +317,41 @@ class FOLTheory:
         # ONLY HANDLES PROBABILISTIC ANNOTATIONS WITHOUT RULES FOR NOW
         # TODO: add support for probabilistic annotations with rules, see https://dtai.cs.kuleuven.be/problog/tutorial/basic/02_bayes.html
         # TODO: maybe split up logic formulas into atoms and formulas. atoms are then declarations of the atoms that are used in formulas.
+        head_count = {}
         for annotation in ground_problog.get_probabilistic_annotations():
             atoms = []
 
             # create a new predicate for the case where all heads of the annotated disjunction are false
             new_predicate = "none_of"
             weight_sum = 0
-
             for head in annotation.heads:
                 new_predicate += "_" + head.name
                 weight_sum += head.probability
                 # add atom with correct weight to FOL Theory
-                theory.add_formula(Atom.create_from_problog_term(head, weight_true=head.probability, weight_false=1))
-                # add atom to local list with weights 1, 1
-                atoms.append(Atom.create_from_problog_term(head, weight_true=1, weight_false=1))
+
+                if len(annotation.body) > 0:
+                    # We have a body
+                    if head not in head_count:
+                        head_count[head.name] = 0
+
+                    fake_head = "p_{}_{}".format(head.name, head_count[head.name])
+                    head_count[head.name] += 1
+                    fake_head_atom = Atom(predicate=fake_head, terms=None, weight_true=1, weight_false=1)
+                    theory.add_formula(
+                        Atom(predicate=fake_head, terms=None, weight_true=head.probability, weight_false=1))
+                    atoms.append(Atom(predicate=fake_head, terms=None, weight_true=1, weight_false=1))
+
+                    new_head = Atom.create_from_problog_term(head, weight_true=1, weight_false=1)
+                    atoms.append(new_head)
+
+                    body_with_fake = [Atom.create_from_problog_term(term, weight_true=1, weight_false=1) for term in annotation.body]
+                    body_with_fake.append(fake_head_atom)
+
+                    theory.add_formula(Equivalence(new_head, Conjunction(body_with_fake)))
+                else:
+                    theory.add_formula(Atom.create_from_problog_term(head, weight_true=head.probability, weight_false=1))
+                    # add atom to local list with weights 1, 1
+                    atoms.append(Atom.create_from_problog_term(head, weight_true=1, weight_false=1))
 
             theory.add_formula(Atom(predicate=new_predicate, terms=None, weight_true=1-weight_sum, weight_false=1))
             atoms.append(Atom(predicate=new_predicate, terms=None, weight_true=1, weight_false=1))
