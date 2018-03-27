@@ -322,7 +322,7 @@ class CNF:
             rule_copy = []
             for v in p.lhs:
                 copy = v.getCopy(negate=True)
-                value = varToInt[copy.getBaseRepr()]
+                value = varToInt[copy.getBaseRepr(False)]
                 if copy.negate:
                     value *= -1
                 rule_copy.append(value)
