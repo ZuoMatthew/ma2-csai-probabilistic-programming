@@ -46,13 +46,20 @@ class ProbabilisticAnnotation(Clause):
             out += " :- " + ", ".join(map(str, self.body))
         return out
 
+class Constraints:
+    """Holds constraints for the FOL.
+       These are things like A and B cannot be true at the same time
+    """
+    def __init__(self, notEquals):
+        self.notEquals = notEquals
 
 class GroundProblog:
     """ A ground problog program is a collection of clauses.
     A clause can be a fact (represented by just a Term here), a  Rule, or a ProbabilityPredicate.
     """
-    def __init__(self, clauses):
+    def __init__(self, clauses, constraints=None):
         self.clauses = clauses
+        self.constraints = [] if constraints is None else constraints
 
     def __str__(self):
         return ".\n".join(map(str, self.clauses)) + "."
@@ -72,3 +79,51 @@ class GroundProblog:
 
     def get_probabilistic_annotations(self):
         return [c for c in self.clauses if isinstance(c, ProbabilisticAnnotation)]
+
+    def get_constraints(self):
+        return self.constraints
+
+    def preprocess_ground(self):
+        # Convert AD's to have heads with no probability
+        new_program = self.convert_ad()
+
+        # Return
+        return new_program
+
+    def convert_ad(self):
+        # For each head in an ad:
+        new_clauses = []
+        # First get the probabilities from AD's and add new facts
+        head_count = {}
+        constraints = []
+        for clause in self.clauses:
+            if type(clause) is ProbabilisticAnnotation:
+
+                # For each head in the annotation
+                for head in clause.heads:
+                    # We have a body
+                    if head.name not in head_count:
+                        head_count[head.name] = 0
+
+                    if clause.body:
+                        fake_head = "p_{}_{}".format(head.name, head_count[head.name])
+                        head_count[head.name] += 1
+
+                        fake_head_term = Term(fake_head, probability=head.probability)
+                        new_clauses.append(fake_head_term)
+
+                        # Create a new head with no weights
+                        new_head_wo_prob = Term(head.name)
+
+                        new_rule = Rule(new_head_wo_prob, clause.body + [fake_head_term])
+                        new_clauses.append(new_rule)
+                    else:
+                        new_clauses.append(clause)
+
+                if len(clause.heads) > 1:
+                    constraints.append(clause.heads)
+
+            else:
+                # Nothing to change addd it to our new clauses
+                new_clauses.append(clause)
+        return GroundProblog(new_clauses, Constraints(constraints))

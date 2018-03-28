@@ -22,6 +22,7 @@ class InferenceEngine:
         print(problog_program)
         print(util.separator_1)
 
+        problog_program = problog_program.preprocess_ground()
         # convert the GroundProblog to a FOLTheory
         fol_theory = FOLTheory.create_from_problog(problog_program)
         print("FOL theory:")

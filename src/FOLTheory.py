@@ -193,24 +193,6 @@ class Disjunction(LogicFormula):
 
             return result.to_cnf()
 
-class Implication(LogicFormula):
-    """ Represents the material implicatie '=>' E.g. "head <= body" """
-    def __init__(self,head, body):
-        # lhs is the things left of the arrow
-        # rhs is the thing right of the arrow
-        # The arrow goes from lhs to rhs (head <= body)
-        self.head = head
-        self.body = body
-
-    def __str__(self):
-        return "(" + str(self.head) + " <= " + str(self.body) + ")"
-
-    def to_cnf(self):
-        """ Convert this formula to Conjunctive Normal Form. """
-        # Formula is of form P <= Q
-        b = Disjunction([self.head, Negation(self.body)])  # (¬P ∨ Q)
-        return b.to_cnf()              # (¬P ∨ Q).to_cnf()
-
 class Equivalence(LogicFormula):
     """ Represents the logical connective '↔'. E.g. "w ↔ r ∨ s" """
 
@@ -329,7 +311,7 @@ class FOLTheory:
                 rules[i] = (rules[i][0], Disjunction([rules[i][1], body]))
 
         for (head, body) in rules:
-            theory.add_formula(Implication(head, body))
+            theory.add_formula(Equivalence(head, body))
 
         # ONLY HANDLES PROBABILISTIC ANNOTATIONS WITHOUT RULES FOR NOW
         # TODO: add support for probabilistic annotations with rules, see https://dtai.cs.kuleuven.be/problog/tutorial/basic/02_bayes.html
@@ -346,36 +328,9 @@ class FOLTheory:
                 weight_sum += head.probability
 
                 # add atom with correct weight to FOL Theory
-                if len(annotation.body) > 0:
-                    # We have a body
-                    if head not in head_count:
-                        head_count[head.name] = 0
-
-                    fake_head = "p_{}_{}".format(head.name, head_count[head.name])
-                    head_count[head.name] += 1
-                    print(fake_head, head.probability)
-                    fake_head_atom = Atom(predicate=fake_head, terms=None, weight_true=head.probability, weight_false=1 - head.probability)
-                    theory.add_formula(fake_head_atom)
-                    #atoms.append(Atom(predicate=fake_head, terms=None, weight_true=1, weight_false=1))
-
-                    # Create a new head with no weights
-                    new_head = Atom.create_from_problog_term(head, weight_true=1, weight_false=1)
-
-                    atoms.append(new_head)
-
-                    body_with_fake = [Atom.create_from_problog_term(term, weight_true=1, weight_false=1) for term in annotation.body]
-                    fake_head_atom = Atom(predicate=fake_head, terms=None, weight_true=1, weight_false=1)
-
-                    body_with_fake.append(fake_head_atom)
-
-                    theory.add_formula(Equivalence(Conjunction(body_with_fake), new_head))
-                else:
-                    #final_prob = head.probability
-                    #print(head.name, final_prob, annotation.body[0].probability)
-
-                    theory.add_formula(Atom.create_from_problog_term(head, weight_true=head.probability, weight_false=1))
-                    # add atom to local list with weights 1, 1
-                    atoms.append(Atom.create_from_problog_term(head, weight_true=1, weight_false=1))
+                theory.add_formula(Atom.create_from_problog_term(head, weight_true=head.probability, weight_false=1))
+                # add atom to local list with weights 1, 1
+                atoms.append(Atom.create_from_problog_term(head, weight_true=1, weight_false=1))
 
             if len(annotation.heads) > 1:
                 theory.add_formula(Atom(predicate=new_predicate, terms=None, weight_true=1-weight_sum, weight_false=1))
