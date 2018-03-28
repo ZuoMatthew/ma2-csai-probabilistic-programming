@@ -1,16 +1,13 @@
 0.9::a.
-
+0.8::d.
 
 0.3::b :- a.
-0.8::c :- b.
-
-query(b).
-%evidence(b, false).
+0.4::c :- a, d.
 
 query(a).
 query(b).
 query(c).
-
+query(d).
 % PROBLOG CNF:
 % ====================================================
 % DIMACS:

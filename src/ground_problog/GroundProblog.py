@@ -5,7 +5,6 @@ This file defines classes that are used to build GroundProblog instances that re
 class Clause:
     """ Abstract class that represents a clause? """
 
-
 class Term(Clause):
     """ A term has a name, can be negated, and possibly has arguments. """
     def __init__(self, name, negation=False, arguments=None, probability=1.0):

@@ -46,8 +46,8 @@ class MiniC2D(WeightedModelCounter):
         # print(output)
 
         # convert the new vtree.dot file to a png file
-        (graph,) = pydot.graph_from_dot_file(vtree_file + "dot")
-        graph.write_png(vtree_file + "png")
+        #(graph,) = pydot.graph_from_dot_file(vtree_file + "dot")
+        #graph.write_png(vtree_file + "png")
 
         # get the model count from the output
         match = re.search(r"Count(/Probability)?\s\t(.*)", output)

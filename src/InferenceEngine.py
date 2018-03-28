@@ -16,6 +16,7 @@ class InferenceEngine:
         """
         # ground and parse the program
         ground_program = util.ground_problog_program(program)
+
         problog_program = self.problog_parser.program_to_problog(ground_program)
         print("PROGRAM")
         print(problog_program)
