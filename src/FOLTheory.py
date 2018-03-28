@@ -354,7 +354,7 @@ class FOLTheory:
                     fake_head = "p_{}_{}".format(head.name, head_count[head.name])
                     head_count[head.name] += 1
                     print(fake_head, head.probability)
-                    fake_head_atom = Atom(predicate=fake_head, terms=None, weight_true=head.probability, weight_false=1)
+                    fake_head_atom = Atom(predicate=fake_head, terms=None, weight_true=head.probability, weight_false=1 - head.probability)
                     theory.add_formula(fake_head_atom)
                     #atoms.append(Atom(predicate=fake_head, terms=None, weight_true=1, weight_false=1))
 
@@ -377,8 +377,9 @@ class FOLTheory:
                     # add atom to local list with weights 1, 1
                     atoms.append(Atom.create_from_problog_term(head, weight_true=1, weight_false=1))
 
-            theory.add_formula(Atom(predicate=new_predicate, terms=None, weight_true=1-weight_sum, weight_false=1))
-            atoms.append(Atom(predicate=new_predicate, terms=None, weight_true=1, weight_false=1))
+            if len(annotation.heads) > 1:
+                theory.add_formula(Atom(predicate=new_predicate, terms=None, weight_true=1-weight_sum, weight_false=1))
+                atoms.append(Atom(predicate=new_predicate, terms=None, weight_true=1, weight_false=1))
 
             # create constraints that make sure only one of the values can be true
             # e.g. 0.1::a; 0.2::b; 0.3::c => (¬a ∨ ¬b) ∧ (¬a ∨ ¬c) ∧ (¬b ∨ ¬c) ∧ (a ∨ b v c ∨ none_of_a_b_c)

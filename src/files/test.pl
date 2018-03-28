@@ -1,29 +1,11 @@
-0.9::a.
-0.8::d.
+0.7::burglary.
+0.2::earthquake.
 
-0.3::b :- a.
-0.4::c :- a, d.
+0.9::alarm :- burglary, earthquake.
+0.8::alarm :- burglary, \+earthquake.
+0.1::alarm :- \+burglary, earthquake.
 
-query(a).
-query(b).
-query(c).
-query(d).
-% PROBLOG CNF:
-% ====================================================
-% DIMACS:
-% p wcnf 3 7 36528
-% c 1  choice(0,0,a)
-% c 2  choice(0,1,b)
-% c 3  choice(0,e,null)
-% c 1  a
-% c 2  b
-% 12039 -1 0
-% 6161 -2 0
-% 18325 -3 0
-% 36528 -1 -2 0
-% 36528 -1 -3 0
-% 36528 -2 -3 0
-% 36528 1 2 3 0
-% ====================================================
-% EVALUATION:
-% a: 0.6521739130434782
+%evidence(alarm,true).
+query(alarm).
+query(burglary).
+query(earthquake).
