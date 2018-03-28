@@ -46,20 +46,14 @@ class ProbabilisticAnnotation(Clause):
             out += " :- " + ", ".join(map(str, self.body))
         return out
 
-class Constraints:
-    """Holds constraints for the FOL.
-       These are things like A and B cannot be true at the same time
-    """
-    def __init__(self, notEquals):
-        self.notEquals = notEquals
 
 class GroundProblog:
     """ A ground problog program is a collection of clauses.
     A clause can be a fact (represented by just a Term here), a  Rule, or a ProbabilityPredicate.
     """
-    def __init__(self, clauses, constraints=None):
+    def __init__(self, clauses, notEquals=None):
         self.clauses = clauses
-        self.constraints = [] if constraints is None else constraints
+        self.notEquals = [] if notEquals is None else notEquals
 
     def __str__(self):
         return ".\n".join(map(str, self.clauses)) + "."
@@ -81,7 +75,7 @@ class GroundProblog:
         return [c for c in self.clauses if isinstance(c, ProbabilisticAnnotation)]
 
     def get_constraints(self):
-        return self.constraints
+        return self.notEquals
 
     def preprocess_ground(self):
         # Convert AD's to have heads with no probability
@@ -117,8 +111,9 @@ class GroundProblog:
 
                         new_rule = Rule(new_head_wo_prob, clause.body + [fake_head_term])
                         new_clauses.append(new_rule)
-                    else:
-                        new_clauses.append(clause)
+
+                if not clause.body:
+                    new_clauses.append(clause)
 
                 if len(clause.heads) > 1:
                     constraints.append(clause.heads)
@@ -126,4 +121,4 @@ class GroundProblog:
             else:
                 # Nothing to change addd it to our new clauses
                 new_clauses.append(clause)
-        return GroundProblog(new_clauses, Constraints(constraints))
+        return GroundProblog(new_clauses, constraints)

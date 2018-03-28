@@ -1,18 +1,8 @@
-0.7::burglary.
-0.2::earthquake.
+0.3::a; 0.54::b.
+0.4::c; 0.4::d :- a, b.
 
-0.9::alarm :- burglary, earthquake.
-0.8::alarm :- burglary, \+earthquake.
-0.1::alarm :- \+burglary, earthquake.
+evidence(b, false).
 
-evidence(alarm,true).
-query(alarm).
-query(burglary).
-query(earthquake).
-
-0.8::a ; 0.7::b :- c.
-a :- c, p_a_0.
-b :- c, p_b_0.
-
-
-
+query(a).
+query(c).
+query(d).

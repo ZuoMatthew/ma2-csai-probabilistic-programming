@@ -316,7 +316,6 @@ class FOLTheory:
         # ONLY HANDLES PROBABILISTIC ANNOTATIONS WITHOUT RULES FOR NOW
         # TODO: add support for probabilistic annotations with rules, see https://dtai.cs.kuleuven.be/problog/tutorial/basic/02_bayes.html
         # TODO: maybe split up logic formulas into atoms and formulas. atoms are then declarations of the atoms that are used in formulas.
-        head_count = {}
         for annotation in ground_problog.get_probabilistic_annotations():
             atoms = []
 
