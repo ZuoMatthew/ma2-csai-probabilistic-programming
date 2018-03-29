@@ -7,7 +7,7 @@ if __name__ == '__main__':
     files = ["alarm", "andes", "hailfinder", "water", "child"]
     for file in files:
         print(file)
-        filename = os.path.join(os.path.dirname(__file__), "..", "files", f"{file}.dsc")
+        filename = os.path.join(os.path.dirname(__file__), "..", "files", "networks", f"{file}.dsc")
         network = BayesianNetwork.create_from_file(filename)
 
         toCachet_bools = [False, True]

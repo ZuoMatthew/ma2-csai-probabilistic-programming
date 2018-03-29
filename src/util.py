@@ -1,6 +1,8 @@
+import os.path
 from problog.formula import LogicFormula
 from problog.ddnnf_formula import DDNNF
 from problog.cnf_formula import CNF
+from InferenceEngine import InferenceEngine
 
 separator_1 = "===================================================="
 separator_2 = "----------------------------------------------------"
@@ -9,6 +11,11 @@ separator_2 = "----------------------------------------------------"
 def file_to_string(filename):
     with open(filename) as input_file:
         return input_file.read()
+
+
+def load_problog_program(filename):
+    filename = os.path.join(os.path.dirname(__file__), "files", "problog", filename)
+    return file_to_string(filename)
 
 
 def ground_problog_program(program):
@@ -42,3 +49,14 @@ def evaluate_using_problog(program, print_steps=False):
             print("{:<{}}: {}".format(query, query_str_len, probability))
 
     return results
+
+
+def results_with_pipeline(filename, print_steps=False):
+    program = load_problog_program(filename)
+    engine = InferenceEngine()
+    return engine.evaluate_problog_program(program, print_steps)
+
+
+def results_with_problog(filename, print_steps):
+    program = load_problog_program(filename)
+    return evaluate_using_problog(program, print_steps)

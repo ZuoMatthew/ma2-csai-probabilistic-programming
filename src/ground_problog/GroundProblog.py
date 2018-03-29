@@ -2,8 +2,10 @@
 This file defines classes that are used to build GroundProblog instances that represent ground problog programs.
 """
 
+
 class Clause:
     """ Abstract class that represents a clause? """
+
 
 class Term(Clause):
     """ A term has a name, can be negated, and possibly has arguments. """
@@ -96,18 +98,18 @@ class GroundProblog:
                 # For each head in the annotation
                 for head in clause.heads:
                     # We have a body
-                    if head.name not in head_count:
-                        head_count[head.name] = 0
+                    if str(head) not in head_count:
+                        head_count[str(head)] = 0
 
                     if clause.body:
-                        fake_head = "p_{}_{}".format(head.name, head_count[head.name])
-                        head_count[head.name] += 1
+                        fake_head = "p_{}_{}".format(str(head), head_count[str(head)])
+                        head_count[str(head)] += 1
 
                         fake_head_term = Term(fake_head, probability=head.probability)
                         new_clauses.append(fake_head_term)
 
                         # Create a new head with no weights
-                        new_head_wo_prob = Term(head.name)
+                        new_head_wo_prob = Term(str(head))
 
                         new_rule = Rule(new_head_wo_prob, clause.body + [fake_head_term])
                         new_clauses.append(new_rule)

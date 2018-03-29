@@ -288,7 +288,7 @@ class FOLTheory:
             theory.add_formula(Atom.create_from_problog_term(fact, fact.probability, 1-fact.probability))
 
         for evidence in ground_problog.get_evidence():
-            print(Atom.create_from_problog_term(evidence, 1, 1))
+            # print(Atom.create_from_problog_term(evidence, 1, 1))
             theory.add_evidence(Atom.create_from_problog_term(evidence, 1, 1))
 
         for query in ground_problog.get_queries():

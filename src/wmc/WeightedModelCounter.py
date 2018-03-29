@@ -6,11 +6,11 @@ import os.path
 class WeightedModelCounter:
     """ Abstract class for weighted model counters. """
 
-    def evaluate_cnf(self, cnf):
+    def evaluate_cnf(self, cnf, print_steps=False):
         """ Executes queries in a given weighted CNF and returns the results. """
         results = {}
 
-        cnf_filename = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "files", "test{}.cnf"))
+        cnf_filename = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "files", "cnf{}.dimac"))
         cnf_query_filename = cnf_filename.format("")
         cnf_no_query_filename = cnf_filename.format("_no_query")
 
@@ -20,13 +20,17 @@ class WeightedModelCounter:
         for literal, number in queries:
             cnf_with_query = copy.deepcopy(cnf)
             cnf_with_query.add_clause([literal])
-            print("DIMACS WITH QUERY:")
-            print(cnf_with_query.to_dimacs())
+            if print_steps:
+                print("DIMACS WITH QUERY:")
+                print(cnf_with_query.to_dimacs())
+
             with open(cnf_query_filename, "w") as file:
                 file.write(cnf_with_query.to_dimacs())
 
             probability = self.do_model_count(cnf_query_filename)
-            print("RESULT: {}".format(probability))
+
+            if print_steps:
+                print("RESULT: {}".format(probability))
 
             # model count just done is of (theory + evidence + query)
             # if CNF has evidence, then need to divide probability by modelcount of (theory + evidence)
@@ -34,15 +38,17 @@ class WeightedModelCounter:
                 with open(cnf_no_query_filename, "w") as file:
                     file.write(cnf.to_dimacs())
                 probability_no_query = self.do_model_count(cnf_no_query_filename)
-                print("RESULT WITHOUT QUERY: {}".format(probability_no_query))
+                if print_steps:
+                    print("RESULT WITHOUT QUERY: {}".format(probability_no_query))
                 probability = probability / probability_no_query
 
             results[str(literal)] = probability
 
-            if literal != queries[-1][0]:
+            if print_steps and literal != queries[-1][0]:
                 print(util.separator_2)
 
-        print(util.separator_1)
+        if print_steps:
+            print(util.separator_1)
         return sorted(results.items(), key=lambda kv: kv[0])
 
     def do_model_count(self, cnf):
