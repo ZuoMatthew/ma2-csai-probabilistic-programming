@@ -17,7 +17,7 @@ class InferenceEngine:
 
         problog_program = self.problog_parser.program_to_problog(ground_program)
         if print_steps:
-            print("PROGRAM")
+            print("GROUND PROGRAM")
             print(problog_program)
             print(util.separator_1)
 

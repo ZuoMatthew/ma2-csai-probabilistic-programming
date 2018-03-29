@@ -42,9 +42,9 @@ class GroundProblogParser:
             
             probability       = decimal / fraction
             fraction          = number slash number
-            word              = ~"[a-zA-Z0-9_']+"
-            number            = ~"[0-9]*"
-            decimal           = ~"[0-9]*\.[0-9]*"
+            word              = ~r"[a-zA-Z0-9_']+"
+            number            = ~r"[0-9]*"
+            decimal           = ~r"[0-9]*\.[0-9]*"
             dot               = _ "." _
             comma             = _ "," _
             semicolon         = _ ";" _
@@ -53,7 +53,7 @@ class GroundProblogParser:
             slash             = _ "/" _
             doublecolon       = _ "::" _
             turnstile         = _ ":-" _
-            negation          = _ "\+" _
+            negation          = _ ~r"\\\+" _
             
             _                 = meaninglessness*
             meaninglessness   = ~r"\s+"

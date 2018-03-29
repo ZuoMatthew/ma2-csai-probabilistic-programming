@@ -28,7 +28,7 @@ def evaluate_using_problog(program, print_steps=False):
     """ Evaluates a problog program using the problog library. """
     formula = LogicFormula.create_from(program, avoid_name_clash=True, label_all=True)
     if print_steps:
-        print("PROGRAM:")
+        print("GROUND PROGRAM:")
         print(formula.to_prolog())
         print(separator_1)
 
