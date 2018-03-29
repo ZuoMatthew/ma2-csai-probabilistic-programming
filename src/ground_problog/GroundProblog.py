@@ -1,6 +1,7 @@
 """
 This file defines classes that are used to build GroundProblog instances that represent ground problog programs.
 """
+import copy
 
 
 class Clause:
@@ -86,7 +87,7 @@ class GroundProblog:
         constraint that only one of the new rules can be true.
         """
         new_clauses = []
-        head_count = {}
+        head_counts = {}
 
         for clause in self.clauses:
             if not isinstance(clause, ProbabilisticAnnotation):
@@ -97,11 +98,11 @@ class GroundProblog:
                 # Should be possible by simply adding the new AD: 0.7::p_a_0 ; 0.3::p_b_0.
                 if len(clause.body):
                     for head in clause.heads:
-                        if head.str_no_prob() not in head_count:
-                            head_count[head.str_no_prob()] = 0
+                        if head.str_no_prob() not in head_counts:
+                            head_counts[head.str_no_prob()] = 0
                         else:
-                            head_count[head.str_no_prob()] += 1
-                        new_prob_fact_name = "p_{}_{}".format(head.str_no_prob(), head_count[head.str_no_prob()])
+                            head_counts[head.str_no_prob()] += 1
+                        new_prob_fact_name = "p_{}_{}".format(head.str_no_prob(), head_counts[head.str_no_prob()])
 
                         # Create the new probabilistic fact that hold the probability of the current head
                         new_prob_fact = Term(new_prob_fact_name, probability=head.probability)
@@ -117,4 +118,59 @@ class GroundProblog:
         return GroundProblog(new_clauses)
 
     def remove_duplicate_probabilistic_terms(self):
-        return self
+        """ Eliminates probabilistic facts and probabilistic annotations with the same names.
+        E.g.    "0.1::a.   0.2::a.   0.3::a :- b."
+        becomes "0.1::a_0. 0.2::a_1. 0.3::a_2 :- b.  a :- a_0.  a :- a_1.  a :- a_2."
+        """
+        new_clauses = self.clauses
+        new_rules = []
+        name_counts = {}
+        name_probability = {}
+
+        # count the amount of times different names occur
+        for clause in new_clauses:
+            if isinstance(clause, Term) and clause.probability != 1:
+                name = clause.str_no_prob()
+                name_probability[name] = True
+                name_counts[name] = 0 if name not in name_counts else name_counts[name] + 1
+
+            elif isinstance(clause, Rule):
+                name = clause.head.str_no_prob()
+                name_counts[name] = 0 if name not in name_counts else name_counts[name] + 1
+
+            elif isinstance(clause, ProbabilisticAnnotation):
+                for head in clause.heads:
+                    name = head.str_no_prob()
+                    name_probability[name] = True
+                    name_counts[name] = 0 if name not in name_counts else name_counts[name] + 1
+
+        # rename duplicate elements and create the new rules
+        counts_copy = {}.fromkeys(name_counts, 0)
+        for clause in new_clauses:
+            if isinstance(clause, Term) and clause.probability != 1:
+                name = clause.str_no_prob()
+
+                if name_counts[name] > 0:
+                    clause.name += "_" + str(counts_copy[name])
+                    counts_copy[name] += 1
+                    new_rules.append(Rule(Term(name), [clause]))
+
+            elif isinstance(clause, Rule):
+                name = clause.head.str_no_prob()
+
+                if name in name_probability and name_probability[name] and name_counts[name] > 0:
+                    clause.head.name += "_" + str(counts_copy[name])
+                    counts_copy[name] += 1
+                    new_rules.append(Rule(Term(name), [clause.head]))
+
+            elif isinstance(clause, ProbabilisticAnnotation):
+                for head in clause.heads:
+                    name = head.str_no_prob()
+
+                    if name_counts[name] > 0:
+                        head.name += "_" + str(counts_copy[name])
+                        counts_copy[name] += 1
+                        new_rules.append(Rule(Term(name), [head]))
+
+        new_clauses += new_rules
+        return GroundProblog(new_clauses)
