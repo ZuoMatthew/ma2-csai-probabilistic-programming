@@ -109,7 +109,8 @@ class CNF:
 
         # Add a comment to check assignments of numbers to literals
         header = "p cnf {} {}\n".format(len(literals), len(self.clauses)+len(self.evidence))
-        comment = "\n".join(["c {:>2}  {}".format(l.dimacs_int, l.name) for l in literals]) + "\n"
+        comment = "c ASSIGNMENTS: DIMACS_INT WEIGHT_TRUE WEIGHT_FALSE NAME\n"
+        comment += "\n".join(["c {:>2} {:.2f} {:.2f} {}".format(l.dimacs_int, float(l.weight_true), float(l.weight_false), l.name) for l in literals]) + "\n"
         comment += "c QUERIES: " + ", ".join([str(l.dimacs_int) for l in self.queries]) + "\n"
 
         weights = "c weights "
