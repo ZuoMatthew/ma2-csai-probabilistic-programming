@@ -107,7 +107,7 @@ class GroundProblog:
                         new_clauses.append(fake_head_term)
 
                         # Create a new head with no weights
-                        new_head_wo_prob = Term(head.name)
+                        new_head_wo_prob = Term(head.name, arguments=head.arguments)
 
                         new_rule = Rule(new_head_wo_prob, clause.body + [fake_head_term])
                         new_clauses.append(new_rule)
