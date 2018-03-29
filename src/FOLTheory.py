@@ -279,6 +279,8 @@ class FOLTheory:
     @staticmethod
     def create_from_problog(ground_problog):
         """ Creates a FOLTheory from a GroundProblog instance. """
+        ground_problog = ground_problog.convert_ads_with_body_to_rules()
+        ground_problog = ground_problog.remove_duplicate_probabilistic_terms()
         theory = FOLTheory()
 
         # Problog facts can just be converted to FOL Atoms
@@ -311,9 +313,7 @@ class FOLTheory:
         for (head, body) in rules:
             theory.add_formula(Equivalence(head, body))
 
-        # ONLY HANDLES PROBABILISTIC ANNOTATIONS WITHOUT RULES FOR NOW
-        # TODO: add support for probabilistic annotations with rules, see https://dtai.cs.kuleuven.be/problog/tutorial/basic/02_bayes.html
-        # TODO: maybe split up logic formulas into atoms and formulas. atoms are then declarations of the atoms that are used in formulas.
+        # add constraints that make sure only one fact in probabilistic annotations can be true
         for annotation in ground_problog.get_probabilistic_annotations():
             atoms = []
 

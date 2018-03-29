@@ -5,7 +5,7 @@ import util as util
 
 if __name__ == '__main__':
     file = "test.pl"
-    results = util.results_with_pipeline(file, print_steps=True)
+    results = util.results_with_pipeline(file, counter="minic2d", print_steps=True)
     problog_results = util.results_with_problog(file, print_steps=False)
 
     print(util.separator_1)
