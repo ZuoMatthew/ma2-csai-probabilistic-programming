@@ -2,97 +2,120 @@ import unittest
 import util
 
 
+def get_results(file):
+    results = util.results_with_pipeline(file, print_steps=False)
+    problog_results = util.results_with_problog(file, print_steps=False)
+
+    results = [(query, round(result, 3)) for query, result in results]
+    problog_results = [(query, round(result, 3)) for query, result in problog_results]
+    return results, problog_results
+
+
 class TestPipeline(unittest.TestCase):
 
-    def assertEqualResultsToProblog(self, file):
-        results = util.results_with_pipeline(file, print_steps=False)
-        problog_results = util.results_with_problog(file, print_steps=False)
-
-        results = [(query, round(result, 3)) for query, result in results]
-        problog_results = [(query, round(result, 3)) for query, result in problog_results]
-
+    def test_alarm_ad(self):
+        results, problog_results = get_results("alarm_ad.pl")
         self.assertListEqual(results, problog_results)
 
-    def test_alarm_ad(self):
-        self.assertEqualResultsToProblog("alarm_ad.pl")
-
     def test_alarm_first_order(self):
-        self.assertEqualResultsToProblog("alarm_first_order.pl")
+        results, problog_results = get_results("alarm_first_order.pl")
+        self.assertListEqual(results, problog_results)
 
     def test_alarm_multi_valued_ad(self):
-        self.assertEqualResultsToProblog("alarm_multi_valued_ad.pl")
+        results, problog_results = get_results("alarm_multi_valued_ad.pl")
+        self.assertListEqual(results, problog_results)
 
     def test_annotated_disjunction_evidence(self):
-        self.assertEqualResultsToProblog("annotated_disjunction_evidence.pl")
+        results, problog_results = get_results("annotated_disjunction_evidence.pl")
+        self.assertListEqual(results, problog_results)
 
     # def test_ball_colors_and_types(self):
-    #     self.assertEqualResultsToProblog("ball_colors_and_types.pl")
+    #   results, problog_results =   get_results("ball_colors_and_types.pl")
+        self.assertListEqual(results, problog_results)
 
     # def test_ball_colors_unused_variable_in(self):
-    #     self.assertEqualResultsToProblog("ball_colors_unused_variable_in.pl")
+    #   results, problog_results =   get_results("ball_colors_unused_variable_in.pl")
+        self.assertListEqual(results, problog_results)
 
     # def test_ball_colors_unused_variable_out(self):
-    #     self.assertEqualResultsToProblog("ball_colors_unused_variable_out.pl")
+    #   results, problog_results =   get_results("ball_colors_unused_variable_out.pl")
+        self.assertListEqual(results, problog_results)
 
     def test_bayesian_networks(self):
-        self.assertEqualResultsToProblog("bayesian_networks.pl")
+        results, problog_results = get_results("bayesian_networks.pl")
+        self.assertListEqual(results, problog_results)
 
     def test_bloodtype(self):
-        self.assertEqualResultsToProblog("bloodtype.pl")
-
-    def test_bloodtype(self):
-        self.assertEqualResultsToProblog("bloodtype.pl")
+        results, problog_results = get_results("bloodtype.pl")
+        self.assertListEqual(results, problog_results)
 
     def test_flexible_probability(self):
-        self.assertEqualResultsToProblog("flexible_probability.pl")
+        results, problog_results = get_results("flexible_probability.pl")
+        self.assertListEqual(results, problog_results)
 
     def test_inhibition_1(self):
-        self.assertEqualResultsToProblog("inhibition_1.pl")
+        results, problog_results = get_results("inhibition_1.pl")
+        self.assertListEqual(results, problog_results)
 
     def test_inhibition_2(self):
-        self.assertEqualResultsToProblog("inhibition_2.pl")
+        results, problog_results = get_results("inhibition_2.pl")
+        self.assertListEqual(results, problog_results)
 
     def test_inhibition_infection(self):
-        self.assertEqualResultsToProblog("inhibition_infection.pl")
+        results, problog_results = get_results("inhibition_infection.pl")
+        self.assertListEqual(results, problog_results)
 
     def test_inhibition_infection_negated_head(self):
-        self.assertEqualResultsToProblog("inhibition_infection_negated_head.pl")
+        results, problog_results = get_results("inhibition_infection_negated_head.pl")
+        self.assertListEqual(results, problog_results)
 
     def test_inhibition_max_entropy(self):
-        self.assertEqualResultsToProblog("inhibition_max_entropy.pl")
+        results, problog_results = get_results("inhibition_max_entropy.pl")
+        self.assertListEqual(results, problog_results)
 
     def test_inhibition_osteoporosis(self):
-        self.assertEqualResultsToProblog("inhibition_osteoporosis.pl")
+        results, problog_results = get_results("inhibition_osteoporosis.pl")
+        self.assertListEqual(results, problog_results)
 
     def test_intensional_probabilistic_facts(self):
-        self.assertEqualResultsToProblog("intensional_probabilistic_facts.pl")
+        results, problog_results = get_results("intensional_probabilistic_facts.pl")
+        self.assertListEqual(results, problog_results)
 
     def test_monty_hall(self):
-        self.assertEqualResultsToProblog("monty_hall.pl")
+        results, problog_results = get_results("monty_hall.pl")
+        self.assertListEqual(results, problog_results)
 
     def test_multiple_declarations(self):
-        self.assertEqualResultsToProblog("multiple_declarations.pl")
+        results, problog_results = get_results("multiple_declarations.pl")
+        self.assertListEqual(results, problog_results)
 
     def test_probabilistic_graph(self):
-        self.assertEqualResultsToProblog("probabilistic_graph.pl")
+        results, problog_results = get_results("probabilistic_graph.pl")
+        self.assertListEqual(results, problog_results)
 
     def test_rolling_dice(self):
-        self.assertEqualResultsToProblog("rolling_dice.pl")
+        results, problog_results = get_results("rolling_dice.pl")
+        self.assertListEqual(results, problog_results)
 
     # def test_rolling_dice_infinite(self):
-    #     self.assertEqualResultsToProblog("rolling_dice_infinite.pl")
+    #   results, problog_results =   get_results("rolling_dice_infinite.pl")
+        self.assertListEqual(results, problog_results)
 
     def test_rolling_dice_infinite_sequences(self):
-        self.assertEqualResultsToProblog("rolling_dice_infinite_sequences.pl")
+        results, problog_results = get_results("rolling_dice_infinite_sequences.pl")
+        self.assertListEqual(results, problog_results)
 
     # def test_rolling_dice_negation_as_failure(self):
-    #     self.assertEqualResultsToProblog("rolling_dice_negation_as_failure.pl")
+    #   results, problog_results =   get_results("rolling_dice_negation_as_failure.pl")
+        self.assertListEqual(results, problog_results)
 
     # def test_social_network(self):
-    #     self.assertEqualResultsToProblog("social_network.pl")
+    #   results, problog_results =   get_results("social_network.pl")
+        self.assertListEqual(results, problog_results)
 
     def test_tossing_coins(self):
-        self.assertEqualResultsToProblog("tossing_coins.pl")
+        results, problog_results = get_results("tossing_coins.pl")
+        self.assertListEqual(results, problog_results)
 
 
 if __name__ == '__main__':

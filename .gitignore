@@ -3,6 +3,8 @@ model_counters/
 !model_counters/*.zip
 *.tmp
 *.nnf
+*.dimac
+test.pl
 test.cnf
 test_no_query.cnf
 */files/vtree*
