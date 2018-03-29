@@ -28,19 +28,17 @@ class Atom(LogicFormula):
         out = ""
         if self.weight_true != 1:
             out += str(self.weight_true) + "::"
-        out += self.predicate
-        if self.arity > 0:
-            out += "(" + ", ".join(map(str, self.terms)) + ")"
+        out += self.str_no_weights()
         return out
-
-    def __eq__(self, other):
-        return isinstance(other, Atom) and self.predicate == other.predicate and self.terms == other.terms
 
     def str_no_weights(self):
         out = self.predicate
         if self.arity > 0:
             out += "(" + ", ".join(map(str, self.terms)) + ")"
         return out
+
+    def __eq__(self, other):
+        return isinstance(other, Atom) and self.predicate == other.predicate and self.terms == other.terms
 
     def to_cnf(self):
         return self

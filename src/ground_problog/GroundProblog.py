@@ -17,7 +17,11 @@ class Term(Clause):
 
     def __str__(self):
         out = (str(self.probability) + "::") if self.probability != 1.0 else ""
-        out += ("\+" if self.negation else "") + self.name
+        out += self.str_no_prob()
+        return out
+
+    def str_no_prob(self):
+        out = ("\+" if self.negation else "") + self.name
         if len(self.arguments):
             out += "(" + ",".join(map(str, self.arguments)) + ")"
         return out
@@ -64,7 +68,6 @@ class GroundProblog:
         return [c for c in self.clauses if isinstance(c, Term) and c.name != "query" and c.name != "evidence"]
 
     def get_queries(self):
-        # Queries have only 1 argument TODO: check this again
         return [c.arguments[0] for c in self.clauses if isinstance(c, Term) and c.name == "query"]
 
     def get_evidence(self):
@@ -98,12 +101,12 @@ class GroundProblog:
                 # For each head in the annotation
                 for head in clause.heads:
                     # We have a body
-                    if str(head) not in head_count:
-                        head_count[str(head)] = 0
+                    if head.str_no_prob() not in head_count:
+                        head_count[head.str_no_prob()] = 0
 
                     if clause.body:
-                        fake_head = "p_{}_{}".format(str(head), head_count[str(head)])
-                        head_count[str(head)] += 1
+                        fake_head = "p_{}_{}".format(head.str_no_prob(), head_count[head.str_no_prob()])
+                        head_count[head.str_no_prob()] += 1
 
                         fake_head_term = Term(fake_head, probability=head.probability)
                         new_clauses.append(fake_head_term)

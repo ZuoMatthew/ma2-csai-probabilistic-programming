@@ -6,11 +6,11 @@ import util
 
 
 def get_results(file):
-    results = util.results_with_pipeline(file, print_steps=False)
+    results = util.results_with_pipeline(file, counter="minic2d", print_steps=False)
     problog_results = util.results_with_problog(file, print_steps=False)
 
-    results = [(query, round(result, 3)) for query, result in results]
-    problog_results = [(query, round(result, 3)) for query, result in problog_results]
+    results = [(query.replace(" ", ""), round(result, 3)) for query, result in results]
+    problog_results = [(query.replace(" ", ""), round(result, 3)) for query, result in problog_results]
     return results, problog_results
 
 
