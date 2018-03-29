@@ -57,9 +57,8 @@ class GroundProblog:
     """ A ground problog program is a collection of clauses.
     A clause can be a fact (represented by just a Term here), a  Rule, or a ProbabilityPredicate.
     """
-    def __init__(self, clauses, notEquals=None):
+    def __init__(self, clauses):
         self.clauses = clauses
-        self.notEquals = [] if notEquals is None else notEquals
 
     def __str__(self):
         return ".\n".join(map(str, self.clauses)) + "."
@@ -79,51 +78,43 @@ class GroundProblog:
     def get_probabilistic_annotations(self):
         return [c for c in self.clauses if isinstance(c, ProbabilisticAnnotation)]
 
-    def get_constraints(self):
-        return self.notEquals
-
-    def preprocess_ground(self):
-        # Convert AD's to have heads with no probability
-        new_program = self.convert_ad()
-
-        # Return
-        return new_program
-
-    def convert_ad(self):
-        # For each head in an ad:
+    def convert_ads_with_body_to_rules(self):
+        """ Converts annotated disjunctions with rule bodies to normal rules.
+        This is done by pulling the probabilities out to new probabilistic facts. A new normal rule is then created for
+        each of the heads. Each new rule contains the new probabilistic fact that was created for it's head.
+        The new probabilistic facts are then added in a new annotated disjunction without rule body, to keep the
+        constraint that only one of the new rules can be true.
+        """
         new_clauses = []
-        # First get the probabilities from AD's and add new facts
         head_count = {}
-        constraints = []
+
         for clause in self.clauses:
-            if type(clause) is ProbabilisticAnnotation:
-
-                # For each head in the annotation
-                for head in clause.heads:
-                    # We have a body
-                    if head.str_no_prob() not in head_count:
-                        head_count[head.str_no_prob()] = 0
-
-                    if clause.body:
-                        fake_head = "p_{}_{}".format(head.str_no_prob(), head_count[head.str_no_prob()])
-                        head_count[head.str_no_prob()] += 1
-
-                        fake_head_term = Term(fake_head, probability=head.probability)
-                        new_clauses.append(fake_head_term)
-
-                        # Create a new head with no weights
-                        new_head_wo_prob = Term(head.name, arguments=head.arguments)
-
-                        new_rule = Rule(new_head_wo_prob, clause.body + [fake_head_term])
-                        new_clauses.append(new_rule)
-
-                if not clause.body:
-                    new_clauses.append(clause)
-
-                if len(clause.heads) > 1:
-                    constraints.append(clause.heads)
+            if not isinstance(clause, ProbabilisticAnnotation):
+                new_clauses.append(clause)
 
             else:
-                # Nothing to change addd it to our new clauses
-                new_clauses.append(clause)
-        return GroundProblog(new_clauses, constraints)
+                # TODO: handle this case: 0.3::x. 0.7::a; 0.3::b: - x.evidence(a).query(a).query(b).
+                # Should be possible by simply adding the new AD: 0.7::p_a_0 ; 0.3::p_b_0.
+                if len(clause.body):
+                    for head in clause.heads:
+                        if head.str_no_prob() not in head_count:
+                            head_count[head.str_no_prob()] = 0
+                        else:
+                            head_count[head.str_no_prob()] += 1
+                        new_prob_fact_name = "p_{}_{}".format(head.str_no_prob(), head_count[head.str_no_prob()])
+
+                        # Create the new probabilistic fact that hold the probability of the current head
+                        new_prob_fact = Term(new_prob_fact_name, probability=head.probability)
+                        new_clauses.append(new_prob_fact)
+
+                        # Create a new head with no weights for the new normal rule
+                        new_head_wo_prob = Term(head.name, arguments=head.arguments)
+                        new_rule = Rule(new_head_wo_prob, clause.body + [new_prob_fact])
+                        new_clauses.append(new_rule)
+                else:
+                    new_clauses.append(clause)
+
+        return GroundProblog(new_clauses)
+
+    def remove_duplicate_probabilistic_terms(self):
+        return self
