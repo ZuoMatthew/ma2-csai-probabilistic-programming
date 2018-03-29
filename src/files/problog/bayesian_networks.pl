@@ -8,7 +8,7 @@ alarm :- burglary, earthquake, p_alarm1.
 alarm :- burglary, \+earthquake, p_alarm2.
 alarm :- \+burglary, earthquake, p_alarm3.
 
-evidence(alarm,false).
+evidence(alarm,true).
 
 query(burglary).
 query(earthquake).
