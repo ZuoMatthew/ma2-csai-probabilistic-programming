@@ -33,15 +33,15 @@ class TestPipeline(unittest.TestCase):
         self.assertListEqual(results, problog_results)
 
     def test_ball_colors_and_types(self):
-        results, problog_results =   get_results("ball_colors_and_types.pl")
+        results, problog_results = get_results("ball_colors_and_types.pl")
         self.assertListEqual(results, problog_results)
 
     def test_ball_colors_unused_variable_in(self):
-        results, problog_results =   get_results("ball_colors_unused_variable_in.pl")
+        results, problog_results = get_results("ball_colors_unused_variable_in.pl")
         self.assertListEqual(results, problog_results)
 
     def test_ball_colors_unused_variable_out(self):
-        results, problog_results =   get_results("ball_colors_unused_variable_out.pl")
+        results, problog_results = get_results("ball_colors_unused_variable_out.pl")
         self.assertListEqual(results, problog_results)
 
     def test_bayesian_networks(self):
@@ -107,21 +107,23 @@ class TestPipeline(unittest.TestCase):
         results, problog_results = get_results("rolling_dice.pl")
         self.assertListEqual(results, problog_results)
 
-    def test_rolling_dice_infinite(self):
-        results, problog_results =   get_results("rolling_dice_infinite.pl")
-        self.assertListEqual(results, problog_results)
+    # CONTAINS CIRCULAR RULES, OUT OF SCOPE OF PROJECT
+        # def test_rolling_dice_infinite(self):
+    #     results, problog_results = get_results("rolling_dice_infinite.pl")
+    #     self.assertListEqual(results, problog_results)
 
     # CONTAINS LISTS, OUT OF SCOPE OF PROJECT
     # def test_rolling_dice_infinite_sequences(self):
     #     results, problog_results = get_results("rolling_dice_infinite_sequences.pl")
     #     self.assertListEqual(results, problog_results)
 
-    def test_rolling_dice_negation_as_failure(self):
-        results, problog_results =   get_results("rolling_dice_negation_as_failure.pl")
-        self.assertListEqual(results, problog_results)
+    # CONTAINS CIRCULAR RULES, OUT OF SCOPE OF PROJECT
+    # def test_rolling_dice_negation_as_failure(self):
+    #     results, problog_results =   get_results("rolling_dice_negation_as_failure.pl")
+    #     self.assertListEqual(results, problog_results)
 
     def test_social_network(self):
-        results, problog_results =   get_results("social_network.pl")
+        results, problog_results = get_results("social_network.pl")
         self.assertListEqual(results, problog_results)
 
     def test_tossing_coins(self):
