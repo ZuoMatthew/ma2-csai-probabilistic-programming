@@ -10,11 +10,8 @@ class InferenceEngine:
         self.problog_parser = GroundProblogParser()
         self.weighted_model_counter = create_weighted_model_counter(counter)
 
-    def evaluate_problog_program(self, program, print_steps=False):
+    def evaluate_ground_problog_program(self, ground_program, print_steps=False):
         """ Evaluates a problog program and returns the results. """
-        # ground and parse the program
-        ground_program = util.ground_problog_program(program)
-
         problog_program = self.problog_parser.program_to_problog(ground_program)
         if print_steps:
             print("GROUND PROGRAM")
@@ -53,9 +50,3 @@ class InferenceEngine:
                 print("{:<{}}: {}".format(query, query_str_len, probability))
 
         return results
-
-    def evaluate_bayesian_network(self, network):
-        """ Evaluates a Bayesian network by converting it to a Problog program and evaluating that program. """
-        # https://github.com/jordn/ProbLog/blob/master/conversions/bn2problog.py
-        # return self.evaluate_problog_program(program)
-        raise NotImplementedError

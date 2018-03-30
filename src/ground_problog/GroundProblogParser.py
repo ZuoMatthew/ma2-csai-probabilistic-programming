@@ -42,7 +42,7 @@ class GroundProblogParser:
             
             probability       = decimal / fraction
             fraction          = number slash number
-            word              = ~r"[a-zA-Z0-9_']+"
+            word              = ~r"[a-zA-Z0-9_'\"]+"
             number            = ~r"[0-9]*"
             decimal           = ~r"[0-9]*\.[0-9]*"
             dot               = _ "." _
