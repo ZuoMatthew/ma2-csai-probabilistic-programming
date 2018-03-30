@@ -1,219 +1,3 @@
-\documentclass[a4paper,10pt]{report}
-\usepackage[utf8]{inputenc}
-\usepackage{cite}
-\usepackage{amsmath}
-\usepackage{graphicx}
-\usepackage{float}
-\usepackage{hyperref}
-
-
-%opening
-\title{Inference for SRL}
-\author{Armin Halilovic \& Thierry Deruyttere (r0660485)}
-
-\begin{document}
-
-\maketitle
-\chapter{Probabilistic Inference Using Weighted Model Counting}
-\section*{1.1}
-\subsection*{1.1.1 ENC 1}
-For our conversion from the cancer bayesian network to ENC1 please look at \ref{ENC1} in our appendix.
-\subsection*{1.1.2 ENC 2}
-As for ENC1 please look at \ref{ENC2} in our appendix.
-
-\section*{1.2}
-The CNF of the monty hall problem is given in image \ref{CNF}
-\begin{figure}[H]
-  \includegraphics[width=7.5cm]{GroundProblogCNF.png}
-  \label{CNF}
-  \caption{Grounded problog cnf}
-\end{figure}
-TODO WEIGHTS
-
-\section*{1.3}
-
-\subsection*{1.3.1}
-We will use minic2d and Cachet as WMC counters.
-
-\subsubsection*{minic2d}
-minic2d needs to use the $-W$ option to do weighted model counting.
-\begin{itemize}
-	\item ENC1:
-\begin{figure}[H]
-  \includegraphics[width=6cm]{minic2d-ENC1.png}
-  \caption{Grounded problog cnf}
- 
-\end{figure}
-	\item ENC2:
-	\begin{figure}[H]
-  \includegraphics[width=6cm]{minic2d-ENC2.png}
-  \caption{Grounded problog cnf}
-\end{figure}
-	\item Prolog first:
-\end{itemize}
-
-\subsubsection*{Cachet}
-\begin{itemize}
-	\item ENC1: 
-
-\begin{figure}[H]
-\begin{center}
-  \includegraphics[width=5cm]{cachet-ENC1.png}
-  \caption{Grounded problog cnf}
-\end{center}
-\end{figure}
-
-	\item ENC2:
-\begin{figure}[H]
-\begin{center}
-  \includegraphics[width=5cm]{cachet-ENC2.png}
-  \caption{Grounded problog cnf}
-\end{center}
-\end{figure}
-
-	\item Prolog first:
-\end{itemize}
-
-For ENC1 we see that with Cachet we get a satisfying probability of almost $0$. This is due to the fact that with ENC1 all our negative literals have a weight of 1, while Cachet expects that a literal $+$ its negation $= 1$. 
-
-\subsection*{1.3.2. Difference between the used WMC's}
-%The differences between the different WMC's come from \cite{CHAVIRA2008772}.
-%\subsubsection{Cachet vs jointree and recursive conditioning}
-%Jointree and recursive conditioning only exploit topological structure thus they take no advantage of the massive determinism available in networks whilst Cachet does this.
-
-\subsubsection*{minic2d Vs Cachet}
-Minic2d and Cachet are both weighted model counters but how to do this is quite different.
-Minic2d is a top down compiler that compiles CNF's into a SDD which results in a faster system but it also uses less space while Cachet is an algorithm that uses formula caching together with clause learning and component analysis. Minic2d needs vtree's to be able to compile the CNF's into an SDD. 
-T%he former is thus a compiler that uses SDD's while the other isn't.
-They, however, both use things from the SAT literature. 
-They both use clause learning and component caching as to be able to reuse components that later appear again in the search. Cachet on the other hand also uses some other things from SAT literature like an explicit on the fly calculation of connected components. This is different in minic2d as it uses a vtree to identify disconnected CNF components. 
-
-%The way that the compilation is done with minic2d is as follows:
-%The SDD compilation is driven by the vtree, it uses this to identify disconnected CNF components and it uses a component caching scheme to prevent compiling the same component multiple times.
-\cite{minic2d} \cite{Cachet}
-
-
-%\subsubsection{ACE Vs Cachet}
-%The biggest difference between them is that Cachet is a WMC by search and ACE is a WMC by compilation. In \cite{CHAVIRA2008772} they say that ACE and Cachet are almost equal in speed. They mention that they had to dissable some of ACE's built-in ways to optimze the search to make the comparisson fair. It can for example encode equal parameters, use structured resolutions, eclauses, ... \cite{CHAVIRA2008772} which optimize the search.
-%They also differ in some other ways like the way they do decompositions, variable splitting and caching \cite{CHAVIRA2008772}.
-%In \cite{CHAVIRA2008772} they note though that by enabling all the speed up features ACE has, that it is not always faster than Cachet. 
-
-\subsection*{1.3.3 Overview of computational requirements}
-All the tests can be found in the test folder.
-We used our scripts to create the dimac files. The input files for our enc1 and enc2 converter ard ``.dsc'' files which can be found at 
-
-\url{http://www.bnlearn.com/bnrepository/discrete-small.html#cancer}.
-
-\subsubsection{Test 1: Cancer network}
-\begin{table}[H]
-\centering
-\caption{My caption}
-\label{my-label}
-\begin{tabular}{c|c|c|c|c|c|c|}
-\cline{2-7}
-        & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7} 
-  & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7} 
-  \textbf{Minic2d} & 1.0  & 0.2 KB    & 0.155s   & 1.0    & 1.0 KB    & 0.000s \\
-  \hline
-\textbf{Cachet}  & val1  & val2    & a       & b     & val3    & val4    \\ \cline{1-7} 
-\end{tabular}
-\end{table}
-
-\subsubsection{Test 2: asia network}
-\begin{table}[H]
-\centering
-\caption{My caption}
-\label{my-label}
-\begin{tabular}{c|c|c|c|c|c|c|}
-\cline{2-7}
-        & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7} 
-  & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7} 
-  \textbf{Minic2d} & 1.0  & 0.9 KB    & 0.145s   & 1.0    & 2.0 KB    & 	 0.139s \\
-  \hline
-\textbf{Cachet}  & val1  & val2    & a       & b     & val3    & val4    \\ \cline{1-7} 
-\end{tabular}
-\end{table}
-
-\subsubsection{Test 3: sachs network}
-\begin{table}[H]
-\centering
-\caption{My caption}
-\label{my-label}
-\begin{tabular}{c|c|c|c|c|c|c|}
-\cline{2-7}
-        & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7} 
-  & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7} 
-  \textbf{Minic2d} & 0.99707  & 14.3 KB    & 0.184s   & 1.0    & 14.5 KB   & 	0.154s \\
-  \hline
-\textbf{Cachet}  & val1  & val2    & a       & b     & val3    & val4    \\ \cline{1-7} 
-\end{tabular}
-\end{table}
-
-\subsubsection{Test 4: earthquake network}
-\begin{table}[H]
-\centering
-\caption{My caption}
-\label{my-label}
-\begin{tabular}{c|c|c|c|c|c|c|}
-\cline{2-7}
-        & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7} 
-  & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7} 
-  \textbf{Minic2d} & 1.0  & 0.6 KB & 0.137s   & 1.0    & 1.0 KB  & 	0.153s \\
-  \hline
-\textbf{Cachet}  & val1  & val2    & a       & b     & val3    & val4    \\ \cline{1-7} 
-\end{tabular}
-\end{table}
-
-\subsubsection{Test 5: survey network}
-\begin{table}[H]
-\centering
-\caption{My caption}
-\label{my-label}
-\begin{tabular}{c|c|c|c|c|c|c|}
-\cline{2-7}
-        & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7} 
-  & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7} 
-  \textbf{Minic2d} & 1.0  & 1.6 KB    & 0.125s   & 1.0    & 2.0 KB    & 	0.125s \\
-  \hline
-\textbf{Cachet}  & val1  & val2    & a       & b     & val3    & val4    \\ \cline{1-7} 
-\end{tabular}
-\end{table}
-
-\subsubsection{Test 6: alarm network}
-\begin{table}[H]
-\centering
-\caption{My caption}
-\label{my-label}
-\begin{tabular}{c|c|c|c|c|c|c|}
-\cline{2-7}
-        & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7} 
-  & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7} 
-  \textbf{Minic2d} & 1.0  & 959.7KB KB    & 0.268s   & 1.0    & 139KB    & 	0.095s \\
-  \hline
-\textbf{Cachet}  & val1  & val2    & a       & b     & val3    & val4    \\ \cline{1-7} 
-\end{tabular}
-\end{table}
-
-\subsubsection{Test 6: andes network}
-\begin{table}[H]
-\centering
-\caption{My caption}
-\label{my-label}
-\begin{tabular}{c|c|c|c|c|c|c|}
-\cline{2-7}
-        & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7} 
-  & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7} 
-  \textbf{Minic2d} & 1.0  & 2.7GB    & 122.78s   & 1.0    & 139.8MB    & 	6.086s \\
-  \hline
-\textbf{Cachet}  & val1  & val2    & a       & b     & val3    & val4    \\ \cline{1-7} 
-\end{tabular}
-\end{table}
-
-
-
-\section*{1.4 Knowledge compilation}
-
-\chapter{Appendix}
 \section{ENC1}
 \label{ENC1}
 \textbf{Indicator clauses}: 
@@ -295,7 +79,6 @@ We used our scripts to create the dimac files. The input files for our enc1 and 
  ($\neg$ $\lambda_{CancerFalse}$ $\lor$ $\neg$ $\lambda_{DyspnoeaFalse}$ $\lor$ $\theta_{DyspnoeaFalse|CancerFalse}$) $\land$ 
  ($\lambda_{CancerFalse}$ $\lor$ $\neg$ $\theta_{DyspnoeaFalse|CancerFalse}$) $\land$ 
  ($\lambda_{DyspnoeaFalse}$ $\lor$ $\neg$ $\theta_{DyspnoeaFalse|CancerFalse}$)
- 
 \end{center}
 \textbf{Weights:}\\
 W($\lambda_{PollutionLow}$) = $1.00$\\ 
@@ -358,7 +141,6 @@ W($\theta_{DyspnoeaTrue|CancerFalse}$) = $0.30$\\
 W($\neg\theta_{DyspnoeaTrue|CancerFalse}$) = $1.00$\\ 
 W($\theta_{DyspnoeaFalse|CancerFalse}$) = $0.70$\\ 
 W($\neg\theta_{DyspnoeaFalse|CancerFalse}$) = $1.00$\\ 
-
 \section{ENC2}
 \label{ENC2}
 \textbf{Indicator clauses}\\
@@ -374,7 +156,6 @@ W($\neg\theta_{DyspnoeaFalse|CancerFalse}$) = $1.00$\\
 ($\neg$ $\lambda_{DyspnoeaTrue}$ $\lor$ $\neg$ $\lambda_{DyspnoeaFalse}$) $\land$ 
 ($\lambda_{DyspnoeaTrue}$ $\lor$ $\lambda_{DyspnoeaFalse}$)
 \end{center}
-
 \textbf{Parameter clauses}
 \begin{center}
 ($\neg$ $\rho_{PollutionLow}$ $\lor$ $\lambda_{PollutionLow}$) $\land$ 
@@ -398,7 +179,6 @@ W($\neg\theta_{DyspnoeaFalse|CancerFalse}$) = $1.00$\\
  ($\neg$ $\lambda_{CancerFalse}$ $\lor$ $\neg$ $\rho_{DyspnoeaTrue|CancerFalse}$ $\lor$ $\lambda_{DyspnoeaTrue}$) $\land$ 
  ($\neg$ $\lambda_{CancerFalse}$ $\lor$ $\rho_{DyspnoeaTrue|CancerFalse}$ $\lor$ $\lambda_{DyspnoeaFalse}$)
 \end{center}
-
 \textbf{Weights}\\
 W($\lambda_{PollutionLow}$) = $1.00$\\ 
 W($\neg$ $\lambda_{PollutionLow}$) = $1.00$\\ 
@@ -440,7 +220,5 @@ W($\rho_{DyspnoeaTrue|CancerTrue}$) = $0.65$\\
 W($\neg$ $\rho_{DyspnoeaTrue|CancerTrue}$) = $0.35$\\ 
 W($\rho_{DyspnoeaTrue|CancerFalse}$) = $0.30$\\ 
 W($\neg$ $\rho_{DyspnoeaTrue|CancerFalse}$) = $0.70$\\ 
-
 \bibliography{biblio}
 \bibliographystyle{plain}
-\end{document}
