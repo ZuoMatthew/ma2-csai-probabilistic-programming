@@ -8,6 +8,7 @@ class WeightedModelCounter:
 
     def evaluate_cnf(self, cnf, print_steps=False):
         """ Executes queries in a given weighted CNF and returns the results. """
+        print_steps = False
         results = {}
 
         cnf_filename = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "files", "cnf{}.dimac"))
@@ -27,7 +28,7 @@ class WeightedModelCounter:
             with open(cnf_query_filename, "w") as file:
                 file.write(cnf_with_query.to_dimacs())
 
-            probability = self.do_model_count(cnf_query_filename)
+            probability, memory_usage = self.do_model_count(cnf_query_filename)
 
             if print_steps:
                 print("RESULT: {}".format(probability))
@@ -37,7 +38,7 @@ class WeightedModelCounter:
             if len(evidence):
                 with open(cnf_no_query_filename, "w") as file:
                     file.write(cnf.to_dimacs())
-                probability_no_query = self.do_model_count(cnf_no_query_filename)
+                probability_no_query, memory_usage = self.do_model_count(cnf_no_query_filename)
                 if print_steps:
                     print("RESULT WITHOUT QUERY: {}".format(probability_no_query))
                 probability = probability / probability_no_query

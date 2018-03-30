@@ -22,10 +22,10 @@ friend(4,2).
 evidence(smokes(2),true).
 evidence(influences(4,2),false).
 
-query(smokes(1)).
+% query(smokes(1)). % cannot do this one because of circular rules
 query(smokes(3)).
 query(smokes(4)).
-query(asthma(1)).
+% query(asthma(1)). % cannot do this one because of circular rules
 query(asthma(2)).
 query(asthma(3)).
 query(asthma(4)).

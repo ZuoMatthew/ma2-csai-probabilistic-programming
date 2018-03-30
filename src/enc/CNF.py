@@ -341,7 +341,7 @@ class CNF:
                         value *= -1
                     rule_copy.append(value)
 
-                val_Q = -varToInt[str(clause.Q.getCopy(negate=True))] if clause.Q.negate else varToInt[str(clause.Q)]
+                val_Q = -varToInt[str(clause.Q.getCopy(negate=True).getBaseRepr(False))] if clause.Q.negate else varToInt[str(clause.Q.getBaseRepr(False))]
                 rule_copy.append(val_Q)
                 dimac += " ".join([str(v) for v in rule_copy])
                 dimac += " 0\n"

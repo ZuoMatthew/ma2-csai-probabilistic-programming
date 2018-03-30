@@ -51,6 +51,8 @@ class MiniC2D(WeightedModelCounter):
 
         # get the model count from the output
         match = re.search(r"Count(/Probability)?\s\t(.*)", output)
+        memory = re.search(r"ent memory\s\t(.*)", output)
+
         if match is None:
-            return None
-        return float(match.group(2))
+            return (None, None)
+        return float(match.group(2)), memory.group(1)

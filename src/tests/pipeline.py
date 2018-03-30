@@ -1,13 +1,17 @@
 import unittest
 import sys
 import os.path
+
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import util
 
 
 def get_results(file):
-    results = util.results_with_pipeline(file, counter="minic2d", print_steps=False)
-    problog_results = util.results_with_problog(file, print_steps=False)
+    path = os.path.join(os.path.dirname(__file__), "..", "files", "problog", file)
+    ground_problog = util.load_problog_or_network_as_ground_problog(path, is_network=False)
+
+    results = util.results_with_pipeline(ground_problog, counter="minic2d", print_steps=False)
+    problog_results = util.results_with_problog(ground_problog, print_steps=False)
 
     results = [(query.replace(" ", ""), round(result, 3)) for query, result in results]
     problog_results = [(query.replace(" ", ""), round(result, 3)) for query, result in problog_results]
@@ -32,16 +36,20 @@ class TestPipeline(unittest.TestCase):
         results, problog_results = get_results("annotated_disjunction_evidence.pl")
         self.assertListEqual(results, problog_results)
 
-    # def test_ball_colors_and_types(self):
-    #   results, problog_results =   get_results("ball_colors_and_types.pl")
+    def test_asia(self):
+        results, problog_results = get_results("asia.pl")
         self.assertListEqual(results, problog_results)
 
-    # def test_ball_colors_unused_variable_in(self):
-    #   results, problog_results =   get_results("ball_colors_unused_variable_in.pl")
+    def test_ball_colors_and_types(self):
+        results, problog_results = get_results("ball_colors_and_types.pl")
         self.assertListEqual(results, problog_results)
 
-    # def test_ball_colors_unused_variable_out(self):
-    #   results, problog_results =   get_results("ball_colors_unused_variable_out.pl")
+    def test_ball_colors_unused_variable_in(self):
+        results, problog_results = get_results("ball_colors_unused_variable_in.pl")
+        self.assertListEqual(results, problog_results)
+
+    def test_ball_colors_unused_variable_out(self):
+        results, problog_results = get_results("ball_colors_unused_variable_out.pl")
         self.assertListEqual(results, problog_results)
 
     def test_bayesian_networks(self):
@@ -52,6 +60,15 @@ class TestPipeline(unittest.TestCase):
         results, problog_results = get_results("bloodtype.pl")
         self.assertListEqual(results, problog_results)
 
+    def test_cancer(self):
+        results, problog_results = get_results("cancer.pl")
+        self.assertListEqual(results, problog_results)
+
+    def test_earthquake(self):
+        results, problog_results = get_results("earthquake.pl")
+        self.assertListEqual(results, problog_results)
+
+    # CONTAINS LISTS, OUT OF SCOPE OF PROJECT
     # def test_flexible_probability(self):
     #     results, problog_results = get_results("flexible_probability.pl")
     #     self.assertListEqual(results, problog_results)
@@ -64,13 +81,19 @@ class TestPipeline(unittest.TestCase):
         results, problog_results = get_results("inhibition_2.pl")
         self.assertListEqual(results, problog_results)
 
-    def test_inhibition_infection(self):
-        results, problog_results = get_results("inhibition_infection.pl")
-        self.assertListEqual(results, problog_results)
+    # CONTAINS CIRCULAR RULES, OUT OF SCOPE OF PROJECT
+    # def test_inhibition_infection(self):
+    #     results, problog_results = get_results("inhibition_infection.pl")
+    #     self.assertListEqual(results, problog_results)
 
     def test_inhibition_infection_negated_head(self):
-        results, problog_results = get_results("inhibition_infection_negated_head.pl")
+        results, problog_results = get_results("inhibition_infection_no_circular.pl")
         self.assertListEqual(results, problog_results)
+
+    # CONTAINS CIRCULAR RULES, OUT OF SCOPE OF PROJECT
+    # def test_inhibition_infection_negated_head(self):
+    #     results, problog_results = get_results("inhibition_infection_negated_head.pl")
+    #     self.assertListEqual(results, problog_results)
 
     def test_inhibition_max_entropy(self):
         results, problog_results = get_results("inhibition_max_entropy.pl")
@@ -100,20 +123,23 @@ class TestPipeline(unittest.TestCase):
         results, problog_results = get_results("rolling_dice.pl")
         self.assertListEqual(results, problog_results)
 
+    # CONTAINS CIRCULAR RULES, OUT OF SCOPE OF PROJECT
     # def test_rolling_dice_infinite(self):
-    #   results, problog_results =   get_results("rolling_dice_infinite.pl")
-        self.assertListEqual(results, problog_results)
+    #     results, problog_results = get_results("rolling_dice_infinite.pl")
+    #     self.assertListEqual(results, problog_results)
 
+    # CONTAINS LISTS, OUT OF SCOPE OF PROJECT
     # def test_rolling_dice_infinite_sequences(self):
     #     results, problog_results = get_results("rolling_dice_infinite_sequences.pl")
     #     self.assertListEqual(results, problog_results)
 
+    # CONTAINS CIRCULAR RULES, OUT OF SCOPE OF PROJECT
     # def test_rolling_dice_negation_as_failure(self):
-    #   results, problog_results =   get_results("rolling_dice_negation_as_failure.pl")
-        self.assertListEqual(results, problog_results)
+    #     results, problog_results =   get_results("rolling_dice_negation_as_failure.pl")
+    #     self.assertListEqual(results, problog_results)
 
-    # def test_social_network(self):
-    #   results, problog_results =   get_results("social_network.pl")
+    def test_social_network(self):
+        results, problog_results = get_results("social_network.pl")
         self.assertListEqual(results, problog_results)
 
     def test_tossing_coins(self):

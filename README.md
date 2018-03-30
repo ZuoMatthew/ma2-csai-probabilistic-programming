@@ -1,11 +1,46 @@
-# csai-probabilistic-programming
-Inference for statistical relational learning.
+# Inference for Statistical Relational Learning
+The goal of the Probabilistic Programming assignment is to build your own state-of-the-art inference and learning engine for probabilistic graphical models such as Bayesian networks and statistical relational models.
+
+## Usage
+The program can evaluate ProbLog programs and Bayesian networks.
+
+### Problog programs
+To evaluate ProbLog programs:
+```sh
+python3 scripts/inference.py --problog_file files/problog/ball_colors_and_types.pl
+```
+The underlying model counter that is used for evaluation can be set with the `--model_counter` parameter. It can be `minic2d` or `sdd`.
+
+The program will print the following steps of the inference pipeline:
+* The ground version of the input program
+* The ground program converted to a First Order Logic theory
+* The ground program in a CNF encoding
+* The CNF encoding in dimacs format
+* The results using our pipeline
+* The results using the problog library
+
+### Bayesian networks
+For Bayesian networks, the process is a bit different.
+The following command will convert the Bayesian network to a ground ProbLog program and run the pipeline on it.
+```sh
+python3 scripts/inference.py --bayesian_network files/networks/earthquake.net
+```
+The output will contain the same elements mentioned above. However, as there are no queries in the ground ProbLog program, there will be nothing to evaluate. In order to add queries, simply copy the ground ProbLog output of the program to a new file and add the queries you want. Then run the command for evaluating a ProbLog file.
+
+Bayesian networks in the following file formats are supported: uai, net, xdsl, xml.
+
+### Tests
+Tests have been created to make sure our pipeline delivers the same results as the problog library. The can be ran as follows:
+```sh
+python3 tests/pipeline.py
+```
 
 ## Dependencies
 * Python >= 3.6
 * graphviz
 
-The program also relies on the MiniC2D package in model_counters/ to be installed. To install them, simply unpack them and run make. MiniC2D might return compilation errors with g++ versions greater than 4.8. To fix this issue, install an older compiler and explicitly add your version in MiniC2D's makefile.
+### MiniC2D
+The program relies on the MiniC2D package in model_counters/ to be installed. To install it, simply unpack them and run make. MiniC2D might return compilation errors with g++ versions greater than 4.8. To fix this issue, install an older compiler and explicitly add your version in MiniC2D's makefile.
 
 The code of the MiniC2D package in model_counters/ has been edited to make it return results with higher precision.
 

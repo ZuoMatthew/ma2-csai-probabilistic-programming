@@ -321,7 +321,7 @@ class FOLTheory:
             new_predicate = "none_of"
             weight_sum = 0
             for head in annotation.heads:
-                new_predicate += "_" + head.name
+                new_predicate += "_" + head.str_no_prob()
                 weight_sum += head.probability
 
                 # add atom with correct weight to FOL Theory
@@ -329,7 +329,7 @@ class FOLTheory:
                 # add atom to local list with weights 1, 1
                 atoms.append(Atom.create_from_problog_term(head, weight_true=1, weight_false=1))
 
-            if len(annotation.heads) > 1:
+            if len(annotation.heads) > 1 and weight_sum < 1:
                 theory.add_formula(Atom(predicate=new_predicate, terms=None, weight_true=1-weight_sum, weight_false=1))
                 atoms.append(Atom(predicate=new_predicate, terms=None, weight_true=1, weight_false=1))
 
