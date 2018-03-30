@@ -14,7 +14,7 @@ def file_to_string(filename):
 
 
 def load_problog_program(filename):
-    filename = os.path.join(os.path.dirname(__file__), "files", "problog", filename)
+    filename = os.path.join(filename)
     return file_to_string(filename)
 
 

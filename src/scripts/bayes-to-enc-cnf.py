@@ -12,7 +12,7 @@ if __name__ == '__main__':
 
         toCachet_bools = [False, True]
         for toCachet in toCachet_bools:
-            output_folder = "/Users/thierryderuyttere/Desktop/Unif_2e_master/capita_selecta/csai-probabilistic-programming/solutions/tests/"
+            output_folder = "/home/thierry/Desktop/unif/capita/ma2-csai-probabilistic-programming/solutions/tests/"
 
             if toCachet:
                 output_folder = output_folder + file + "/cachet"
@@ -21,8 +21,9 @@ if __name__ == '__main__':
 
             enc1_cnf = network.to_enc1()
             enc1_cnf.convert()
+            #enc1_cnf.elimEquiv()
             #print("converted enc1: \n", enc1_cnf.elimEquiv())
-            enc1 = enc1_cnf.toDimac(toCachet=toCachet)
+            enc1 = enc1_cnf.elimEquiv().toDimac(toCachet=toCachet)
             #print("dimac:\n", enc1)
             f = open(f"{output_folder}/enc1.dimac", "w")
             f.write(enc1)
@@ -31,7 +32,7 @@ if __name__ == '__main__':
             enc2_cnf = network.to_enc2()
             enc2_cnf.convert()
             #print("converted enc2: \n", enc2_cnf.elimEquiv())
-            enc2 = enc2_cnf.toDimac(toCachet=toCachet)
+            enc2 = enc2_cnf.elimEquiv().toDimac(toCachet=toCachet)
             #print("dimac:\n",enc2)
             f = open(f"{output_folder}/enc2.dimac", "w")
             f.write(enc2)

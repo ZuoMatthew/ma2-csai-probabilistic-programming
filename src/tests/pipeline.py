@@ -4,7 +4,6 @@ import os.path
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import util
 
-
 def get_results(file):
     results = util.results_with_pipeline(file, counter="minic2d", print_steps=False)
     problog_results = util.results_with_problog(file, print_steps=False)
@@ -12,7 +11,6 @@ def get_results(file):
     results = [(query.replace(" ", ""), round(result, 3)) for query, result in results]
     problog_results = [(query.replace(" ", ""), round(result, 3)) for query, result in problog_results]
     return results, problog_results
-
 
 class TestPipeline(unittest.TestCase):
 
