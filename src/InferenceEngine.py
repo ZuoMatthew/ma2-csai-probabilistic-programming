@@ -33,7 +33,7 @@ class InferenceEngine:
             print(util.separator_1)
 
             # convert the CNF to dimacs format for the weighted model counter
-            print("DIMACS")
+            print("DIMACS:")
             print(cnf.to_dimacs())
             print(util.separator_1)
 
