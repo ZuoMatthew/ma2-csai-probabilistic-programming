@@ -12,7 +12,6 @@ class InferenceEngine:
 
     def evaluate_ground_problog_program(self, ground_program, print_steps=False):
         """ Evaluates a problog program and returns the results. """
-        print(ground_program)
         problog_program = self.problog_parser.program_to_problog(ground_program)
         if print_steps:
             print("GROUND PROGRAM")

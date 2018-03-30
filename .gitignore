@@ -9,6 +9,8 @@ test.cnf
 test_no_query.cnf
 */files/vtree*
 */files/sdd*
+*.aux
+*.out
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template

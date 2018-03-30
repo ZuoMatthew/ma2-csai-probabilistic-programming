@@ -8,6 +8,7 @@ class WeightedModelCounter:
 
     def evaluate_cnf(self, cnf, print_steps=False):
         """ Executes queries in a given weighted CNF and returns the results. """
+        print_steps = False
         results = {}
 
         cnf_filename = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "files", "cnf{}.dimac"))
