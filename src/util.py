@@ -63,7 +63,7 @@ def evaluate_using_problog(program, print_steps=False):
     return results
 
 
-def results_with_pipeline(ground_program, counter="sdd", print_steps=False):
+def results_with_pipeline(ground_program, counter="minic2d", print_steps=False):
     engine = InferenceEngine(counter)
     return engine.evaluate_ground_problog_program(ground_program, print_steps=print_steps)
 

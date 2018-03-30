@@ -36,6 +36,10 @@ class TestPipeline(unittest.TestCase):
         results, problog_results = get_results("annotated_disjunction_evidence.pl")
         self.assertListEqual(results, problog_results)
 
+    def test_asia(self):
+        results, problog_results = get_results("asia.pl")
+        self.assertListEqual(results, problog_results)
+
     def test_ball_colors_and_types(self):
         results, problog_results = get_results("ball_colors_and_types.pl")
         self.assertListEqual(results, problog_results)
@@ -54,6 +58,14 @@ class TestPipeline(unittest.TestCase):
 
     def test_bloodtype(self):
         results, problog_results = get_results("bloodtype.pl")
+        self.assertListEqual(results, problog_results)
+
+    def test_cancer(self):
+        results, problog_results = get_results("cancer.pl")
+        self.assertListEqual(results, problog_results)
+
+    def test_earthquake(self):
+        results, problog_results = get_results("earthquake.pl")
         self.assertListEqual(results, problog_results)
 
     # CONTAINS LISTS, OUT OF SCOPE OF PROJECT

@@ -54,5 +54,5 @@ class MiniC2D(WeightedModelCounter):
         memory = re.search(r"ent memory\s\t(.*)", output)
 
         if match is None:
-            return None
+            return (None, None)
         return float(match.group(2)), memory.group(1)

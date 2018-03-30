@@ -6,12 +6,13 @@ from wmc.factory import create as create_weighted_model_counter
 
 
 class InferenceEngine:
-    def __init__(self, counter="sdd"):
+    def __init__(self, counter="minic2d"):
         self.problog_parser = GroundProblogParser()
         self.weighted_model_counter = create_weighted_model_counter(counter)
 
     def evaluate_ground_problog_program(self, ground_program, print_steps=False):
         """ Evaluates a problog program and returns the results. """
+        print(ground_program)
         problog_program = self.problog_parser.program_to_problog(ground_program)
         if print_steps:
             print("GROUND PROGRAM")
@@ -24,10 +25,6 @@ class InferenceEngine:
             print("FOL theory:")
             print(fol_theory)
             print(util.separator_2)
-
-            print("FOL theory in CNF:")
-            print(fol_theory.to_cnf().formulas[0])
-            print(util.separator_1)
 
         # convert the LogicFormula to its CNF representation
         cnf = CNF.create_from_fol_theory(fol_theory)

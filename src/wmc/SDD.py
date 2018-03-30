@@ -65,4 +65,4 @@ class SDD(WeightedModelCounter):
         (graph,) = pydot.graph_from_dot_file(vtree_file + "dot")
         graph.write_png(vtree_file + "png")
 
-        return wmc.propagate()
+        return (wmc.propagate(), 0)
