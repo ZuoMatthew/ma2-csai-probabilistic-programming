@@ -6,14 +6,14 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import util as util
 
 parser = argparse.ArgumentParser(description='Arguments for inference')
-parser.add_argument('--problog_file', dest="pf", default=None, help="A problog file")
+parser.add_argument('--problog', dest="pf", default=None, help="A problog file")
 parser.add_argument("--model_counter", dest="model_counter", help="The model counter to use [minic2d, sdd]", default="minic2d")
-parser.add_argument("--bayesian_network", dest="bn", default=None, help="A bayesian network file")
+parser.add_argument("--bn", dest="bn", default=None, help="A bayesian network file")
 
 if __name__ == '__main__':
     args = parser.parse_args()
     if args.pf is None and args.bn is None:
-        parser.error("Please provide a problog file (--problog_file) or a bayesian network (--bayesian_network)")
+        parser.error("Please provide a problog file (--problog) or a bayesian network (--bn)")
 
     filename = args.pf if args.pf is not None else args.bn
     is_network = True if args.bn else False

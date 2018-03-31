@@ -7,7 +7,7 @@ The program can evaluate ProbLog programs and Bayesian networks.
 ### Problog programs
 To evaluate ProbLog programs:
 ```sh
-python3 scripts/inference.py --problog_file files/problog/ball_colors_and_types.pl
+python3 scripts/inference.py --problog files/problog/ball_colors_and_types.pl
 ```
 The underlying model counter that is used for evaluation can be set with the `--model_counter` parameter. It can be `minic2d` or `sdd`.
 
@@ -23,7 +23,7 @@ The program will print the following steps of the inference pipeline:
 For Bayesian networks, the process is a bit different.
 The following command will convert the Bayesian network to a ground ProbLog program and run the pipeline on it.
 ```sh
-python3 scripts/inference.py --bayesian_network files/networks/earthquake.net
+python3 scripts/inference.py --bn files/networks/earthquake.net
 ```
 The output will contain the same elements mentioned above. However, as there are no queries in the ground ProbLog program, there will be nothing to evaluate. In order to add queries, simply copy the ground ProbLog output of the program to a new file and add the queries you want. Then run the command for evaluating a ProbLog file.
 
