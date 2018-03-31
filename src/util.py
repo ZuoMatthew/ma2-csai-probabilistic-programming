@@ -38,7 +38,7 @@ def ground_problog_program(program):
 def evaluate_using_problog(program, print_steps=False):
     """ Evaluates a problog program using the problog library. """
 
-    formula = LogicFormula.create_from(program, avoid_name_clash=True, keep_order=True, label_all=True)
+    formula = ground_problog_program(program)
     if print_steps:
         print("GROUND PROGRAM:")
         print(formula.to_prolog())
@@ -63,9 +63,13 @@ def evaluate_using_problog(program, print_steps=False):
     return results
 
 
-def results_with_pipeline(ground_program, counter="minic2d", print_steps=False):
+def results_with_pipeline(ground_program, counter="minic2d", parameter_learning=False, interpretations=0, print_steps=False):
     engine = InferenceEngine(counter)
-    return engine.evaluate_ground_problog_program(ground_program, print_steps=print_steps)
+
+    if not parameter_learning:
+        return engine.ground_problog_evaluate(ground_program, print_steps)
+    else:
+        return engine.ground_problog_learn_parameters(ground_program, interpretations, print_steps)
 
 
 def results_with_problog(ground_program, print_steps=False):
