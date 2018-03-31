@@ -1,6 +1,7 @@
 import copy
 
 import util as util
+from timeit import default_timer as timer
 from CNF import CNF
 from FOLTheory import FOLTheory
 from ground_problog.GroundProblogParser import GroundProblogParser
@@ -14,6 +15,7 @@ class InferenceEngine:
 
     def ground_problog_evaluate(self, ground_program, print_steps=False):
         """ Evaluates a problog program and returns the results. """
+        start = timer()
         # parse the ground program to the internal representation of ground problog
         problog_program = self.problog_parser.program_to_problog(ground_program)
         if print_steps:
@@ -41,12 +43,18 @@ class InferenceEngine:
             print(util.separator_1)
 
         # do the model counting
-        results = self.weighted_model_counter.evaluate_cnf(cnf, print_steps)
+        results, stats = self.weighted_model_counter.evaluate_cnf(cnf, print_steps)
+        stats["total runtime"] = timer() - start
         if print_steps:
+            print(util.separator_1)
             print("EVALUATION:")
             query_str_len = max([len(q) for q, _ in results]) if results else None
             for query, probability in results:
                 print("{:<{}}: {}".format(query, query_str_len, probability))
+            print(util.separator_2)
+            print("STATS:")
+            for stat in stats:
+                print("\t" + stat + ": ", stats[stat])
 
         return results
 
@@ -90,9 +98,6 @@ class InferenceEngine:
             print(cnf.to_dimacs())
             print(util.separator_1)
 
-        print("GOT INTERPRETATIONS:")
-        print(interpretations)
-
         # get the probabilities that need to be learned/tuned
         tunable_probabilities = problog_program.get_tunable_probabilities_as_dict()
         if print_steps:
@@ -102,15 +107,16 @@ class InferenceEngine:
         iteration = 0
         convergence = False
 
-        while not convergence:
+        while not convergence and iteration < 100:
             iteration += 1
-            probability_sums = dict.fromkeys(tunable_probabilities.keys(), 0)
 
             # update the weights of the tunable probabilities in the CNF at every iteration
             for tunable_prob_name in tunable_probabilities:
                 prob = tunable_probabilities[tunable_prob_name]
                 cnf.set_literal_weights(tunable_prob_name, prob, 1 - prob)
 
+            # add each interpretation as evidence to the CNF and sum up the results of the queries
+            probability_sums = dict.fromkeys(tunable_probabilities.keys(), 0)
             for interpretation in interpretations:
                 # add the interpretation as evidence in a copy of the CNF
                 cnf_copy = copy.deepcopy(cnf)
@@ -118,21 +124,27 @@ class InferenceEngine:
                     cnf_copy.add_evidence(evidence)
 
                 # do model counting with the evidence
-                results = self.weighted_model_counter.evaluate_cnf(cnf_copy, print_steps)
+                results, _ = self.weighted_model_counter.evaluate_cnf(cnf_copy, print_steps=False)
                 for query, probability in results:
-                    # TODO: add the results (DONE?)
                     probability_sums[query] += probability
 
-            # TODO: update the probabilities (DONE?)
+            # update the tunable probabilities and determine whether or not convergence has been reached
+            all_converged = True
             for probability in probability_sums:
-                tunable_probabilities[probability] = probability_sums[probability] / len(interpretations)
+                new_probability = probability_sums[probability] / len(interpretations)
 
+                if abs(tunable_probabilities[probability] - new_probability) > 0.0001:
+                    all_converged = False
+
+                tunable_probabilities[probability] = new_probability
+
+            convergence = all_converged
             print("probabilities after iteration {}: {}".format(iteration, tunable_probabilities))
-            print(util.separator_2)
 
         if print_steps:
+            print(util.separator_1)
             print("FINAL LEARNED PARAMETERS:")
-            query_str_len = max([len(k) for k in tunable_probabilities.keys])
+            query_str_len = max([len(k) for k in tunable_probabilities.keys()])
             for query, probability in tunable_probabilities.items():
                 print("{:<{}}: {}".format(query, query_str_len, probability))
 

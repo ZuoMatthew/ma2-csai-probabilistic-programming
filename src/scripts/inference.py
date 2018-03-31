@@ -62,7 +62,7 @@ if __name__ == '__main__':
         ground_program = util.file_to_string(filename)
 
         ground_truth_filename = args.problog_learn_truth
-        amount_of_interpretations = args.learning_interpretations
+        amount_of_interpretations = int(args.learning_interpretations)
         interpretations = util.generate_interpretations(ground_truth_filename, amount_of_interpretations)
 
         util.results_with_pipeline(ground_program, model_counter, parameter_learning, interpretations, print_steps=True)
