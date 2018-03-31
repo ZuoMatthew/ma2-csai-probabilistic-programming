@@ -92,6 +92,11 @@ class CNF:
     def get_evidence(self):
         return self.evidence
 
+    def set_literal_weights(self, literal_name, weight_true, weight_false):
+        self.literals[literal_name].weight_true = weight_true
+        self.literals[literal_name].weight_false = weight_false
+        return self
+
     def get_evidence_with_dimacs_numbers(self):
         return [(lit, lit.dimacs_int) for lit in self.evidence]
 

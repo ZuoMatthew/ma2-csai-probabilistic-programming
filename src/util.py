@@ -3,6 +3,8 @@ import problog_conversions.bn2problog
 from problog.formula import LogicFormula
 from problog.ddnnf_formula import DDNNF
 from problog.cnf_formula import CNF
+from problog.program import PrologFile
+from problog.tasks.sample import sample
 from InferenceEngine import InferenceEngine
 
 separator_1 = "===================================================="
@@ -76,9 +78,7 @@ def results_with_problog(ground_program, print_steps=False):
     return evaluate_using_problog(ground_program, print_steps)
 
 
-def generate_interpretations(file_path, n):
-    from problog.program import PrologFile
-    from problog.tasks.sample import sample
-
-    pl = PrologFile(file_path)
-    return sample(pl, n=n, as_evidence=True)
+def generate_interpretations(filename, n):
+    pl = PrologFile(filename)
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", list(sample(pl, n=n, as_evidence=True)))
+    return list(sample(pl, n=n, as_evidence=True))

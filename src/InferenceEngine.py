@@ -66,12 +66,6 @@ class InferenceEngine:
             print(problog_program)
             print(util.separator_1)
 
-        # get the probabilities that need to be learned/tuned
-        tunable_probabilities = problog_program.get_tunable_probabilities_as_dict()
-        if print_steps:
-            print("INITIAL TUNABLE PROBABILITIES")
-            print(tunable_probabilities)
-
         # convert the GroundProblog to a FOLTheory
         fol_theory = FOLTheory.create_from_problog(problog_program)
         # add the probabilities to be learned as queries in the FOLTheory
@@ -96,34 +90,45 @@ class InferenceEngine:
             print(cnf.to_dimacs())
             print(util.separator_1)
 
-        convergence = False
-        iteration = 1
-        while not convergence:
-            for tp in tunable_probabilities:
-                # TODO: set the weights of the tunable_probabilities every iteration
-                p = tunable_probabilities[tp]
-                cnf.set_weights(tp, p, 1 - p)
+        print("GOT INTERPRETATIONS:")
+        print(interpretations)
 
-            sums = dict.fromkeys(tunable_probabilities.keys(), 0)
-            M = 0
+        # get the probabilities that need to be learned/tuned
+        tunable_probabilities = problog_program.get_tunable_probabilities_as_dict()
+        if print_steps:
+            print("INITIAL TUNABLE PROBABILITIES:")
+            print(tunable_probabilities)
+            print(util.separator_1)
+        iteration = 0
+        convergence = False
+
+        while not convergence:
+            iteration += 1
+            probability_sums = dict.fromkeys(tunable_probabilities.keys(), 0)
+
+            # update the weights of the tunable probabilities in the CNF at every iteration
+            for tunable_prob_name in tunable_probabilities:
+                prob = tunable_probabilities[tunable_prob_name]
+                cnf.set_literal_weights(tunable_prob_name, prob, 1 - prob)
+
             for interpretation in interpretations:
-                M += 1
+                # add the interpretation as evidence in a copy of the CNF
                 cnf_copy = copy.deepcopy(cnf)
-                # add the interpretation as evidence in the CNF
                 for evidence in self.interpretation_to_cnf_evidence(interpretation):
                     cnf_copy.add_evidence(evidence)
 
-                # Do model counting with the evidence
+                # do model counting with the evidence
                 results = self.weighted_model_counter.evaluate_cnf(cnf_copy, print_steps)
                 for query, probability in results:
                     # TODO: add the results (DONE?)
-                    sums[query] += probability
+                    probability_sums[query] += probability
 
             # TODO: update the probabilities (DONE?)
-            for probability in sums:
-                tunable_probabilities[probability] = sums[probability] / M
+            for probability in probability_sums:
+                tunable_probabilities[probability] = probability_sums[probability] / len(interpretations)
 
             print("probabilities after iteration {}: {}".format(iteration, tunable_probabilities))
+            print(util.separator_2)
 
         if print_steps:
             print("FINAL LEARNED PARAMETERS:")
