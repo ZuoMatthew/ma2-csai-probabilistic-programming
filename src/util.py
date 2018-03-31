@@ -78,14 +78,15 @@ def results_with_pipeline(ground_program, counter="minic2d", parameter_learning=
 def results_with_problog(ground_program, print_steps=False):
     return evaluate_using_problog(ground_program, print_steps)
 
+
 def generate_interpretations(filename, n):
     pl = PrologFile(filename)
-    interpretations = list(sample(pl, n=n, as_evidence=True))
     new_samples = []
-    for interpr in interpretations:
+
+    for interpretation in sample(pl, n=n, as_evidence=True):
         temp = []
 
-        for i in interpr.split("\n"):
+        for i in interpretation.splitlines():
             if random.random() <= 0.7:
                 temp.append(i)
 

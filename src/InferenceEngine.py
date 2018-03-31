@@ -133,7 +133,7 @@ class InferenceEngine:
             for probability in probability_sums:
                 new_probability = probability_sums[probability] / len(interpretations)
 
-                if abs(tunable_probabilities[probability] - new_probability) > 0.0001:
+                if abs(tunable_probabilities[probability] - new_probability) > 0.01:
                     all_converged = False
 
                 tunable_probabilities[probability] = new_probability
