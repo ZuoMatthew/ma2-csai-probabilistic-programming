@@ -14,6 +14,7 @@ class InferenceEngine:
 
     def ground_problog_evaluate(self, ground_program, print_steps=False):
         """ Evaluates a problog program and returns the results. """
+        # parse the ground program to the internal representation of ground problog
         problog_program = self.problog_parser.program_to_problog(ground_program)
         if print_steps:
             print("GROUND PROGRAM")
@@ -51,19 +52,26 @@ class InferenceEngine:
 
     def ground_problog_learn_parameters(self, ground_program, amount_of_interpretations, print_steps=False):
         """ Learns parameters in a ground_problog file using Expectation Maximization. """
+        # parse the ground program to the internal representation of ground problog
         problog_program = self.problog_parser.program_to_problog(ground_program)
         if print_steps:
             print("GROUND PROGRAM")
             print(problog_program)
             print(util.separator_1)
 
-        # TODO: update parser so it parses tunable probabilities. Add 'is_tunable' to GroundProblog.Term
-        # TODO: in parsing, if the probability is t(_), just set the probability to a random number during parsing
+        # get the probabilities that need to be learned/tuned
         tunable_probabilities = problog_program.get_tunable_probabilities_as_dict()
+        if print_steps:
+            print("TUNABLE PROBABILITIES")
+            print(tunable_probabilities)
 
         # convert the GroundProblog to a FOLTheory
-        # TODO: in create_from_problog, add the tunable_probabilities as queries. Remove all other queries first as they are not relevant?
         fol_theory = FOLTheory.create_from_problog(problog_program)
+        # add the probabilities to be learned as queries in the FOLTheory
+        fol_theory.delete_queries()
+        for term in problog_program.get_tunable_probabilities():
+            fol_theory.add_query_from_problog_term(term)
+
         if print_steps:
             print("FOL theory:")
             print(fol_theory)
@@ -82,7 +90,9 @@ class InferenceEngine:
             print(util.separator_1)
 
         # TODO: generate interpretations. One interpretation is a list of CNF.Literal that will be added as evidence
+        print("initial probabilities", tunable_probabilities)
         convergence = False
+        iteration = 1
         while not convergence:
             for tp in tunable_probabilities:
                 # TODO: set the weights of the tunable_probabilities every iteration
@@ -105,6 +115,7 @@ class InferenceEngine:
             # TODO: update the probabilities
             for probability in sums:
                 tunable_probabilities[probability] = sums[probability] / amount_of_interpretations
+            print("probabilities after iteration {}: {}".format(iteration, tunable_probabilities))
 
         if print_steps:
             print("FINAL LEARNED PARAMETERS:")

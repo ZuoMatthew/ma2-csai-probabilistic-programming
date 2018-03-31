@@ -1,7 +1,6 @@
 """
 This file defines classes that are used to build GroundProblog instances that represent ground problog programs.
 """
-import copy
 
 
 class Clause:
@@ -10,11 +9,12 @@ class Clause:
 
 class Term(Clause):
     """ A term has a name, can be negated, and possibly has arguments. """
-    def __init__(self, name, negation=False, arguments=None, probability=1.0):
+    def __init__(self, name, negation=False, arguments=None, probability=1.0, is_tunable=False):
         self.name = name
         self.negation = negation
         self.arguments = arguments if arguments is not None else []
         self.probability = probability
+        self.is_tunable = is_tunable
 
     def __str__(self):
         out = (str(self.probability) + "::") if self.probability != 1.0 else ""
@@ -66,6 +66,13 @@ class GroundProblog:
 
     def get_facts(self):
         return [c for c in self.clauses if isinstance(c, Term) and c.name != "query" and c.name != "evidence"]
+
+    def get_tunable_probabilities(self):
+        return [c for c in self.clauses if isinstance(c, Term) and c.is_tunable]
+
+    def get_tunable_probabilities_as_dict(self):
+        probs = [c for c in self.clauses if isinstance(c, Term) and c.is_tunable]
+        return {c.str_no_prob(): c.probability for c in probs}
 
     def get_queries(self):
         return [c.arguments[0] for c in self.clauses if isinstance(c, Term) and c.name == "query"]

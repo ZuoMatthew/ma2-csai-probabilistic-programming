@@ -45,11 +45,11 @@ class Atom(LogicFormula):
 
     @staticmethod
     def create_from_problog_term(term, weight_true, weight_false):
-        arguments = []
-        if len(term.arguments):
-            arguments = [Atom.create_from_problog_term(arg, 1, 1) for arg in term.arguments]
+        predicate = term.name
+        terms = [Atom.create_from_problog_term(arg, 1, 1) for arg in term.arguments] if len(term.arguments) else []
 
-        atom = Atom(predicate=term.name, terms=arguments, weight_true=weight_true, weight_false=weight_false)
+        atom = Atom(predicate, terms, weight_true, weight_false)
+
         return Negation(atom) if term.negation else atom
 
 
@@ -191,6 +191,7 @@ class Disjunction(LogicFormula):
 
             return result.to_cnf()
 
+
 class Equivalence(LogicFormula):
     """ Represents the logical connective '↔'. E.g. "w ↔ r ∨ s" """
 
@@ -236,21 +237,36 @@ class FOLTheory:
         return out
 
     def add_formula(self, formula):
+        if not isinstance(formula, LogicFormula):
+            raise Exception("Adding formula of wrong type")
+
         self.formulas.append(formula)
 
     def get_formulas(self):
         return self.formulas
 
     def add_evidence(self, evidence):
+        if not isinstance(evidence, LogicFormula):
+            raise Exception("Adding evidence of wrong type")
+
         self.evidence.append(evidence)
 
     def get_evidence(self):
         return self.evidence
 
     def add_query(self, query):
+        if not isinstance(query, LogicFormula):
+            raise Exception("Adding query of wrong type")
+
         self.queries.append(query)
 
+    def add_query_from_problog_term(self, term):
+        self.add_query(Atom.create_from_problog_term(term, 1, 1))
+
     def get_queries(self):
+        return self.queries
+
+    def delete_queries(self):
         return self.queries
 
     def to_cnf(self):

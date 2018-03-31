@@ -1,5 +1,6 @@
 from sys import exc_info
 from six import reraise
+from random import random
 from parsimonious import NodeVisitor, VisitationError, UndefinedLabel
 from ground_problog.GroundProblog import *
 
@@ -17,8 +18,8 @@ class GroundProblogVisitor(NodeVisitor):
     def visit(self, node):
         """Walk a parse tree, transforming it into another representation."""
         # Do nothing for following expressions
-        skip_nodes = ["_", "dot", "comma", "semicolon", "lparen", "rparen",
-                         "slash", "doublecolon", "turnstile", "negation"]
+        skip_nodes = ["_", "dot", "comma", "semicolon", "lparen", "rparen", "slash",
+                      "doublecolon", "turnstile", "negation", "tunable", "tunable_empty"]
         if node.expr_name in skip_nodes:
             return
 
@@ -109,7 +110,8 @@ class GroundProblogVisitor(NodeVisitor):
     def visit_prob_fact(self, node, visited_children):
         self.print("visit_prob_fact", map(str, visited_children))
         term = visited_children[2]
-        term.probability = visited_children[0]
+        term.is_tunable = visited_children[0]["tunable"]
+        term.probability = visited_children[0]["probability"]
         return term
 
     def visit_rule_predicate(self, node, visited_children):
@@ -152,6 +154,22 @@ class GroundProblogVisitor(NodeVisitor):
 
     def visit_probability(self, node, visited_children):
         self.print("visit_probability", map(str, visited_children))
+        return visited_children[0]
+
+    def visit_prob_num(self, node, visited_children):
+        self.print("visit_prob_num", map(str, visited_children))
+        return {"tunable": False, "probability": visited_children[0]}
+
+    def visit_prob_tunable_num(self, node, visited_children):
+        self.print("visit_prob_tunable_num", map(str, visited_children))
+        return {"tunable": True, "probability": visited_children[3]}
+
+    def visit_prob_tunable_none(self, node, visited_children):
+        self.print("visit_prob_tunable_none", map(str, visited_children))
+        return {"tunable": True, "probability": random()}
+
+    def visit_decimal_or_frac(self, node, visited_children):
+        self.print("vidit_decimal_or_frac", map(str, visited_children))
         return visited_children[0]
 
     def visit_fraction(self, node, visited_children):

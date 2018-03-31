@@ -40,7 +40,11 @@ class GroundProblogParser:
             arguments_more_o  = arguments_more?
             arguments_more    = comma arguments_list
             
-            probability       = decimal / fraction
+            probability       = prob_num / prob_tunable_num / prob_tunable_none
+            prob_num          = decimal_or_frac _
+            prob_tunable_num  = _ tunable lparen decimal_or_frac rparen _
+            prob_tunable_none = _ tunable_empty _
+            decimal_or_frac   = decimal / fraction
             fraction          = number slash number
             word              = ~r"([a-zA-Z0-9_]+|\"[a-zA-Z0-9_\-\'\.\/\=\<\>\+]*\"|\'[a-zA-Z0-9_\-\'\.\/\=\<\>\+]*\')"
             number            = ~r"[0-9]*"
@@ -54,6 +58,8 @@ class GroundProblogParser:
             doublecolon       = _ "::" _
             turnstile         = _ ":-" _
             negation          = _ ~r"\\\+" _
+            tunable           = _ "t" _
+            tunable_empty     = "t(_)"
             
             _                 = meaninglessness*
             meaninglessness   = ~r"\s+"
