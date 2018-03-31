@@ -63,7 +63,7 @@ def evaluate_using_problog(program, print_steps=False):
     return results
 
 
-def results_with_pipeline(ground_program, counter="minic2d", parameter_learning=False, interpretations=0, print_steps=False):
+def results_with_pipeline(ground_program, counter="minic2d", parameter_learning=False, interpretations=None, print_steps=False):
     engine = InferenceEngine(counter)
 
     if not parameter_learning:

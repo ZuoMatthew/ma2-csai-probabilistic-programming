@@ -49,7 +49,14 @@ class InferenceEngine:
 
         return results
 
-    def ground_problog_learn_parameters(self, ground_program, amount_of_interpretations, print_steps=False):
+    def interpretation_to_cnf(self, interpretation):
+        """Given an interpretation returns a ground problog class"""
+        problog_program = self.problog_parser.program_to_problog(interpretation)
+        fol_theory = FOLTheory.create_from_problog(problog_program)
+        cnf = CNF.create_from_fol_theory(fol_theory)
+        return cnf.get_evidence()
+
+    def ground_problog_learn_parameters(self, ground_program, interpretations, print_steps=False):
         """ Learns parameters in a ground_problog file using Expectation Maximization. """
         problog_program = self.problog_parser.program_to_problog(ground_program)
         if print_steps:
@@ -81,7 +88,6 @@ class InferenceEngine:
             print(cnf.to_dimacs())
             print(util.separator_1)
 
-        # TODO: generate interpretations. One interpretation is a list of CNF.Literal that will be added as evidence
         convergence = False
         while not convergence:
             for tp in tunable_probabilities:
@@ -90,21 +96,25 @@ class InferenceEngine:
                 cnf.set_weights(tp, p, 1 - p)
 
             sums = dict.fromkeys(tunable_probabilities.keys(), 0)
-
-            for i in range(amount_of_interpretations):
+            M = 0
+            for interpretation in interpretations:
+                M += 1
                 cnf_copy = copy.deepcopy(cnf)
-                # TODO: generate an interpretation
-                # TODO: add the interpretation as evidence
+                # TODO: generate an interpretation (DONE)
+                # TODO: add the interpretation as evidence (DONE)
+                evidences = self.interpretation_to_cnf(interpretation)
+                for evidence in evidences:
+                    cnf_copy.add_evidence(evidence)
 
                 # Do model counting with the evidence
                 results = self.weighted_model_counter.evaluate_cnf(cnf_copy, print_steps)
                 for query, probability in results:
-                    # TODO: add the results
+                    # TODO: add the results (DONE?)
                     sums[query] += probability
 
-            # TODO: update the probabilities
+            # TODO: update the probabilities (DONE?)
             for probability in sums:
-                tunable_probabilities[probability] = sums[probability] / amount_of_interpretations
+                tunable_probabilities[probability] = sums[probability] / M
 
         if print_steps:
             print("FINAL LEARNED PARAMETERS:")
