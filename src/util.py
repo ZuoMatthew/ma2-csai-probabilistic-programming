@@ -1,5 +1,6 @@
 import os.path
 import problog_conversions.bn2problog
+import random
 from problog.formula import LogicFormula
 from problog.ddnnf_formula import DDNNF
 from problog.cnf_formula import CNF
@@ -77,8 +78,18 @@ def results_with_pipeline(ground_program, counter="minic2d", parameter_learning=
 def results_with_problog(ground_program, print_steps=False):
     return evaluate_using_problog(ground_program, print_steps)
 
-
 def generate_interpretations(filename, n):
     pl = PrologFile(filename)
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", list(sample(pl, n=n, as_evidence=True)))
-    return list(sample(pl, n=n, as_evidence=True))
+    interpretations = list(sample(pl, n=n, as_evidence=True))
+    new_samples = []
+    for interpr in interpretations:
+        temp = []
+
+        for i in interpr.split("\n"):
+            if random.random() <= 0.7:
+                temp.append(i)
+
+        new_samples.append("\n".join(temp))
+
+    return new_samples
+
