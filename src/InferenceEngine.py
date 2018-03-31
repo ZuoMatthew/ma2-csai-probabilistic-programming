@@ -50,8 +50,8 @@ class InferenceEngine:
 
         return results
 
-    def interpretation_to_cnf(self, interpretation):
-        """Given an interpretation returns a ground problog class"""
+    def interpretation_to_cnf_evidence(self, interpretation):
+        """ Converts a ProbLog interpretation to a list of CNF evidence. """
         problog_program = self.problog_parser.program_to_problog(interpretation)
         fol_theory = FOLTheory.create_from_problog(problog_program)
         cnf = CNF.create_from_fol_theory(fol_theory)
@@ -109,10 +109,8 @@ class InferenceEngine:
             for interpretation in interpretations:
                 M += 1
                 cnf_copy = copy.deepcopy(cnf)
-                # TODO: generate an interpretation (DONE)
-                # TODO: add the interpretation as evidence (DONE)
-                evidences = self.interpretation_to_cnf(interpretation)
-                for evidence in evidences:
+                # add the interpretation as evidence in the CNF
+                for evidence in self.interpretation_to_cnf_evidence(interpretation):
                     cnf_copy.add_evidence(evidence)
 
                 # Do model counting with the evidence
