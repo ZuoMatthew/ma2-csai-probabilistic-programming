@@ -63,7 +63,7 @@ def evaluate_using_problog(program, print_steps=False):
     return results
 
 
-def results_with_pipeline(ground_program, counter="minic2d", parameter_learning=False, interpretations=0, print_steps=False):
+def results_with_pipeline(ground_program, counter="minic2d", parameter_learning=False, interpretations=None, print_steps=False):
     engine = InferenceEngine(counter)
 
     if not parameter_learning:
@@ -74,3 +74,11 @@ def results_with_pipeline(ground_program, counter="minic2d", parameter_learning=
 
 def results_with_problog(ground_program, print_steps=False):
     return evaluate_using_problog(ground_program, print_steps)
+
+
+def generate_interpretations(file_path, n):
+    from problog.program import PrologFile
+    from problog.tasks.sample import sample
+
+    pl = PrologFile(file_path)
+    return sample(pl, n=n, as_evidence=True)

@@ -56,5 +56,5 @@ if __name__ == '__main__':
         # as grounding a file without queries would result in an empty program
         ground_program = util.file_to_string(filename)
         amount = args.learning_interpretations
-
-        util.results_with_pipeline(ground_program, model_counter, parameter_learning, amount, print_steps=True)
+        interpretations = util.generate_interpretations(filename, amount)
+        util.results_with_pipeline(ground_program, model_counter, parameter_learning, interpretations, print_steps=True)
