@@ -4,15 +4,23 @@ import FOLTheory
 class Literal:
     """ A literal of a CNF formula. """
 
-    def __init__(self, name, negated=False, weight_true=1.0, weight_false=1.0, dimacs_assignment=None):
+    def __init__(self, name, negated=False, weight_true=1.0, weight_false=1.0, dimacs_assignment=None, tunable=False):
         self.name = name
         self.negated = negated
         self.weight_true = weight_true
         self.weight_false = weight_false
         self.dimacs_int = dimacs_assignment
+        self.is_tunable = tunable
 
     def __str__(self):
-        return (str(self.weight_true)+"::" if self.weight_true != 1.0 else "") + ("-" if self.negated else "") + self.name
+        out = ""
+        if self.weight_true != 1:
+            if self.is_tunable:
+                out += "t(" + str(self.weight_true) + ")::"
+            else:
+                out += str(self.weight_true) + "::"
+        out += ("-" if self.negated else "") + self.name
+        return out
 
     def __eq__(self, other):
         return self.name == other.name and self.negated == other.negated and \
@@ -21,9 +29,19 @@ class Literal:
     @staticmethod
     def create_from_fol_formula(formula):
         if isinstance(formula, FOLTheory.Negation):
-            return Literal(str(formula.formula), True, formula.formula.weight_true, formula.formula.weight_false)
+            name = str(formula.formula)
+            negated = True
+            w_true = formula.formula.weight_true
+            w_false = formula.formula.weight_false
+            is_tunable = formula.formula.is_tunable
         else:
-            return Literal(str(formula.str_no_weights()), False, formula.weight_true, formula.weight_false)
+            name = str(formula.str_no_weights())
+            negated = False
+            w_true = formula.weight_true
+            w_false = formula.weight_false
+            is_tunable = formula.is_tunable
+
+        return Literal(name, negated, w_true, w_false, tunable=is_tunable)
 
 
 class CNF:
@@ -54,20 +72,23 @@ class CNF:
 
         return out
 
-    def get_or_add_literal(self, literal):
-        if not isinstance(literal, Literal):
+    def get_or_add_literal(self, lit):
+        if not isinstance(lit, Literal):
             raise Exception("Adding literal of wrong type")
         
-        if literal.name not in self.literals:
+        if lit.name not in self.literals:
             dimacs_assignment = len(self.literals) + 1
-            new_literal = Literal(literal.name, False, literal.weight_true, literal.weight_false, dimacs_assignment)
-            self.literals[literal.name] = new_literal
+            new_literal = Literal(lit.name, False, lit.weight_true, lit.weight_false, dimacs_assignment, lit.is_tunable)
+            self.literals[lit.name] = new_literal
             return new_literal
         else:
-            return self.literals[literal.name]
+            return self.literals[lit.name]
 
     def get_literals(self):
         return sorted(self.literals.values(), key=lambda lit: lit.dimacs_int)
+
+    def get_tunable_literals_as_dict(self):
+        return {l.name: l for l in self.get_literals() if l.is_tunable}
 
     def add_clause(self, clause):
         if not isinstance(clause, list):

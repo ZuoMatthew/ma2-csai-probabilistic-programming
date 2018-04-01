@@ -47,7 +47,7 @@ class WeightedModelCounter:
 
                 probability = probability / probability_without_query
 
-            results[str(literal)] = probability
+            results[literal.name] = probability
 
         results = sorted(results.items(), key=lambda kv: kv[0])
 
