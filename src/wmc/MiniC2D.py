@@ -32,6 +32,10 @@ class MiniC2D(WeightedModelCounter):
         subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         return vtree_f + "txt"
 
+    def get_stats_from_output(self, output):
+        pass
+
+    
     def do_model_count(self, filename):
         filename = os.path.abspath(filename)
         dir = os.path.dirname(filename)
@@ -57,6 +61,8 @@ class MiniC2D(WeightedModelCounter):
             return None, {}
 
         result = float(match.group(2))
+        stats = self.get_stats_from_output(output)
+
         stats = {
             "Number of variables in the CNF": "CNF stats: vars",
             "Number of lines in the CNF": "CNF stats: clauses",
