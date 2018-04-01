@@ -376,12 +376,12 @@ Concerning the weighted model counters, we clearly see that Cachet is faster tha
 For this exercise we used ``SDD''. the resulting vtree's and their sdd's can be found in the folder \textbf{1.4}.
 In this folder there are three different other folders. One for each different CNF.
 The file name in each of these folders follow the following convention:
-initial-vtree-type\_[minimize cardinality]\_[vtree | sdd]
+initial-vtree-type$[\_$minimize cardinality$]$\_$[$vtree $\vert$ sdd$]$
 \begin{itemize}
-    \item \textbf{ENC1}:
-    \item \textbf{ENC2}:
-    \item \textbf{Monty Hall}:
+    \item \textbf{ENC1}: The smallest vtree is given by using ``-t balanced [-m]''. This gives us a sdd that is quite shallow but branches a lot.
+    \item \textbf{ENC2}: For this encoding we have different options that give us a quite shallow vtree. the options ``-t balanced'' and ``-t right'' give us shallow vtree without having the need to use the -m parameter. But the most compact circuit is given by the ``-t balanced'' argument here.
+    \item \textbf{Monty Hall}: Here we see that by using the option ``-t balanced'' we receive the most compact circuit.
 \end{itemize}
 
 \subsubsection{Pattern for a good vtree}
-As a vtree is a binary tree, which means that a good vtree is compact. We want thus a vtree that is shallow. 
+From our tests we've seen that a vtree that is quite shallow gives us the best circuit. As a vtree is a binary search tree this seems logical for us as with such a tree you also want it to be shallow.
