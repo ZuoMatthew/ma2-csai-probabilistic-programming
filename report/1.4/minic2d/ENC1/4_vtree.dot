@@ -1,0 +1,132 @@
+
+digraph vtree {
+
+overlap=false
+
+n1 [label="vt1
+4
+{}",shape="ellipse"]; 
+n3 [label="vt3
+1
+{3,4,17,18,27,29,31,33,43,45,47,49}",shape="ellipse"]; 
+n5 [label="vt5
+6
+{3,4,17,18,27,29,31,33,43,45,47,49,1,2,11,12,19,20,23,24,28,32}",shape="ellipse"]; 
+n7 [label="vt7
+5
+{3,4,17,18,27,29,31,33,43,45,47,49,1,2,11,12,19,20,23,24,28,32,5,6,26,34,39,42,50,57,58,60,61,69,70,72,73}",shape="ellipse"]; 
+n33 [label="vt33
+{3,4,17,18,27,29,31,33,43,45,47,49,1,2,11,12,19,20,23,24,28,32,26,34,39,42,50,57,58,60,61,69,70,72,73,22,30,35,38,46,51,52,54,55,63,64,66,67}",shape="box"]; 
+n19 [label="vt19
+{31,33,32,34,57,58,60,61,69,70,72,73,51,52,54,55,63,64,66,67}",shape="box"]; 
+n9 [label="vt9
+10
+{69,70,72,73,63,64,66,67}",shape="ellipse"]; 
+n15 [label="vt15
+{69,70,72,73,63,64,66,67,9,10,68,74}",shape="box"]; 
+n11 [label="vt11
+9
+{69,70,63,64,9,10}",shape="ellipse"]; 
+n13 [label="vt13
+29
+{69,70,63,64,65,71}",shape="ellipse"]; 
+n14 [label="27",fontname="Times-Italic",fontsize=14,shape=plaintext,fixedsize=true,width=.25,height=.25]; 
+n17 [label="vt17
+30
+{72,73,66,67,68,74}",shape="ellipse"]; 
+n18 [label="28",fontname="Times-Italic",fontsize=14,shape=plaintext,fixedsize=true,width=.25,height=.25]; 
+n21 [label="vt21
+18
+{31,33,32,34,57,58,60,61,51,52,54,55}",shape="ellipse"]; 
+n23 [label="vt23
+8
+{57,58,60,61,51,52,54,55}",shape="ellipse"]; 
+n29 [label="vt29
+{57,58,60,61,51,52,54,55,7,8,56,62}",shape="box"]; 
+n25 [label="vt25
+7
+{57,58,51,52,7,8}",shape="ellipse"]; 
+n27 [label="vt27
+25
+{57,58,51,52,53,59}",shape="ellipse"]; 
+n28 [label="23",fontname="Times-Italic",fontsize=14,shape=plaintext,fixedsize=true,width=.25,height=.25]; 
+n31 [label="vt31
+24
+{60,61,54,55,56,62}",shape="ellipse"]; 
+n32 [label="26",fontname="Times-Italic",fontsize=14,shape=plaintext,fixedsize=true,width=.25,height=.25]; 
+n35 [label="vt35
+3
+{3,4,17,18,27,29,43,45,47,49,1,2,11,12,19,20,23,24,28,26,39,42,50,22,30,35,38,46}",shape="ellipse"]; 
+n47 [label="vt47
+{17,18,27,29,43,45,47,49,1,2,11,12,19,20,23,24,28,26,39,42,50,22,30,35,38,46,15,16,21,25,37,41}",shape="box"]; 
+n41 [label="vt41
+{17,18,27,29,11,12,19,20,23,24,28,26,22,30,15,16,21,25}",shape="box"]; 
+n37 [label="vt37
+11
+{17,18,27,29,11,12,28,30}",shape="ellipse"]; 
+n39 [label="vt39
+14
+{17,18,27,29,28,30}",shape="ellipse"]; 
+n40 [label="17",fontname="Times-Italic",fontsize=14,shape=plaintext,fixedsize=true,width=.25,height=.25]; 
+n43 [label="vt43
+16
+{19,20,23,24,26,22,15,16,21,25}",shape="ellipse"]; 
+n45 [label="vt45
+15
+{19,20,22,15,16,21}",shape="ellipse"]; 
+n46 [label="13",fontname="Times-Italic",fontsize=14,shape=plaintext,fixedsize=true,width=.25,height=.25]; 
+n49 [label="vt49
+2
+{43,45,47,49,1,2,39,42,50,35,38,46,37,41}",shape="ellipse"]; 
+n55 [label="vt55
+{43,45,47,49,39,42,50,35,38,46,37,41,13,14,36,40,44,48}",shape="box"]; 
+n51 [label="vt51
+19
+{39,42,35,38,37,41,13,14,36,40}",shape="ellipse"]; 
+n53 [label="vt53
+12
+{39,42,41,13,14,40}",shape="ellipse"]; 
+n54 [label="20",fontname="Times-Italic",fontsize=14,shape=plaintext,fixedsize=true,width=.25,height=.25]; 
+n57 [label="vt57
+21
+{43,45,47,49,50,46,44,48}",shape="ellipse"]; 
+n58 [label="22",fontname="Times-Italic",fontsize=14,shape=plaintext,fixedsize=true,width=.25,height=.25]; 
+n1->n3 [arrowhead=none];
+n3->n5 [arrowhead=none];
+n5->n7 [arrowhead=none];
+n7->n33 [arrowhead=none];
+n33->n19 [arrowhead=none];
+n19->n9 [arrowhead=none];
+n9->n15 [arrowhead=none];
+n15->n11 [arrowhead=none];
+n11->n13 [arrowhead=none];
+n13->n14 [arrowhead=none];
+n15->n17 [arrowhead=none];
+n17->n18 [arrowhead=none];
+n19->n21 [arrowhead=none];
+n21->n23 [arrowhead=none];
+n23->n29 [arrowhead=none];
+n29->n25 [arrowhead=none];
+n25->n27 [arrowhead=none];
+n27->n28 [arrowhead=none];
+n29->n31 [arrowhead=none];
+n31->n32 [arrowhead=none];
+n33->n35 [arrowhead=none];
+n35->n47 [arrowhead=none];
+n47->n41 [arrowhead=none];
+n41->n37 [arrowhead=none];
+n37->n39 [arrowhead=none];
+n39->n40 [arrowhead=none];
+n41->n43 [arrowhead=none];
+n43->n45 [arrowhead=none];
+n45->n46 [arrowhead=none];
+n47->n49 [arrowhead=none];
+n49->n55 [arrowhead=none];
+n55->n51 [arrowhead=none];
+n51->n53 [arrowhead=none];
+n53->n54 [arrowhead=none];
+n55->n57 [arrowhead=none];
+n57->n58 [arrowhead=none];
+
+
+}
