@@ -64,7 +64,7 @@ Our CNF encoding for the given Monty Hall ProbLog program is:
 \section{Weighted Model Counting}
 \subsection{Weighted model counters on above CNFs}
 We have selected MiniC2D and Cachet as weighted model counters.
-
+We have executed the model counters on DIMACS versions of the CNFs. The DIMACS files can be found under report/encodings.
 The output of the model counters can be found in the listings below.
 
 \subsubsection{MiniC2D}
@@ -121,7 +121,7 @@ Count stats:
 Total Time: 0.012s
 \end{lstlisting}
 
-\begin{lstlisting}[caption={MiniC2D on WCNF encoding of Monty Hall}]
+\begin{lstlisting}[caption={MiniC2D on CNF encoding of Monty Hall}]
 Constructing CNF... DONE
 CNF stats:
   Vars=10 / Clauses=26
@@ -151,7 +151,7 @@ For Cachet, there is no need to use extra parameters to get a probability.
 It is reported next to ``Satisfying probability''.
 
 \begin{lstlisting}[caption={Cachet on ENC1 encoding of Cancer network}]
-    Number of total components		11
+Number of total components		11
 Number of split components		2
 Number of non-split components		5
 Number of SAT residual formula		12
@@ -178,7 +178,7 @@ Number of solutions			93.6645
 \end{lstlisting}
 
 \begin{lstlisting}[caption={Cachet on ENC2 encoding of Cancer network}]
-    Number of total components		11
+Number of total components		11
 Number of split components		2
 Number of non-split components		5
 Number of SAT residual formula		12
@@ -230,7 +230,7 @@ Satisfying probability			0.444444
 Number of solutions			455.111
 \end{lstlisting}
 
-For ENC1 we see that with Cachet we get a satisfying probability of almost $0$. With Monty hall we can also see that we get a probability of 0.4. This is due to the fact that with ENC1 all our negative literals have a weight of 1, while Cachet expects that a literal $+$ its negation $= 1$. For Monty hall we also have negative literals with weight $1$ which gives the same problem as with ENC1.
+For ENC1, we see that with Cachet reports a satisfying probability of almost 0. Similarly, for Monty Hall, we see that we get a probability of 0.44. This is due to the fact that with ENC1, the weights of negated literals are 1, but Cachet expects that $weight(x) + weight(-x) = 1$. In the Monty Hall encoding, we also have weights of negated literals equalling 1, which gives the same problem as with ENC1.
 
 \subsection{Difference between the selected WMCs}
 %The differences between the different WMCs come from \cite{CHAVIRA2008772}.
@@ -238,152 +238,132 @@ For ENC1 we see that with Cachet we get a satisfying probability of almost $0$. 
 %Jointree and recursive conditioning only exploit topological structure thus they take no advantage of the massive determinism available in networks whilst Cachet does this.
 
 \subsubsection{MiniC2D Vs Cachet}
-MiniC2D and Cachet are weighted model counters that work in different ways. In short, MiniC2D is a top down compiler that compiles CNFs into SDDs, while Cachet uses formula caching combined clause learning and component analysis [\cite{MiniC2D},\cite{Cachet}]. MiniC2D's compilation to SDDs is faster and uses less memory.
+MiniC2D and Cachet are weighted model counters that work in different ways. In short, MiniC2D is a top down compiler that compiles CNFs into SDDs, while Cachet uses formula caching combined with clause learning and component analysis [\cite{MiniC2D},\cite{Cachet}].
 
 Both weighted model counters use concepts from the SAT literature. They both use clause learning and component caching in order to reuse components that later appear again during search. \\
-Cachet also uses other methods from SAT literature, like an explicit on the fly calculation of connected components. This is different in MiniC2D, as relies on vtrees to identify disconnected CNF components. MiniC2d creates vtrees for CNFs and then creates SDDs based on the created vtrees.
+Cachet also uses other methods from SAT literature, like an explicit on the fly calculation of connected components. This is different in MiniC2D, as it relies on vtrees to identify disconnected CNF components. MiniC2d creates vtrees for CNFs and then creates SDDs based on the created vtrees.
 %The way that the compilation is done with MiniC2D is as follows:
 %The SDD compilation is driven by the vtree, it uses this to identify disconnected CNF components and it uses a component caching scheme to prevent compiling the same component multiple times.
 
 
 \subsection{Overview of computational requirements}
-All the tests can be found in the test folder.
-We used our scripts to create the dimac files. The input files for our enc1 and enc2 converter ard ``.dsc'' files which can be found at 
-\url{http://www.bnlearn.com/bnrepository/discrete-small.html#cancer}.
+We have executed the model counters with various CNFs to build an overview of computational requirements. The files we used for testing can be found under report/encodings. We have used scripts to convert the ``.dsc'' files to ENC1 and ENC2 encodings in DIMACS format. We downloaded the ``.dsc'' files from \url{http://www.bnlearn.com/bnrepository/}.
 
-\subsubsection{Test 1: Cancer network}
+\subsubsection{Test 1: Cancer network (small)}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c|c|c|c|}
+    \cline{2-7}
+            & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7}
+      & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7}
+      \textbf{Minic2d} & 1.0  & 0.2 KB    & 0.155s   & 1.0    & 1.0 KB    & 0.000s \\
+      \hline
+    \textbf{Cachet}  & 0.0  & ?    & 0.016s       & 1.0     & ?    & 0.016s    \\ \cline{1-7}
+    \end{tabular}
+\end{table}
+
+\subsubsection{Test 2: Asia network (small)}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c|c|c|c|}
+    \cline{2-7}
+            & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7}
+      & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7}
+      \textbf{Minic2d} & 1.0  & 0.9 KB    & 0.145s   & 1.0    & 2.0 KB    & 	 0.139s \\
+      \hline
+    \textbf{Cachet}  & 0.0  & ?    & 0.018s       & 1.0     & ?    & 0.017s    \\ \cline{1-7}
+    \end{tabular}
+\end{table}
+
+\subsubsection{Test 3: Sachs network (small)}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c|c|c|c|}
+    \cline{2-7}
+            & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7}
+      & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7}
+      \textbf{Minic2d} & 0.99707  & 14.3 KB    & 0.184s   & 1.0    & 14.5 KB   & 	0.154s \\
+      \hline
+    \textbf{Cachet}  & 0.0  & ?    & 0.019s       & 1.0     & ?    & 0.017s    \\ \cline{1-7}
+    \end{tabular}
+\end{table}
+
+\subsubsection{Test 4: Earthquake network (small)}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c|c|c|c|}
+    \cline{2-7}
+            & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7}
+      & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7}
+      \textbf{Minic2d} & 1.0  & 0.6 KB & 0.137s   & 1.0    & 1.0 KB  & 	0.153s \\
+      \hline
+    \textbf{Cachet}  & 0.0  & ?    & 0.016s       & 1.0     & ?    & 0.017s    \\ \cline{1-7}
+    \end{tabular}
+\end{table}
+
+\subsubsection{Test 5: Survey network (small)}
 \begin{table}[H]
 \centering
-\caption{My caption}
-\label{my-label}
-\begin{tabular}{c|c|c|c|c|c|c|}
-\cline{2-7}
-        & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7} 
-  & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7} 
-  \textbf{Minic2d} & 1.0  & 0.2 KB    & 0.155s   & 1.0    & 1.0 KB    & 0.000s \\
-  \hline
-\textbf{Cachet}  & 0  & ?    & 0.016s       & 1.0     & ?    & 0.016s    \\ \cline{1-7} 
+    \begin{tabular}{c|c|c|c|c|c|c|}
+    \cline{2-7}
+            & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7}
+      & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7}
+      \textbf{Minic2d} & 1.0  & 1.6 KB    & 0.125s   & 1.0    & 2.0 KB    & 	0.125s \\
+      \hline
+    \textbf{Cachet}  & 0.0  & ?    & 0.016s       & 1.0     & ?    & 0.016s    \\ \cline{1-7}
+    \end{tabular}
+\end{table}
+
+\subsubsection{Test 6: Alarm network (medium)}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c|c|c|c|}
+    \cline{2-7}
+            & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7}
+      & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7}
+      \textbf{Minic2d} & 0.999  & 819.4 KB    & 0.215s   & 0.999    & 147.2 KB    & 	0.092s \\
+      \hline
+    \textbf{Cachet}  & 0.0  & ?    & 0.176s       & 1.0     & ?    & 0.222s    \\ \cline{1-7}
 \end{tabular}
 \end{table}
 
-\subsubsection{Test 2: asia network}
+\subsubsection{Test 8: Child network (medium)}
 \begin{table}[H]
-\centering
-\caption{My caption}
-\label{my-label}
-\begin{tabular}{c|c|c|c|c|c|c|}
-\cline{2-7}
-        & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7} 
-  & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7} 
-  \textbf{Minic2d} & 1.0  & 0.9 KB    & 0.145s   & 1.0    & 2.0 KB    & 	 0.139s \\
-  \hline
-\textbf{Cachet}  & 0  & ?    & 0.018s       & 1     & ?    & 0.017s    \\ \cline{1-7} 
-\end{tabular}
+    \centering
+    \begin{tabular}{c|c|c|c|c|c|c|}
+    \cline{2-7}
+            & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7}
+      & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7}
+      \textbf{Minic2d} & 1.0  & 45.8KB    & 0.076   & 1.0    & 30.8 KB    & 	0.059s \\
+      \hline
+    \textbf{Cachet}  & 0.0  & ?    & 0.03s      & 1.0     & ?    & 0.03s    \\ \cline{1-7}
+    \end{tabular}
 \end{table}
 
-\subsubsection{Test 3: sachs network}
+\subsubsection{Test 9: Hailfinder network (large)}
 \begin{table}[H]
-\centering
-\caption{My caption}
-\label{my-label}
-\begin{tabular}{c|c|c|c|c|c|c|}
-\cline{2-7}
-        & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7} 
-  & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7} 
-  \textbf{Minic2d} & 0.99707  & 14.3 KB    & 0.184s   & 1.0    & 14.5 KB   & 	0.154s \\
-  \hline
-\textbf{Cachet}  & 0  & ?    & 0.019s       & 1     & ?    & 0.017s    \\ \cline{1-7} 
-\end{tabular}
+    \centering
+    \begin{tabular}{c|c|c|c|c|c|c|}
+    \cline{2-7}
+            & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7}
+      & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7}
+      \textbf{Minic2d} & 1.0  & 129.8 MB & 0.999   & 1.0    & 13.1 MB    & 	1.854 \\
+      \hline
+    \textbf{Cachet}  & val1  & val2    & a       & b     & val3    & val4    \\ \cline{1-7}
+    \end{tabular}
 \end{table}
 
-\subsubsection{Test 4: earthquake network}
+\subsubsection{Test 7: Andes network (very large)}
 \begin{table}[H]
-\centering
-\caption{My caption}
-\label{my-label}
-\begin{tabular}{c|c|c|c|c|c|c|}
-\cline{2-7}
-        & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7} 
-  & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7} 
-  \textbf{Minic2d} & 1.0  & 0.6 KB & 0.137s   & 1.0    & 1.0 KB  & 	0.153s \\
-  \hline
-\textbf{Cachet}  & 0  & ?    & 0.016s       & 1     & ?    & 0.017s    \\ \cline{1-7} 
-\end{tabular}
-\end{table}
-
-\subsubsection{Test 5: survey network}
-\begin{table}[H]
-\centering
-\caption{My caption}
-\label{my-label}
-\begin{tabular}{c|c|c|c|c|c|c|}
-\cline{2-7}
-        & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7} 
-  & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7} 
-  \textbf{Minic2d} & 1.0  & 1.6 KB    & 0.125s   & 1.0    & 2.0 KB    & 	0.125s \\
-  \hline
-\textbf{Cachet}  & 0  & ?    & 0.016s       & 1     & ?    & 0.016s    \\ \cline{1-7} 
-\end{tabular}
-\end{table}
-
-\subsubsection{Test 6: alarm network}
-\begin{table}[H]
-\centering
-\caption{My caption}
-\label{my-label}
-\begin{tabular}{c|c|c|c|c|c|c|}
-\cline{2-7}
-        & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7} 
-  & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7} 
-  \textbf{Minic2d} & 0.999  & 819.4 KB    & 0.215s   & 0.999    & 147.2 KB    & 	0.092s \\
-  \hline
-\textbf{Cachet}  & 0  & ?    & 0.176s       & 1     & ?    & 0.222s    \\ \cline{1-7} 
-\end{tabular}
-\end{table}
-
-\subsubsection{Test 7: andes network}
-\begin{table}[H]
-\centering
-\caption{My caption}
-\label{my-label}
-\begin{tabular}{c|c|c|c|c|c|c|}
-\cline{2-7}
-        & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7} 
-  & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7} 
-  \textbf{Minic2d} & 1.0  & 5.1GB    & 246.998s   & 1.0    & 364.1 MB    & 	12.06s \\
-  \hline
-\textbf{Cachet}  & ?  & ?    & $> 4h (killed)$      & b     & val3    & ?    \\ \cline{1-7} 
-\end{tabular}
-\end{table}
-
-\subsubsection{Test 8: child network}
-\begin{table}[H]
-\centering
-\caption{My caption}
-\label{my-label}
-\begin{tabular}{c|c|c|c|c|c|c|}
-\cline{2-7}
-        & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7} 
-  & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7} 
-  \textbf{Minic2d} & 1.0  & 45.8KB    & 0.076   & 1.0    & 30.8 KB    & 	0.059s \\
-  \hline
-\textbf{Cachet}  & 0  & ?    & 0.03s      & 1     & ?    & 0.03s    \\ \cline{1-7} 
-\end{tabular}
-\end{table}
-
-\subsubsection{Test 9: hailfinder network}
-\begin{table}[H]
-\centering
-\caption{My caption}
-\label{my-label}
-\begin{tabular}{c|c|c|c|c|c|c|}
-\cline{2-7}
-        & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7} 
-  & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7} 
-  \textbf{Minic2d} & 1.0  & 129.8 MB & 0.999   & 1.0    & 13.1 MB    & 	1.854 \\
-  \hline
-\textbf{Cachet}  & val1  & val2    & a       & b     & val3    & val4    \\ \cline{1-7} 
-\end{tabular}
+    \centering
+    \begin{tabular}{c|c|c|c|c|c|c|}
+    \cline{2-7}
+            & \multicolumn{3}{c|}{ENC1} & \multicolumn{3}{c|}{ENC2} \\ \cline{2-7}
+      & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} & \textbf{Prob}  & \textbf{Memory}  & \textbf{Runtime} \\ \cline{1-7}
+      \textbf{Minic2d} & 1.0  & 5.1GB    & 246.998s   & 1.0    & 364.1 MB    & 	12.06s \\
+      \hline
+    \textbf{Cachet}  & ?  & ?    & $> 4h (killed)$      & b     & val3    & ?    \\ \cline{1-7}
+    \end{tabular}
 \end{table}
 
 
