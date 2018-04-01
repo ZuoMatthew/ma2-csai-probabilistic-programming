@@ -6,12 +6,27 @@ Reporting of statistics other than the resulting probability only happens with o
 \section{Pipeline with previous tasks}
 \subsection{Cancer Bayesian network}
 \begin{itemize}
-    \item Probability:
-    \item Total runtime:
+    \item Probabilities:
+    \begin{lstlisting}
+    cancer           : 0.01163
+    dyspnoea         : 0.3040705
+    pollution("high"): 0.1
+    pollution("low") : 0.9
+    smoker           : 0.3
+    xray("negative") : 0.7918589999999999
+    xray("positive") : 0.208141
+    \end{lstlisting}
+    \item Total runtime: 0.594s
     \item Runtime of the separate parts:
-    \item Number of variables and lines in CNF:
-    \item Depth of vtree:
-    \item Number of edges and nodes in the circuit:
+    \begin{lstlisting}
+    Time to parse ground problog:  0.011s
+    Time to convert ground problog to first order logic:  0.0s
+    Time to convert first order logic to CNF:  0.002s
+    Time for all model counting:  0.58s
+    \end{lstlisting}
+    \item Number of variables and lines in CNF: 17, 77
+    \item Depth of vtree: 11
+    \item Number of edges and nodes in the circuit: 81, 94
 \end{itemize}
 \subsection{Monty Hall}
 \begin{itemize}
