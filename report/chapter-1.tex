@@ -78,7 +78,7 @@ MiniC2D needs to use the $-W$ option to do weighted model counting.
   \includegraphics[width=6cm]{minic2d-ENC2.png}
   \caption{Grounded problog cnf}
 \end{figure}
-	\item Prolog first:
+	\item Monty hall:
 \end{itemize}
 
 \subsubsection{Cachet}
@@ -97,7 +97,7 @@ MiniC2D needs to use the $-W$ option to do weighted model counting.
   \caption{Grounded problog cnf}
 \end{center}
 \end{figure}
-	\item Prolog first:
+	\item Monty Hall:
 \end{itemize}
 For ENC1 we see that with Cachet we get a satisfying probability of almost $0$. This is due to the fact that with ENC1 all our negative literals have a weight of 1, while Cachet expects that a literal $+$ its negation $= 1$. 
 \subsection{Difference between the selected WMCs}
@@ -106,7 +106,7 @@ For ENC1 we see that with Cachet we get a satisfying probability of almost $0$. 
 %Jointree and recursive conditioning only exploit topological structure thus they take no advantage of the massive determinism available in networks whilst Cachet does this.
 
 \subsubsection{MiniC2D Vs Cachet}
-MiniC2D and Cachet are both weighted model counters but how to do this is quite different.
+MiniC2D and Cachet are both weighted model counters but how they do this is quite different.
 MiniC2D is a top down compiler that compiles CNFs into a SDD which results in a faster system but it also uses less space while Cachet is an algorithm that uses formula caching together with clause learning and component analysis. MiniC2D needs vtrees to be able to compile the CNFs into an SDD.
 T%he former is thus a compiler that uses SDDs while the other isn't.
 They, however, both use things from the SAT literature. 
@@ -229,10 +229,8 @@ We used our scripts to create the dimac files. The input files for our enc1 and 
 \end{tabular}
 \end{table}
 
-
-
 \section{Knowledge compilation}
 \subsubsection{Vtree with the most compact circuit}
-
+During our tests 
 \subsubsection{Pattern for a good vtree}
-
+As a vtree is a binary tree, which means that a good vtree is compact. We want thus a vtree that is shallow. 
