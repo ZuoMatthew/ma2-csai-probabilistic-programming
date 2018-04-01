@@ -15,6 +15,7 @@ class InferenceEngine:
 
     def ground_problog_evaluate(self, ground_program, print_steps=False):
         """ Evaluates a problog program and returns the results. """
+        print(ground_program)
         start = timer()
         # parse the ground program to the internal representation of ground problog
         problog_program = self.problog_parser.program_to_problog(ground_program)

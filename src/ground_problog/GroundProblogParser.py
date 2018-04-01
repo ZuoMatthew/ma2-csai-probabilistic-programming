@@ -46,7 +46,8 @@ class GroundProblogParser:
             prob_tunable_none = _ tunable_empty _
             decimal_or_frac   = decimal / fraction
             fraction          = number slash number
-            word              = ~r"([a-zA-Z0-9_]+|\"[a-zA-Z0-9_\-\'\.\/\=\<\>\+]*\"|\'[a-zA-Z0-9_\-\'\.\/\=\<\>\+]*\')"
+            # could to this in a better way, but this works and we are way over time already
+            word              = ~r"([a-zA-Z0-9_\.\[\]]+|\"[a-zA-Z0-9_\-\'\.\/\=\<\>\+\[\]]*\"|\'[a-zA-Z0-9_\-\'\.\/\=\<\>\+\[\]]*\')"
             number            = ~r"[0-9]*"
             decimal           = ~r"[0-9]*\.[0-9]*"
             dot               = _ "." _
