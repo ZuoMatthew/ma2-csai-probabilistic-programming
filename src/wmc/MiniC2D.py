@@ -31,10 +31,6 @@ class MiniC2D(WeightedModelCounter):
         subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         return vtree_txt
 
-    def get_stats_from_output(self, output):
-        pass
-
-
     def do_model_count(self, filename):
         filename = os.path.abspath(filename)
 
