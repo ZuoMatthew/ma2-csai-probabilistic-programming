@@ -48,16 +48,16 @@ Our CNF encoding for the given Monty Hall ProbLog program is:
     \land & (\neg prize(2) \lor \neg prize(3))                                        \\
     \land & (prize(1) \lor prize(2) \lor prize(3))\\
     & \textbf{Weights:}             \\
-    & W(p\_open\_door(2)\_0) = 0.5 \\
-    & W(p\_open\_door(3)\_0) = 0.5 \\
-    & W(select\_door(1)) = 1.00    \\
-    & W(prize(1)) = 0.33           \\
-    & W(prize(2)) = 0.33           \\
-    & W(prize(3)) = 0.33           \\
-    & W(open\_door(2)) = 1.00      \\
-    & W(open\_door(3)) = 1.00      \\
-    & W(win\_keep) = 1.00          \\
-    & W(win\_switch) = 1.00        \\
+    & W(p\_open\_door(2)\_0) = 0.5 & W &(\neg p\_open\_door(2)\_0) = 0.5 \\
+    & W(p\_open\_door(3)\_0) = 0.5 & W &(\neg p\_open\_door(3)\_0) = 0.5 \\
+    & W(select\_door(1)) = 1.00    & W &(\neg select\_door(1)) = 0.00    \\
+    & W(prize(1)) = 0.33           & W &(\neg prize(1)) = 1.00           \\
+    & W(prize(2)) = 0.33           & W &(\neg prize(2)) = 1.00           \\
+    & W(prize(3)) = 0.33           & W &(\neg prize(3)) = 1.00           \\
+    & W(open\_door(2)) = 1.00      & W &(\neg open\_door(2)) = 1.00      \\
+    & W(open\_door(3)) = 1.00      & W &(\neg open\_door(3)) = 1.00      \\
+    & W(win\_keep) = 1.00          & W &(\neg win\_keep) = 1.00          \\
+    & W(win\_switch) = 1.00        & W &(\neg win\_switch) = 1.00        \\
 \end{align*}
 
 
