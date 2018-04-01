@@ -367,11 +367,9 @@ We have executed the model counters with various CNFs to build an overview of co
     \end{tabular}
 \end{table}
 
-For cachet we didn't find a way to output it's used memory so we'll have to leave this outside of the comparison.
-From the results listed above, we can conclude that ENC2 is a better encoding than ENC1 as in most of the cases it is faster than the latter.
-Concering the WMC's, we clearly see that Cachet is faster than minic2d when it comes to small to medium networks. Once we reach the large networks
-and certainly the very large networks, Cachet is way slower than minic2d and for the very large networks Cachet couldn't even give a result
-in 4 hours!
+For Cachet, we didn't find a way to output memory usage, so we cannot compare that aspect to MiniC2D.
+From the results listed above, we can conclude that ENC2 is a better encoding than ENC1 when it comes to computational requirements. In most of the cases, it has lower memory usage and a lower runtime.
+Concerning the weighted model counters, we clearly see that Cachet is faster than MiniC2D on small to medium networks. When we use larger networks, Cachet is a lot slower than MiniC2D, and for the very large network, Cachet couldn't even finish in 4 hours!
 
 \section{Knowledge compilation}
 \subsubsection{Vtree with the most compact circuit}
