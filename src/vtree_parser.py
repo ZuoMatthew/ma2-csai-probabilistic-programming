@@ -1,5 +1,3 @@
-
-
 class VtreeNode:
     def __init__(self, node_id, children):
         self.id = node_id
@@ -38,6 +36,6 @@ def read_vtree(filename):
 
     return root
 
-
-tree = read_vtree("files/vtree-minic2d.txt")
-print(tree.get_depth()-1)
+def get_vtree_depth(filename):
+    tree = read_vtree(filename)
+    return tree.get_depth()-1

@@ -4,7 +4,7 @@ import os.path
 import subprocess
 from sys import platform
 from wmc.WeightedModelCounter import WeightedModelCounter
-
+from vtree_parser import get_vtree_depth
 
 class MiniC2D(WeightedModelCounter):
     """ WMC using the miniC2D package, which does knowledge compilation and model counting based on exhaustive DPLL. """
@@ -68,7 +68,7 @@ class MiniC2D(WeightedModelCounter):
         return {
             "Number of variables in the CNF": re.search(r"Vars=([0-9]+)", output).group(1),
             "Number of lines in the CNF": re.search(r"Clauses=([0-9]+)", output).group(1),
-            "Statistics on the depth of the vtree": "???? vtree widths? vtree-minic2d.txt file bekijken?",
+            "Vtree depth": get_vtree_depth(vtree_txt),
             "Number of nodes in the circuit": re.search(r"\s\sNodes\s+([0-9]+)", output).group(1),
             "Number of edges in the circuit": re.search(r"\s\sEdges\s+([0-9]+)", output).group(1)
         }
