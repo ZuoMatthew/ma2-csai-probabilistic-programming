@@ -17,7 +17,12 @@ class Term(Clause):
         self.is_tunable = is_tunable
 
     def __str__(self):
-        out = (str(self.probability) + "::") if self.probability != 1.0 else ""
+        out = ""
+        if self.probability != 1.0:
+            if self.is_tunable:
+                out += "t(" + str(self.probability) + ")::"
+            else:
+                out += str(self.probability) + "::"
         out += self.str_no_prob()
         return out
 
@@ -101,8 +106,6 @@ class GroundProblog:
                 new_clauses.append(clause)
 
             else:
-                # TODO: handle this case: 0.3::x. 0.7::a; 0.3::b: - x.evidence(a).query(a).query(b).
-                # Should be possible by simply adding the new AD: 0.7::p_a_0 ; 0.3::p_b_0.
                 if len(clause.body):
                     for head in clause.heads:
                         if head.str_no_prob() not in head_counts:
@@ -112,7 +115,7 @@ class GroundProblog:
                         new_prob_fact_name = "p_{}_{}".format(head.str_no_prob(), head_counts[head.str_no_prob()])
 
                         # Create the new probabilistic fact that hold the probability of the current head
-                        new_prob_fact = Term(new_prob_fact_name, probability=head.probability)
+                        new_prob_fact = Term(new_prob_fact_name, probability=head.probability, is_tunable=head.is_tunable)
                         new_clauses.append(new_prob_fact)
 
                         # Create a new head with no weights for the new normal rule

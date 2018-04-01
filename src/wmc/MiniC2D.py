@@ -59,16 +59,22 @@ class MiniC2D(WeightedModelCounter):
         command = "{} {} {} {}".format(self.counter_path, nnf_params, vtree_params, self.options)
         completed_process = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output = completed_process.stdout.decode()
-        print(output)
+        # print(output)
 
         # convert the new vtree.dot file to a png file
         # (graph,) = pydot.graph_from_dot_file(vtree_file + "dot")
         # graph.write_png(vtree_file + "png")
 
+        num_variables = re.search(r"Vars=([0-9]+)", output)
+        num_lines = re.search(r"Clauses=([0-9]+)", output)
+        num_nodes = re.search(r"\s\sNodes\s+([0-9]+)", output)
+        num_edges = re.search(r"\s\sEdges\s+([0-9]+)", output)
+
         return {
-            "Number of variables in the CNF": re.search(r"Vars=([0-9]+)", output).group(1),
-            "Number of lines in the CNF": re.search(r"Clauses=([0-9]+)", output).group(1),
-            "Vtree depth": get_vtree_depth(vtree_txt),
-            "Number of nodes in the circuit": re.search(r"\s\sNodes\s+([0-9]+)", output).group(1),
-            "Number of edges in the circuit": re.search(r"\s\sEdges\s+([0-9]+)", output).group(1)
+            "Number of variables in the CNF": num_variables.group(1) if num_variables is not None else "MiniC2D segmentation fault",
+            "Number of lines in the CNF": num_lines.group(1) if num_lines is not None else "MiniC2D segmentation fault",
+            "Depth of the vtree": get_vtree_depth(vtree_txt),
+            "Statistics on the depth of the vtree": "???? vtree widths? vtree-minic2d.txt file bekijken?",
+            "Number of nodes in the circuit": num_nodes.group(1) if num_nodes is not None else "MiniC2D segmentation fault",
+            "Number of edges in the circuit": num_edges.group(1) if num_edges is not None else "MiniC2D segmentation fault"
         }

@@ -30,15 +30,12 @@ The output will contain the same elements mentioned above. However, as there are
 Bayesian networks in the following file formats are supported: uai, net, xdsl, xml. The networks are converted to ProbLog code using [conversion scripts](/src/problog_conversions) taken (and slightly adapted) from the [ProbLog repository](https://github.com/jordn/ProbLog).
 
 ### Parameter learning
-There is limited support for parameter learning. To do this, the program expects a file containing tunable probabilities and another file containing values for all probabilities (the ground truth). The ground truth is necessary for generation of interpretations (training evidence). The amount of interpretations to be generated can be set as well.
+There is support for parameter learning. To do this, the program expects a file containing tunable probabilities and another file containing values for all probabilities (the ground truth). The ground truth is necessary for generation of interpretations (training evidence). The amount of interpretations to be generated can be set as well.
 
 ```sh
 python3 scripts/inference.py --problog_learn file --problog_learn_truth file_ground_truth --learning_interpretations 100
 ```
 The interpretations that were generated for the execution will be written to src/files/interpretations.txt.
-
-#### Limited support
-TOOD: No annotated disjunctions
 
 #### Note
 The file with tunable probabilities needs to be in ground ProbLog form and cannot contain any comments. This is because we uses the problog library to ground files, and the library cannot ground files with tunable probabilities.

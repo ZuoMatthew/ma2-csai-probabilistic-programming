@@ -12,6 +12,7 @@ class VtreeNode:
             depths.append(c.get_depth() + 1)
         return max(depths)
 
+
 def read_vtree(filename):
     f = open(filename, "r")
     lines = f.readlines()
@@ -36,6 +37,7 @@ def read_vtree(filename):
 
     return root
 
+
 def get_vtree_depth(filename):
     tree = read_vtree(filename)
-    return tree.get_depth()-1
+    return tree.get_depth() - 1

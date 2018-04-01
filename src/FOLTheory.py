@@ -17,17 +17,21 @@ class LogicFormula:
 class Atom(LogicFormula):
     """ An atom is of the form p(t_1, ..., t_n) where p is a predicate of arity n and the t_i are terms. """
 
-    def __init__(self, predicate, terms=None, weight_true=1, weight_false=1):
+    def __init__(self, predicate, terms=None, weight_true=1, weight_false=1, is_tunable=False):
         self.predicate = predicate
         self.terms = terms if terms is not None else []
         self.arity = len(self.terms)
         self.weight_true = weight_true
         self.weight_false = weight_false
+        self.is_tunable = is_tunable
 
     def __str__(self):
         out = ""
         if self.weight_true != 1:
-            out += str(self.weight_true) + "::"
+            if self.is_tunable:
+                out += "t(" + str(self.weight_true) + ")::"
+            else:
+                out += str(self.weight_true) + "::"
         out += self.str_no_weights()
         return out
 
@@ -48,7 +52,7 @@ class Atom(LogicFormula):
         predicate = term.name
         terms = [Atom.create_from_problog_term(arg, 1, 1) for arg in term.arguments] if len(term.arguments) else []
 
-        atom = Atom(predicate, terms, weight_true, weight_false)
+        atom = Atom(predicate, terms, weight_true, weight_false, term.is_tunable)
 
         return Negation(atom) if term.negation else atom
 
