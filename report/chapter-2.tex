@@ -6,39 +6,120 @@ Reporting of statistics other than the resulting probability only happens with o
 \section{Pipeline with previous tasks}
 \subsection{Cancer Bayesian network}
 \begin{itemize}
-    \item Probability:
-    \item Total runtime:
+    \item Probabilities:
+    \begin{lstlisting}
+    cancer           : 0.01163
+    dyspnoea         : 0.3040705
+    pollution("high"): 0.1
+    pollution("low") : 0.9
+    smoker           : 0.3
+    xray("negative") : 0.7918589999999999
+    xray("positive") : 0.208141
+    \end{lstlisting}
+    \item Total runtime: 0.594s
     \item Runtime of the separate parts:
-    \item Number of variables and lines in CNF:
-    \item Depth of vtree:
-    \item Number of edges and nodes in the circuit:
+    \begin{lstlisting}
+    Time to parse ground problog:  0.011s
+    Time to convert ground problog to first order logic:  0.0s
+    Time to convert first order logic to CNF:  0.002s
+    Time for all model counting:  0.58s
+    \end{lstlisting}
+    \item Number of variables and lines in CNF: 17, 77
+    \item Depth of vtree: 11
+    \item Number of edges and nodes in the circuit: 81, 94
 \end{itemize}
 \subsection{Monty Hall}
 \begin{itemize}
-    \item Probability:
-    \item Total runtime:
+    \item Probabilities:
+    \begin{lstlisting}
+    prize(1)      : 0.3333333333333333
+    prize(2)      : 0.3333333333333333
+    prize(3)      : 0.3333333333333333
+    select_door(1): 1.0
+    win_keep      : 0.3333333333333333
+    win_switch    : 0.6666666666666666
+    \end{lstlisting}
+    \item Total runtime: 0.469s
     \item Runtime of the separate parts:
-    \item Number of variables and lines in CNF:
-    \item Depth of vtree:
-    \item Number of edges and nodes in the circuit:
+    \begin{lstlisting}
+    Time to parse ground problog:  0.011s
+    Time to convert ground problog to first order logic:  0.0s
+    Time to convert first order logic to CNF:  0.001s
+    Time for all model counting:  0.458s
+    \end{lstlisting}
+    \item Number of variables and lines in CNF: 10, 26
+    \item Depth of vtree: 8
+    \item Number of edges and nodes in the circuit: 52, 44
 \end{itemize}
 
 \section{Pipeline on Bayesian learning example}
 \begin{itemize}
-    \item Probability:
-    \item Total runtime:
+    \item Probabilities:
+    \begin{lstlisting}
+    weight(c1, 0.1): 0.0
+    weight(c1, 0.3): 2.167977370376305e-06
+    weight(c1, 0.5): 0.004149743263716653
+    weight(c1, 0.7): 0.13174850211546205
+    weight(c1, 0.9): 0.8640995866434509
+    weight(c2, 0.1): 3.227661043218289e-06
+    weight(c2, 0.3): 0.02410999702877393
+    weight(c2, 0.5): 0.6672475437022279
+    weight(c2, 0.7): 0.3062862583084689
+    weight(c2, 0.9): 0.0023529732994859343
+    \end{lstlisting}
+
+    \item Total runtime: 3.633s
     \item Runtime of the separate parts:
-    \item Number of variables and lines in CNF:
-    \item Depth of vtree:
-    \item Number of edges and nodes in the circuit:
+    \begin{lstlisting}
+        Time to parse ground problog:  0.338s
+        Time to convert ground problog to first order logic:  0.024s
+        Time to convert first order logic to CNF:  0.088s
+        Time for all model counting:  3.183s
+    \end{lstlisting}
+
+    \item Number of variables and lines in CNF: 192, 1062
+    \item Depth of vtree: 95
+    \item Number of edges and nodes in the circuit: 646, 525
 \end{itemize}
 
 \section{Pipeline on alarm Bayesian network}
 \begin{itemize}
-    \item Probability:
-    \item Total runtime:
+    \item Probabilities:
+    \begin{lstlisting}
+cVP("HIGH")           : 0.1541757517134
+cVP("LOW")            : 0.1129475165156
+cVP("NORMAL")         : 0.7160774170523999
+lVEDVOLUME("HIGH")    : 0.2095
+lVEDVOLUME("LOW")     : 0.0886
+lVEDVOLUME("NORMAL")  : 0.7019
+pAP("HIGH")           : 0.0575
+pAP("LOW")            : 0.0496
+pAP("NORMAL")         : 0.8929
+pCWP("HIGH")          : 0.2064165610039
+pCWP("LOW")           : 0.1129475165156
+pCWP("NORMAL")        : 0.6755051316624
+sHUNT("HIGH")         : 0.103095
+sHUNT("NORMAL")       : 0.8969050000000001
+sTROKEVOLUME("HIGH")  : 0.0404
+sTROKEVOLUME("LOW")   : 0.1808
+sTROKEVOLUME("NORMAL"): 0.7787999999999999
+tPR("HIGH")           : 0.2971
+tPR("LOW")            : 0.3068
+tPR("NORMAL")         : 0.3961
+vENTMACH("HIGH")      : 0.056
+vENTMACH("LOW")       : 0.056
+vENTMACH("NORMAL")    : 0.838
+vENTMACH("ZERO")      : 0.05
+    \end{lstlisting}
+    \item Total runtime: 6.413s
     \item Runtime of the separate parts:
-    \item Number of variables and lines in CNF:
-    \item Depth of vtree:
-    \item Number of edges and nodes in the circuit:
+    \begin{lstlisting}
+    Time to parse ground problog:  0.037s
+    Time to convert ground problog to first order logic:  0.003s
+    Time to convert first order logic to CNF:  0.148s
+    Time for all model counting:  6.225s
+    \end{lstlisting}
+    \item Number of variables and lines in CNF: 112, 1118
+    \item Depth of vtree: 27
+    \item Number of edges and nodes in the circuit: 974, 711
 \end{itemize}
