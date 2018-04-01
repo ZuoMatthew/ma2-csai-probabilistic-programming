@@ -74,7 +74,6 @@ class MiniC2D(WeightedModelCounter):
             "Number of variables in the CNF": num_variables.group(1) if num_variables is not None else "MiniC2D segmentation fault",
             "Number of lines in the CNF": num_lines.group(1) if num_lines is not None else "MiniC2D segmentation fault",
             "Depth of the vtree": get_vtree_depth(vtree_txt),
-            "Statistics on the depth of the vtree": "???? vtree widths? vtree-minic2d.txt file bekijken?",
             "Number of nodes in the circuit": num_nodes.group(1) if num_nodes is not None else "MiniC2D segmentation fault",
             "Number of edges in the circuit": num_edges.group(1) if num_edges is not None else "MiniC2D segmentation fault"
         }
