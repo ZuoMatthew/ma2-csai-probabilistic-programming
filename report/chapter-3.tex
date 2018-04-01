@@ -1,1 +1,8 @@
-learning
+We have extended the pipeline with limited support for parameter learning. For this functionality, our program expects a file containing tunable probabilities and another file containing values for all probabilities. The second file is used for generation of interpretations. The amount of interpretations to be generated can be set as well. More information about this feature can be found in \texttt{README.MD}.
+\begin{lstlisting}
+python3 scripts/inference.py --problog_learn files/problog/test.pl --problog_learn_truth files/problog/test_truth.pl --learning_interpretations 100
+\end{lstlisting}
+
+\section{Generated interpretations}
+\section{Pipeline with interpretations}
+\section{Observations for different number of interpretations}

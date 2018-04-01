@@ -4,6 +4,7 @@ model_counters/
 *.tmp
 *.nnf
 */files/*.dimac
+*/files/interpretations.txt
 test.pl
 test_truth.pl
 test.cnf
@@ -14,6 +15,7 @@ test_no_query.cnf
 *.out
 *.bbl
 *.blg
+
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template
