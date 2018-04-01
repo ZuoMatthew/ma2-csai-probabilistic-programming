@@ -151,15 +151,83 @@ For Cachet, there is no need to use extra parameters to get a probability.
 It is reported next to ``Satisfying probability''.
 
 \begin{lstlisting}[caption={Cachet on ENC1 encoding of Cancer network}]
-    TODO TEXT HIER PASTEN
+    Number of total components		11
+Number of split components		2
+Number of non-split components		5
+Number of SAT residual formula		12
+Number of trivial components		0
+Number of changed components		0
+Number of adjusted components		0
+First component split level		1
+
+Number of Decisions			11
+Max Decision Level			5
+Number of Variables			30
+Original Num Clauses			74
+Original Num Literals			172
+Added Conflict Clauses			0
+Added Conflict Literals			0
+Deleted Unrelevant clauses		0
+Deleted Unrelevant literals		0
+Number of Implications			124
+Total Run Time				0.0163
+
+Satisfying probability			8.72319e-08
+Number of solutions			93.6645
+
 \end{lstlisting}
 
 \begin{lstlisting}[caption={Cachet on ENC2 encoding of Cancer network}]
-    TODO TEXT HIER PASTEN
+    Number of total components		11
+Number of split components		2
+Number of non-split components		5
+Number of SAT residual formula		12
+Number of trivial components		0
+Number of changed components		0
+Number of adjusted components		0
+First component split level		1
+
+Number of Decisions			11
+Max Decision Level			5
+Number of Variables			20
+Original Num Clauses			30
+Original Num Literals			84
+Added Conflict Clauses			0
+Added Conflict Literals			0
+Deleted Unrelevant clauses		0
+Deleted Unrelevant literals		0
+Number of Implications			72
+Total Run Time				0.017372
+
+Satisfying probability			1
+Number of solutions			1.04858e+06
+
 \end{lstlisting}
 
 \begin{lstlisting}[caption={Cachet on WCNF encoding of Monty Hall}]
-    TODO TEXT HIER PASTEN
+Number of total components		4
+Number of split components		1
+Number of non-split components		2
+Number of SAT residual formula		5
+Number of trivial components		0
+Number of changed components		0
+Number of adjusted components		0
+First component split level		2
+
+Number of Decisions			4
+Max Decision Level			4
+Number of Variables			10
+Original Num Clauses			26
+Original Num Literals			73
+Added Conflict Clauses			0
+Added Conflict Literals			0
+Deleted Unrelevant clauses		0
+Deleted Unrelevant literals		0
+Number of Implications			26
+Total Run Time				0.016062
+
+Satisfying probability			0.444444
+Number of solutions			455.111
 \end{lstlisting}
 
 For ENC1 we see that with Cachet we get a satisfying probability of almost $0$. With Monty hall we can also see that we get a probability of 0.4. This is due to the fact that with ENC1 all our negative literals have a weight of 1, while Cachet expects that a literal $+$ its negation $= 1$. For Monty hall we also have negative literals with weight $1$ which gives the same problem as with ENC1.
