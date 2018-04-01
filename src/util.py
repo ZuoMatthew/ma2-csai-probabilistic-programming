@@ -38,9 +38,8 @@ def ground_problog_program(program):
     return lf.to_prolog()
 
 
-def evaluate_using_problog(program, print_steps=False):
+def evaluate_using_problog_library(program, print_steps=False):
     """ Evaluates a problog program using the problog library. """
-
     formula = ground_problog_program(program)
     if print_steps:
         print("GROUND PROGRAM:")
@@ -66,31 +65,24 @@ def evaluate_using_problog(program, print_steps=False):
     return results
 
 
-def results_with_pipeline(ground_program, counter="minic2d", parameter_learning=False, interpretations=None, print_steps=False):
-    engine = InferenceEngine(counter)
+def generate_interpretations(problog_filename, m):
+    pl = PrologFile(problog_filename)
+    interpretations = []
 
-    if not parameter_learning:
-        return engine.ground_problog_evaluate(ground_program, print_steps)
-    else:
-        return engine.ground_problog_learn_parameters(ground_program, interpretations, print_steps)
-
-
-def results_with_problog(ground_program, print_steps=False):
-    return evaluate_using_problog(ground_program, print_steps)
-
-
-def generate_interpretations(filename, n):
-    pl = PrologFile(filename)
-    new_samples = []
-
-    for interpretation in sample(pl, n=n, as_evidence=True):
+    for interpretation in sample(pl, n=m, as_evidence=True):
         temp = []
 
+        # drop each observation with a probability of 30%
         for i in interpretation.splitlines():
             if random.random() <= 0.7:
                 temp.append(i)
 
-        new_samples.append("\n".join(temp))
+        interpretations.append("\n".join(temp))
 
-    return new_samples
+    interpretations_file = os.path.abspath(os.path.join(os.path.dirname(__file__), "files", "interpretations.txt"))
+    with open(interpretations_file, "w") as out:
+        sep = os.linesep + separator_1 + os.linesep
+        out.write(sep.join(interpretations))
+
+    return interpretations
 

@@ -32,7 +32,8 @@ class GroundProblogParser:
             prob_ann_rule     = turnstile conjunction
             prob_fact         = probability doublecolon term
 
-            term              = negation_opt word arguments_opt
+            term              = negation_opt word_or_num arguments_opt
+            word_or_num       = decimal_or_frac / word
             negation_opt      = negation?
             arguments_opt     = arguments?
             arguments         = lparen arguments_list rparen
@@ -47,7 +48,7 @@ class GroundProblogParser:
             decimal_or_frac   = decimal / fraction
             fraction          = number slash number
             # could to this in a better way, but this works and we are way over time already
-            word              = ~r"([a-zA-Z0-9_\.\[\]]+|\"[a-zA-Z0-9_\-\'\.\/\=\<\>\+\[\]]*\"|\'[a-zA-Z0-9_\-\'\.\/\=\<\>\+\[\]]*\')"
+            word              = ~r"([a-zA-Z0-9_\[\]]+|\"[a-zA-Z0-9_\-\'\.\/\=\<\>\+\[\]]*\"|\'[a-zA-Z0-9_\-\'\.\/\=\<\>\+\[\]]*\')"
             number            = ~r"[0-9]*"
             decimal           = ~r"[0-9]*\.[0-9]*"
             dot               = _ "." _

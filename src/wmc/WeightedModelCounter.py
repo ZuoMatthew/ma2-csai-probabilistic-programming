@@ -20,7 +20,7 @@ class WeightedModelCounter:
         evidence = cnf.get_evidence_with_dimacs_numbers()
         queries = cnf.get_queries_with_dimacs_numbers()
 
-        query_stats = {}
+        query_stats = []
         for literal, number in queries:
             query_start = timer()
             cnf_with_query = copy.deepcopy(cnf)
@@ -52,10 +52,10 @@ class WeightedModelCounter:
 
             if print_steps and literal != queries[-1][0]:
                 print(util.separator_2)
-            query_stats[str(literal)] = timer() - query_start
+            query_stats.append(str(literal) + ": " + str(round(timer() - query_start, 3)) + "s")
 
-        stats["duration of cnf evaluation of queries"] = query_stats
-        stats["duration of cnf evaluation"] = timer() - start
+        stats["durations of model counts"] = query_stats
+        stats["duration of model counting"] = str(round(timer() - start, 3)) + "s"
 
         return sorted(results.items(), key=lambda kv: kv[0]), stats
 

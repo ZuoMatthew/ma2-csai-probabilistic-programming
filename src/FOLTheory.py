@@ -241,6 +241,7 @@ class FOLTheory:
             raise Exception("Adding formula of wrong type")
 
         self.formulas.append(formula)
+        return self
 
     def get_formulas(self):
         return self.formulas
@@ -250,6 +251,7 @@ class FOLTheory:
             raise Exception("Adding evidence of wrong type")
 
         self.evidence.append(evidence)
+        return self
 
     def get_evidence(self):
         return self.evidence
@@ -259,15 +261,18 @@ class FOLTheory:
             raise Exception("Adding query of wrong type")
 
         self.queries.append(query)
+        return self
 
     def add_query_from_problog_term(self, term):
         self.add_query(Atom.create_from_problog_term(term, 1, 1))
+        return self
 
     def get_queries(self):
         return self.queries
 
     def delete_queries(self):
-        return self.queries
+        self.queries = []
+        return self
 
     def to_cnf(self):
         cnf = Conjunction([f.to_cnf() for f in self.formulas])

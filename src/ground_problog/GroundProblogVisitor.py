@@ -122,6 +122,10 @@ class GroundProblogVisitor(NodeVisitor):
         self.print("visit_term", map(str, visited_children))
         return Term(visited_children[1], visited_children[0], visited_children[2])
 
+    def visit_word_or_num(self, node, visited_children):
+        self.print("visit_word_or_num", map(str, visited_children))
+        return str(visited_children[0])
+
     def visit_negation_opt(self, node, visited_children):
         exists_negation = len(visited_children) != 0
         self.print("visit_negation_opt", visited_children, exists_negation)
@@ -166,7 +170,7 @@ class GroundProblogVisitor(NodeVisitor):
 
     def visit_prob_tunable_none(self, node, visited_children):
         self.print("visit_prob_tunable_none", map(str, visited_children))
-        return {"tunable": True, "probability": random()}
+        return {"tunable": True, "probability": round(random(), 4)}
 
     def visit_decimal_or_frac(self, node, visited_children):
         self.print("vidit_decimal_or_frac", map(str, visited_children))

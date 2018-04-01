@@ -1,12 +1,12 @@
 import sys
 import os.path
 import argparse
-
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import util as util
+from InferenceEngine import InferenceEngine
 
 parser = argparse.ArgumentParser(description='Arguments for inference')
-parser.add_argument("-p", "--problog", dest="problog", help="Evaluate a ProbLog file")
+parser.add_argument("-pg", "--problog", dest="problog", help="Evaluate a ProbLog file")
 parser.add_argument("-pl", "--problog_learn", dest="problog_learn", help="Parameter learning on a ground ProbLog file with tunable probabilities")
 parser.add_argument("-plt", "--problog_learn_truth", dest="problog_learn_truth", help="Ground ProbLog file with values probabilities to sample from for parameter learning")
 parser.add_argument("-li", "--learning_interpretations", dest="learning_interpretations", default=10, help="Amount of interpretations to generate for parameter learning")
@@ -40,11 +40,13 @@ if __name__ == '__main__':
     parameter_learning = args.problog_learn is not None
     is_network = args.bn is not None
 
+    engine = InferenceEngine(model_counter)
+
     if not parameter_learning:
         ground_program = util.load_problog_or_network_as_ground_problog(filename, is_network)
 
-        results = util.results_with_pipeline(ground_program, model_counter, parameter_learning, print_steps=True)
-        problog_results = util.results_with_problog(ground_program, print_steps=False)
+        results = engine.ground_problog_evaluate(ground_program, print_steps=True)
+        problog_results = util.evaluate_using_problog_library(ground_program, print_steps=False)
 
         print(util.separator_1)
         print("EVALUATION USING PROBLOG LIBRARY:")
@@ -65,4 +67,4 @@ if __name__ == '__main__':
         amount_of_interpretations = int(args.learning_interpretations)
         interpretations = util.generate_interpretations(ground_truth_filename, amount_of_interpretations)
 
-        util.results_with_pipeline(ground_program, model_counter, parameter_learning, interpretations, print_steps=True)
+        engine.ground_problog_learn_parameters(ground_program, interpretations, print_steps=True)

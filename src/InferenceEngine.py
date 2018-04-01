@@ -15,12 +15,12 @@ class InferenceEngine:
 
     def ground_problog_evaluate(self, ground_program, print_steps=False):
         """ Evaluates a problog program and returns the results. """
-        print(ground_program)
+        # print(ground_program)
         start = timer()
         # parse the ground program to the internal representation of ground problog
         problog_program = self.problog_parser.program_to_problog(ground_program)
         if print_steps:
-            print("GROUND PROGRAM")
+            print("GROUND PROGRAM:")
             print(problog_program)
             print(util.separator_1)
 
@@ -45,13 +45,14 @@ class InferenceEngine:
 
         # do the model counting
         results, stats = self.weighted_model_counter.evaluate_cnf(cnf, print_steps)
-        stats["total runtime"] = timer() - start
+        stats["total runtime"] = str(round(timer() - start, 3)) + "s"
         if print_steps:
             print(util.separator_1)
             print("EVALUATION:")
             query_str_len = max([len(q) for q, _ in results]) if results else None
             for query, probability in results:
                 print("{:<{}}: {}".format(query, query_str_len, probability))
+
             print(util.separator_2)
             print("STATS:")
             for stat in stats:
@@ -71,7 +72,7 @@ class InferenceEngine:
         # parse the ground program to the internal representation of ground problog
         problog_program = self.problog_parser.program_to_problog(ground_program)
         if print_steps:
-            print("GROUND PROGRAM")
+            print("GROUND PROGRAM:")
             print(problog_program)
             print(util.separator_1)
 
@@ -134,7 +135,7 @@ class InferenceEngine:
             for probability in probability_sums:
                 new_probability = probability_sums[probability] / len(interpretations)
 
-                if abs(tunable_probabilities[probability] - new_probability) > 0.01:
+                if abs(tunable_probabilities[probability] - new_probability) > 0.005:
                     all_converged = False
 
                 tunable_probabilities[probability] = new_probability

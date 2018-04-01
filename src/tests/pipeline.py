@@ -1,17 +1,18 @@
 import unittest
 import sys
 import os.path
-
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import util
+from InferenceEngine import InferenceEngine
 
 
 def get_results(file):
     path = os.path.join(os.path.dirname(__file__), "..", "files", "problog", file)
-    ground_problog = util.load_problog_or_network_as_ground_problog(path, is_network=False)
+    ground_program = util.load_problog_or_network_as_ground_problog(path, is_network=False)
 
-    results = util.results_with_pipeline(ground_problog, counter="minic2d", print_steps=False)
-    problog_results = util.results_with_problog(ground_problog, print_steps=False)
+    engine = InferenceEngine(counter="minic2d")
+    results = engine.ground_problog_evaluate(ground_program, print_steps=False)
+    problog_results = util.evaluate_using_problog_library(ground_program, print_steps=False)
 
     results = [(query.replace(" ", ""), round(result, 3)) for query, result in results]
     problog_results = [(query.replace(" ", ""), round(result, 3)) for query, result in problog_results]
@@ -54,6 +55,10 @@ class TestPipeline(unittest.TestCase):
 
     def test_bayesian_networks(self):
         results, problog_results = get_results("bayesian_networks.pl")
+        self.assertListEqual(results, problog_results)
+
+    def test_bayesian_learning(self):
+        results, problog_results = get_results("bayesian_learning.pl")
         self.assertListEqual(results, problog_results)
 
     def test_bloodtype(self):

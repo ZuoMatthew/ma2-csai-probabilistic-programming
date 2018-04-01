@@ -79,7 +79,7 @@ class CNF:
             lit.dimacs_int = self.get_or_add_literal(lit).dimacs_int
             
         self.clauses.append(clause)
-        return clause
+        return self
 
     def add_evidence(self, evidence):
         if not isinstance(evidence, Literal):
@@ -87,7 +87,7 @@ class CNF:
 
         evidence.dimacs_int = self.get_or_add_literal(evidence).dimacs_int
         self.evidence.append(evidence)
-        return evidence
+        return self
 
     def get_evidence(self):
         return self.evidence
@@ -106,7 +106,7 @@ class CNF:
 
         query.dimacs_int = self.get_or_add_literal(query).dimacs_int
         self.queries.append(query)
-        return query
+        return self
 
     def get_queries_with_dimacs_numbers(self):
         return [(lit, lit.dimacs_int) for lit in self.queries]
