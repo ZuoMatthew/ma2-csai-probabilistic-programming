@@ -8,7 +8,7 @@ model_counters/
 test.pl
 test_truth.pl
 test.cnf
-test_no_query.cnf
+test_without_query.cnf
 */files/vtree*
 */files/sdd*
 *.aux

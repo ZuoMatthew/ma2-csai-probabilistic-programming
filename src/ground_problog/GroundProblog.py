@@ -89,7 +89,7 @@ class GroundProblog:
     def convert_ads_with_body_to_rules(self):
         """ Converts annotated disjunctions with rule bodies to normal rules.
         This is done by pulling the probabilities out to new probabilistic facts. A new normal rule is then created for
-        each of the heads. Each new rule contains the new probabilistic fact that was created for it's head.
+        each of the heads. Each new rule contains the new probabilistic fact that was created for its head.
         The new probabilistic facts are then added in a new annotated disjunction without rule body, to keep the
         constraint that only one of the new rules can be true.
         """

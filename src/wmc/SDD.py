@@ -60,9 +60,12 @@ class SDD(WeightedModelCounter):
         with open(vtree_file + "dot", "w") as out:
             out.write(vtree.dot())
 
-        (graph,) = pydot.graph_from_dot_file(sdd_file + "dot")
-        graph.write_png(sdd_file + "png")
-        (graph,) = pydot.graph_from_dot_file(vtree_file + "dot")
-        graph.write_png(vtree_file + "png")
+        # (graph,) = pydot.graph_from_dot_file(sdd_file + "dot")
+        # graph.write_png(sdd_file + "png")
+        # (graph,) = pydot.graph_from_dot_file(vtree_file + "dot")
+        # graph.write_png(vtree_file + "png")
 
-        return wmc.propagate(), 0
+        return wmc.propagate()
+
+    def get_stats_for_cnf(self, cnf):
+        return {"More stats with SDD as model counter": "not supported"}

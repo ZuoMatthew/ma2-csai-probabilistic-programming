@@ -16,12 +16,15 @@ class InferenceEngine:
     def ground_problog_evaluate(self, ground_program, print_steps=False):
         """ Evaluates a problog program and returns the results. """
         start = timer()
+        ttime = timer()
         # parse the ground program to the internal representation of ground problog
         problog_program = self.problog_parser.program_to_problog(ground_program)
         if print_steps:
             print("GROUND PROGRAM:")
             print(problog_program)
             print(util.separator_1)
+        time_parsed_ground_problog = str(round(timer() - ttime, 3)) + "s"
+        ttime = timer()
 
         # convert the GroundProblog to a FOLTheory
         fol_theory = FOLTheory.create_from_problog(problog_program)
@@ -29,6 +32,8 @@ class InferenceEngine:
             print("FOL theory:")
             print(fol_theory)
             print(util.separator_2)
+        time_converted_to_fol = str(round(timer() - ttime, 3)) + "s"
+        ttime = timer()
 
         # convert the FOLTheory to its CNF representation
         cnf = CNF.create_from_fol_theory(fol_theory)
@@ -41,10 +46,19 @@ class InferenceEngine:
             print("DIMACS:")
             print(cnf.to_dimacs())
             print(util.separator_1)
+        time_converted_to_cnf = str(round(timer() - ttime, 3)) + "s"
+        ttime = timer()
 
         # do the model counting
         results, stats = self.weighted_model_counter.evaluate_cnf(cnf, print_steps)
-        stats["total runtime"] = str(round(timer() - start, 3)) + "s"
+        time_model_counting = str(round(timer() - ttime, 3)) + "s"
+        time_total = str(round(timer() - start, 3)) + "s"
+
+        stats["Time to parse ground problog"] = time_parsed_ground_problog
+        stats["Time to convert ground problog to first order logic"] = time_converted_to_fol
+        stats["Time to convert first order logic to CNF"] = time_converted_to_cnf
+        stats["Time for all model counting"] = time_model_counting
+        stats["Total runtime"] = time_total
         if print_steps:
             print(util.separator_1)
             print("EVALUATION:")
@@ -112,10 +126,8 @@ class InferenceEngine:
         iteration = 0
         converged = False
 
-        iteration_times = []
         while not converged and iteration < 100:
             iteration += 1
-            iteration_start = timer()
 
             # update the weights of the tunable probabilities in the CNF at every iteration
             for tunable_prob_name in tunable_probabilities:
@@ -147,8 +159,6 @@ class InferenceEngine:
 
             converged = all_converged
             print("probabilities after iteration {}: {}".format(iteration, tunable_probabilities))
-            iteration_times.append(str(round(timer() - iteration_start, 3)) + "s")
-            print("runtime for iteration", iteration_times[-1])
 
         if print_steps:
             print(util.separator_1)
@@ -157,6 +167,5 @@ class InferenceEngine:
             for query, probability in tunable_probabilities.items():
                 print("{:<{}}: {}".format(query, query_str_len, probability))
 
-        print("Runtime per iteration:", iteration_times)
         print("Total runtime:", str(round(timer() - start, 3)) + "s")
         return tunable_probabilities
