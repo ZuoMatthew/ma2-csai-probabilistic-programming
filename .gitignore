@@ -3,7 +3,7 @@ model_counters/
 !model_counters/*.zip
 *.tmp
 *.nnf
-*.dimac
+*/files/*.dimac
 test.pl
 test_truth.pl
 test.cnf

@@ -12,7 +12,7 @@ if __name__ == '__main__':
 
         toCachet_bools = [False, True]
         for toCachet in toCachet_bools:
-            output_folder = "/home/thierry/Desktop/unif/capita/ma2-csai-probabilistic-programming/solutions/tests/"
+            output_folder = "/home/thierry/Desktop/unif/capita/ma2-csai-probabilistic-programming/solutions/encodings/"
 
             if toCachet:
                 output_folder = output_folder + file + "/cachet"
