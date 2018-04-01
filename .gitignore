@@ -12,6 +12,8 @@ test_no_query.cnf
 */files/sdd*
 *.aux
 *.out
+*.bbl
+*.blg
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template
