@@ -1,28 +1,28 @@
 \section{Implementation}
 We have implemented the pipeline using python. Information about installation and usage can be found in \texttt{README.MD}.
 
-Reporting of statistics other than the resulting probability only happens with our pipeline when MiniC2D is selected as model counter (flag --model\_counter minic2d).
+Reporting of statistics other than the resulting probabilities only happens with our pipeline when MiniC2D is selected as model counter (flag --model\_counter minic2d).
 
 \section{Pipeline with previous tasks}
 \subsection{Cancer Bayesian network}
 \begin{itemize}
     \item Probabilities:
     \begin{lstlisting}
-    cancer           : 0.01163
-    dyspnoea         : 0.3040705
-    pollution("high"): 0.1
-    pollution("low") : 0.9
-    smoker           : 0.3
-    xray("negative") : 0.7918589999999999
-    xray("positive") : 0.208141
+cancer           : 0.01163
+dyspnoea         : 0.3040705
+pollution("high"): 0.1
+pollution("low") : 0.9
+smoker           : 0.3
+xray("negative") : 0.7918589999999999
+xray("positive") : 0.208141
     \end{lstlisting}
     \item Total runtime: 0.594s
     \item Runtime of the separate parts:
     \begin{lstlisting}
-    Time to parse ground problog:  0.011s
-    Time to convert ground problog to first order logic:  0.0s
-    Time to convert first order logic to CNF:  0.002s
-    Time for all model counting:  0.58s
+Time to parse ground problog:  0.011s
+Time to convert ground problog to first order logic:  0.000s
+Time to convert first order logic to CNF:  0.002s
+Time for all model counting:  0.58s
     \end{lstlisting}
     \item Number of variables and lines in CNF: 17, 77
     \item Depth of vtree: 11
@@ -32,20 +32,20 @@ Reporting of statistics other than the resulting probability only happens with o
 \begin{itemize}
     \item Probabilities:
     \begin{lstlisting}
-    prize(1)      : 0.3333333333333333
-    prize(2)      : 0.3333333333333333
-    prize(3)      : 0.3333333333333333
-    select_door(1): 1.0
-    win_keep      : 0.3333333333333333
-    win_switch    : 0.6666666666666666
+prize(1)      : 0.3333333333333333
+prize(2)      : 0.3333333333333333
+prize(3)      : 0.3333333333333333
+select_door(1): 1.0
+win_keep      : 0.3333333333333333
+win_switch    : 0.6666666666666666
     \end{lstlisting}
     \item Total runtime: 0.469s
     \item Runtime of the separate parts:
     \begin{lstlisting}
-    Time to parse ground problog:  0.011s
-    Time to convert ground problog to first order logic:  0.0s
-    Time to convert first order logic to CNF:  0.001s
-    Time for all model counting:  0.458s
+Time to parse ground problog:  0.011s
+Time to convert ground problog to first order logic:  0.0s
+Time to convert first order logic to CNF:  0.001s
+Time for all model counting:  0.458s
     \end{lstlisting}
     \item Number of variables and lines in CNF: 10, 26
     \item Depth of vtree: 8
@@ -56,25 +56,25 @@ Reporting of statistics other than the resulting probability only happens with o
 \begin{itemize}
     \item Probabilities:
     \begin{lstlisting}
-    weight(c1, 0.1): 0.0
-    weight(c1, 0.3): 2.167977370376305e-06
-    weight(c1, 0.5): 0.004149743263716653
-    weight(c1, 0.7): 0.13174850211546205
-    weight(c1, 0.9): 0.8640995866434509
-    weight(c2, 0.1): 3.227661043218289e-06
-    weight(c2, 0.3): 0.02410999702877393
-    weight(c2, 0.5): 0.6672475437022279
-    weight(c2, 0.7): 0.3062862583084689
-    weight(c2, 0.9): 0.0023529732994859343
+weight(c1, 0.1): 0.0
+weight(c1, 0.3): 2.167977370376305e-06
+weight(c1, 0.5): 0.004149743263716653
+weight(c1, 0.7): 0.13174850211546205
+weight(c1, 0.9): 0.8640995866434509
+weight(c2, 0.1): 3.227661043218289e-06
+weight(c2, 0.3): 0.02410999702877393
+weight(c2, 0.5): 0.6672475437022279
+weight(c2, 0.7): 0.3062862583084689
+weight(c2, 0.9): 0.0023529732994859343
     \end{lstlisting}
 
     \item Total runtime: 3.633s
     \item Runtime of the separate parts:
     \begin{lstlisting}
-        Time to parse ground problog:  0.338s
-        Time to convert ground problog to first order logic:  0.024s
-        Time to convert first order logic to CNF:  0.088s
-        Time for all model counting:  3.183s
+Time to parse ground problog:  0.338s
+Time to convert ground problog to first order logic:  0.024s
+Time to convert first order logic to CNF:  0.088s
+Time for all model counting:  3.183s
     \end{lstlisting}
 
     \item Number of variables and lines in CNF: 192, 1062
@@ -83,6 +83,18 @@ Reporting of statistics other than the resulting probability only happens with o
 \end{itemize}
 
 \section{Pipeline on alarm Bayesian network}
+We had to drop many nodes in order for the pipeline to be able to process the ALARM Bayesian network. This is due to how we implemented the conversion from First Order Logic to CNF. We have come across methods with better performance, but were out of time to try other implementations. Only 21 of the 37 nodes are left in the network.
+
+We used the pipeline to convert files/networks/alarm.net to CNF with the following command.
+\begin{lstlisting}
+python3 scripts/inference.py --bayesian_network files/networks/alarm.net
+\end{lstlisting}
+We kept dropping leaf nodes until a CNF was created within reasonable time (a couple seconds). Then, we used the ground problog file in the output of the pipeline and stored it in files/problog/alarm.pl. Finally, to this file, we added queries for all the nodes in the network.
+
+The probabilities shown below are only those of the nodes lower in the network. To see all of the probabilities, run:
+\begin{lstlisting}
+python3 scripts/inference.py --problog files/problog/alarm.pl
+\end{lstlisting}
 \begin{itemize}
     \item Probabilities:
     \begin{lstlisting}
@@ -114,10 +126,10 @@ vENTMACH("ZERO")      : 0.05
     \item Total runtime: 6.413s
     \item Runtime of the separate parts:
     \begin{lstlisting}
-    Time to parse ground problog:  0.037s
-    Time to convert ground problog to first order logic:  0.003s
-    Time to convert first order logic to CNF:  0.148s
-    Time for all model counting:  6.225s
+Time to parse ground problog:  0.037s
+Time to convert ground problog to first order logic:  0.003s
+Time to convert first order logic to CNF:  0.148s
+Time for all model counting:  6.225s
     \end{lstlisting}
     \item Number of variables and lines in CNF: 112, 1118
     \item Depth of vtree: 27

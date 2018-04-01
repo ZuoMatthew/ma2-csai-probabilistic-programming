@@ -26,7 +26,7 @@ if __name__ == '__main__':
     elif args.bn:
         filename = args.bn
     else:
-        parser.error("Please provide a problog file (--problog --problog_learn) or a bayesian network (--bn)")
+        parser.error("Please provide a problog file (--problog --problog_learn) or a bayesian network (--bayesian_network)")
         sys.exit(1)
 
     if args.model_counter.lower() == "minic2d":

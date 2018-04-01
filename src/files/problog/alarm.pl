@@ -40,6 +40,24 @@
 0.04::pCWP("LOW"); 0.95::pCWP("NORMAL"); 0.01::pCWP("HIGH") :- lVEDVOLUME("NORMAL").
 0.01::pCWP("LOW"); 0.04::pCWP("NORMAL"); 0.95::pCWP("HIGH") :- lVEDVOLUME("HIGH").
 
+
+query(aNAPHYLAXIS).
+query(dISCONNECT).
+query(kINKEDTUBE).
+query(iNSUFFANESTH).
+query(fIO2("LOW")).
+query(fIO2("NORMAL")).
+query(iNTUBATION("NORMAL")).
+query(iNTUBATION("ESOPHAGEAL")).
+query(iNTUBATION("ONESIDED")).
+query(mINVOLSET("LOW")).
+query(mINVOLSET("NORMAL")).
+query(mINVOLSET("HIGH")).
+query(eRRLOWOUTPUT).
+query(hYPOVOLEMIA).
+query(pULMEMBOLUS).
+query(lVFAILURE).
+query(eRRCAUTER).
 query(lVEDVOLUME("LOW")).
 query(lVEDVOLUME("NORMAL")).
 query(lVEDVOLUME("HIGH")).
@@ -52,6 +70,7 @@ query(pAP("HIGH")).
 query(sTROKEVOLUME("LOW")).
 query(sTROKEVOLUME("NORMAL")).
 query(sTROKEVOLUME("HIGH")).
+query(hISTORY).
 query(sHUNT("NORMAL")).
 query(sHUNT("HIGH")).
 query(vENTMACH("ZERO")).
