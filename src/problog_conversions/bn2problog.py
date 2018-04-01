@@ -3,6 +3,8 @@
 """
 bn2problog.py
 
+CONVERSION CODE TAKEN FROM https://github.com/jordn/ProbLog
+
 Created by Wannes Meert on 06-03-2017.
 Copyright (c) 2016 KU Leuven. All rights reserved.
 """

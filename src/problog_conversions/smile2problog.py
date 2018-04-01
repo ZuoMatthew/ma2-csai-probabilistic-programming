@@ -3,6 +3,8 @@
 """
 hugin2problog.py
 
+CONVERSION CODE TAKEN FROM https://github.com/jordn/ProbLog
+
 Created by Wannes Meert on 23-02-2016.
 Copyright (c) 2016 KU Leuven. All rights reserved.
 """

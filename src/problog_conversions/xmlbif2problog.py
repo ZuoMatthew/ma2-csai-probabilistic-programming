@@ -3,6 +3,8 @@
 """
 xmlbif2problog.py
 
+CONVERSION CODE TAKEN FROM https://github.com/jordn/ProbLog
+
 http://www.cs.cmu.edu/~fgcozman/Research/InterchangeFormat/
 
 Created by Wannes Meert.

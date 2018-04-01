@@ -3,6 +3,8 @@
 """
 uai2problog.py
 
+CONVERSION CODE TAKEN FROM https://github.com/jordn/ProbLog
+
 http://graphmod.ics.uci.edu/uai08/FileFormat
 
 Created by Wannes Meert on 31-01-2016.

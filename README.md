@@ -23,11 +23,11 @@ The program will print the following steps of the inference pipeline:
 For Bayesian networks, the process is a bit different.
 The following command will convert the Bayesian network to a ground ProbLog program and run the pipeline on it.
 ```sh
-python3 scripts/inference.py --bn files/networks/earthquake.net
+python3 scripts/inference.py -bn files/networks/earthquake.net
 ```
 The output will contain the same elements mentioned above. However, as there are no queries in the ground ProbLog program, there will be nothing to evaluate. In order to add queries, simply copy the ground ProbLog output of the program to a new file and add the queries you want. Then run the command for evaluating a ProbLog file.
 
-Bayesian networks in the following file formats are supported: uai, net, xdsl, xml.
+Bayesian networks in the following file formats are supported: uai, net, xdsl, xml. The networks are converted to ProbLog code using [conversion scripts](/src/problog_conversions) taken (and slightly adapted) from the [ProbLog repository](https://github.com/jordn/ProbLog).
 
 ### Parameter learning
 There is limited support for parameter learning. To do this, the program expects a file containing tunable probabilities and another file containing values for all probabilities. The other file is used for generation of interpretations (training evidence). The amount of interpretations to be generated can be set as well.
@@ -43,6 +43,7 @@ Tests have been created to make sure our pipeline delivers the same results as t
 ```sh
 python3 tests/pipeline.py
 ```
+The ProbLog code used for testing is mainly taken from the online [ProbLog tutorial](https://dtai.cs.kuleuven.be/problog/tutorial.html).
 
 ## Dependencies
 * Python >= 3.6
