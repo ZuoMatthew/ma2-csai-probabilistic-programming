@@ -1,8 +1,8 @@
-# represents a node in the network
 from enc.ENC1 import ENC1
 from enc.ENC2 import ENC2
 
 
+# represents a node in the network
 class Node:
     def __init__(self, name, values):
         self.name = name

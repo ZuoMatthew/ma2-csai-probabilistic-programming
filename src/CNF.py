@@ -125,6 +125,11 @@ class CNF:
         weights += " ".join(["{} {}".format(l.weight_true, l.weight_false) for l in literals]) + "\n"
 
         dimacs = ""
+        to_cachet = False
+        if to_cachet:
+            weights = ""
+            dimacs = "\n".join(["w {} {} {}".format(l.dimacs_int, l.weight_true, l.weight_false) for l in literals]) + "\n"
+
         for disjunction in self.clauses:
             disjunction_literals = ["{}{}".format("-" if l.negated else "", l.dimacs_int) for l in disjunction]
             dimacs += " ".join(disjunction_literals) + " 0"
