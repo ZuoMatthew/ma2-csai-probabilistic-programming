@@ -63,53 +63,105 @@ Our CNF encoding for the given Monty Hall ProbLog program is:
 
 \section{Weighted Model Counting}
 \subsection{Weighted model counters on above CNFs}
-We will use MiniC2D and Cachet as WMC counters.
+We have selected MiniC2D and Cachet as weighted model counters.
+
+The output of the model counters can be found in the listings below.
 
 \subsubsection{MiniC2D}
-MiniC2D needs to use the $-W$ option to do weighted model counting. The probability can be read next to ``Count''.
-\begin{itemize}
-	\item ENC1:
-\begin{figure}[H]
-  \includegraphics[width=6cm]{minic2d-ENC1.png}
-  \caption{Grounded problog cnf}
-\end{figure}
-	\item ENC2:
-	\begin{figure}[H]
-  \includegraphics[width=6cm]{minic2d-ENC2.png}
-  \caption{Grounded problog cnf}
-\end{figure}
-	\item Monty hall:
-	\item 	\begin{figure}[H]
-  \includegraphics[width=6cm]{Monty-minic2d}
-  \caption{Grounded problog cnf}
-\end{figure}
-\end{itemize}
+MiniC2D needs to be executed with the $-W$ flag in order for it to do weighted model counting.
+The resulting probability can be read next to ``Count''.
+
+\begin{lstlisting}[caption={MiniC2D on ENC1 encoding of Cancer network}]
+Constructing CNF... DONE
+CNF stats:
+  Vars=30 / Clauses=74
+  CNF Time	0.000s
+Constructing vtree (from primal graph)... DONE
+Vtree stats:
+  Vtree widths: con<=5, c_con=48 v_con=5
+  Vtree Time	0.001s
+Counting... DONE
+  Learned clauses      	0
+Cache stats:
+  hit rate   	75.0%
+  lookups    	16
+  ent count  	4
+  ent memory 	0.2 KB
+  ht  memory 	152.6 MB
+  clists     	1.0 ave, 1 max
+  keys       	3.0b ave, 3.0b max, 3.0b min
+Count stats:
+  Count Time	0.000s
+  Count 	0.9999999999999999
+Total Time: 0.012s
+\end{lstlisting}
+
+\begin{lstlisting}[caption={MiniC2D on ENC2 encoding of Cancer network}]
+Constructing CNF... DONE
+CNF stats:
+  Vars=20 / Clauses=30
+  CNF Time	0.000s
+Constructing vtree (from primal graph)... DONE
+Vtree stats:
+  Vtree widths: con<=6, c_con=16 v_con=6
+  Vtree Time	0.000s
+Counting... DONE
+  Learned clauses      	0
+Cache stats:
+  hit rate   	23.1%
+  lookups    	26
+  ent count  	20
+  ent memory 	1.0 KB
+  ht  memory 	152.6 MB
+  clists     	1.0 ave, 1 max
+  keys       	1.8b ave, 3.0b max, 1.0b min
+Count stats:
+  Count Time	0.000s
+  Count 	1.0000000000000000
+Total Time: 0.012s
+\end{lstlisting}
+
+\begin{lstlisting}[caption={MiniC2D on WCNF encoding of Monty Hall}]
+Constructing CNF... DONE
+CNF stats:
+  Vars=10 / Clauses=26
+  CNF Time	0.000s
+Constructing vtree (from primal graph)... DONE
+Vtree stats:
+  Vtree widths: con<=4, c_con=22 v_con=4
+  Vtree Time	0.000s
+Counting... DONE
+  Learned clauses      	0
+Cache stats:
+  hit rate   	20.0%
+  lookups    	5
+  ent count  	4
+  ent memory 	0.2 KB
+  ht  memory 	152.6 MB
+  clists     	1.0 ave, 1 max
+  keys       	3.2b ave, 4.0b max, 3.0b min
+Count stats:
+  Count Time	0.000s
+  Count 	1.0000000000000000
+Total Time: 0.011s
+\end{lstlisting}
 
 \subsubsection{Cachet}
-For Cachet, no need to use extra parameters to get the probability. It is reported next to ``Satisfying probability''.
-\begin{itemize}
-	\item ENC1: 
-\begin{figure}[H]
-\begin{center}
-  \includegraphics[width=5cm]{cachet-ENC1.png}
-  \caption{Grounded problog cnf}
-\end{center}
-\end{figure}
-	\item ENC2:
-\begin{figure}[H]
-\begin{center}
-  \includegraphics[width=5cm]{cachet-ENC2.png}
-  \caption{Grounded problog cnf}
-\end{center}
-\end{figure}
-	\item Monty Hall:
-	\begin{figure}[H]
-\begin{center}
-  \includegraphics[width=5cm]{Monty-Cachet.png}
-  \caption{Grounded problog cnf}
-\end{center}
-\end{figure}
-\end{itemize}
+For Cachet, there is no need to use extra parameters to get a probability.
+It is reported next to ``Satisfying probability''.
+
+\begin{lstlisting}[caption={Cachet on ENC1 encoding of Cancer network}]
+    TODO TEXT HIER PASTEN
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Cachet on ENC2 encoding of Cancer network}]
+    TODO TEXT HIER PASTEN
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Cachet on WCNF encoding of Monty Hall}]
+    TODO TEXT HIER PASTEN
+\end{lstlisting}
+
 For ENC1 we see that with Cachet we get a satisfying probability of almost $0$. With Monty hall we can also see that we get a probability of 0.4. This is due to the fact that with ENC1 all our negative literals have a weight of 1, while Cachet expects that a literal $+$ its negation $= 1$. For Monty hall we also have negative literals with weight $1$ which gives the same problem as with ENC1.
 
 \subsection{Difference between the selected WMCs}
