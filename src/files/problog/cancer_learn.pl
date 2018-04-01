@@ -1,4 +1,4 @@
-t(_)::smoker.
+t(0.9)::smoker.
 t(_)::pollution("low"); t(_)::pollution("high").
 t(_)::cancer :- pollution("low"), smoker.
 t(_)::cancer :- pollution("low"), \+smoker.

@@ -15,7 +15,6 @@ class InferenceEngine:
 
     def ground_problog_evaluate(self, ground_program, print_steps=False):
         """ Evaluates a problog program and returns the results. """
-        # print(ground_program)
         start = timer()
         # parse the ground program to the internal representation of ground problog
         problog_program = self.problog_parser.program_to_problog(ground_program)
@@ -69,6 +68,10 @@ class InferenceEngine:
 
     def ground_problog_learn_parameters(self, ground_program, interpretations, print_steps=False):
         """ Learns parameters in a ground_problog file using Expectation Maximization. """
+        start = timer()
+
+        # initial values for the probabilities to be learned have already been set during parsing
+
         # parse the ground program to the internal representation of ground problog
         problog_program = self.problog_parser.program_to_problog(ground_program)
         if print_steps:
@@ -107,10 +110,12 @@ class InferenceEngine:
             print(tunable_probabilities)
             print(util.separator_1)
         iteration = 0
-        convergence = False
+        converged = False
 
-        while not convergence and iteration < 100:
+        iteration_times = []
+        while not converged and iteration < 100:
             iteration += 1
+            iteration_start = timer()
 
             # update the weights of the tunable probabilities in the CNF at every iteration
             for tunable_prob_name in tunable_probabilities:
@@ -140,8 +145,10 @@ class InferenceEngine:
 
                 tunable_probabilities[probability] = new_probability
 
-            convergence = all_converged
+            converged = all_converged
             print("probabilities after iteration {}: {}".format(iteration, tunable_probabilities))
+            iteration_times.append(str(round(timer() - iteration_start, 3)) + "s")
+            print("runtime for iteration", iteration_times[-1])
 
         if print_steps:
             print(util.separator_1)
@@ -150,4 +157,6 @@ class InferenceEngine:
             for query, probability in tunable_probabilities.items():
                 print("{:<{}}: {}".format(query, query_str_len, probability))
 
+        print("Runtime per iteration:", iteration_times)
+        print("Total runtime:", str(round(timer() - start, 3)) + "s")
         return tunable_probabilities

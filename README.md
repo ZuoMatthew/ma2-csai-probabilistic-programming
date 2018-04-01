@@ -30,13 +30,20 @@ The output will contain the same elements mentioned above. However, as there are
 Bayesian networks in the following file formats are supported: uai, net, xdsl, xml. The networks are converted to ProbLog code using [conversion scripts](/src/problog_conversions) taken (and slightly adapted) from the [ProbLog repository](https://github.com/jordn/ProbLog).
 
 ### Parameter learning
-There is limited support for parameter learning. To do this, the program expects a file containing tunable probabilities and another file containing values for all probabilities. The other file is used for generation of interpretations (training evidence). The amount of interpretations to be generated can be set as well.
+There is limited support for parameter learning. To do this, the program expects a file containing tunable probabilities and another file containing values for all probabilities (the ground truth). The ground truth is necessary for generation of interpretations (training evidence). The amount of interpretations to be generated can be set as well.
 
-**Note**: The file with tunable probabilities needs to be in ground ProbLog form and cannot contain any comments. This is because we uses the problog library to ground files, and the library cannot ground files with tunable probabilities. Also, in order to generate interpretations, the other file must have `query(...).` statements for all predicates for which evidence should be generated.
 ```sh
 python3 scripts/inference.py --problog_learn file --problog_learn_truth file_ground_truth --learning_interpretations 100
 ```
 The interpretations that were generated for the execution will be written to src/files/interpretations.txt.
+
+#### Limited support
+TOOD: No annotated disjunctions
+
+#### Note
+The file with tunable probabilities needs to be in ground ProbLog form and cannot contain any comments. This is because we uses the problog library to ground files, and the library cannot ground files with tunable probabilities.
+
+Also, in order to generate interpretations, the file with the ground truth must have `query(...).` statements for all predicates for which evidence should be generated.
 
 ### Tests
 Tests have been created to make sure our pipeline delivers the same results as the problog library. They can be ran as follows:
