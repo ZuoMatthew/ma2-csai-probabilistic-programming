@@ -25,7 +25,7 @@ class MiniC2D(WeightedModelCounter):
         vtree_txt = os.path.join(dir, "vtree-minic2d.txt")
 
         cnf_params = "--cnf {}".format(filename)
-        vtree_params = "--vtree_method 0 --vtree_out {}".format(vtree_txt)
+        vtree_params = "--vtree_method 3 --vtree_out {}".format(vtree_txt)
         command = "{} {} {} {}".format(self.counter_path, cnf_params, vtree_params, self.options)
 
         subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -35,7 +35,7 @@ class MiniC2D(WeightedModelCounter):
         filename = os.path.abspath(filename)
 
         cnf_params = "--model_counter --cnf {}".format(filename)
-        vtree_params = "--vtree_method 0"
+        vtree_params = "--vtree_method 3"
         command = "{} {} {} {}".format(self.counter_path, cnf_params, vtree_params, self.options)
 
         completed_process = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -55,7 +55,7 @@ class MiniC2D(WeightedModelCounter):
 
         # need to run without --model_counter to generate NNF stats (= SDD nodes and edges)
         nnf_params = "--cnf {}".format(filename)
-        vtree_params = "--vtree_method 0 --vtree_out {} --vtree_dot {}".format(vtree_txt, vtree_dot)
+        vtree_params = "--vtree_method 3 --vtree_out {} --vtree_dot {}".format(vtree_txt, vtree_dot)
         command = "{} {} {} {}".format(self.counter_path, nnf_params, vtree_params, self.options)
         completed_process = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output = completed_process.stdout.decode()

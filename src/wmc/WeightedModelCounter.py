@@ -7,7 +7,7 @@ from timeit import default_timer as timer
 class WeightedModelCounter:
     """ Abstract class for weighted model counters. """
 
-    def evaluate_cnf(self, cnf, print_steps=False):
+    def evaluate_cnf(self, cnf, return_stats=True, print_steps=False):
         """ Executes queries in a given weighted CNF and returns the results. """
         results = {}
 
@@ -49,8 +49,13 @@ class WeightedModelCounter:
 
             results[str(literal)] = probability
 
-        stats = self.get_stats_for_cnf(cnf_without_query_filename)
-        return sorted(results.items(), key=lambda kv: kv[0]), stats
+        results = sorted(results.items(), key=lambda kv: kv[0])
+
+        if return_stats:
+            stats = self.get_stats_for_cnf(cnf_without_query_filename)
+            return results, stats
+
+        return results
 
     def do_model_count(self, cnf):
         """ Executes weighted model counting on a given weighted CNF and returns its probability. """

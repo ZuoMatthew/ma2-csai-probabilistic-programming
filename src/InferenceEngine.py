@@ -50,7 +50,7 @@ class InferenceEngine:
         ttime = timer()
 
         # do the model counting
-        results, stats = self.weighted_model_counter.evaluate_cnf(cnf, print_steps)
+        results, stats = self.weighted_model_counter.evaluate_cnf(cnf, return_stats=True, print_steps=print_steps)
         time_model_counting = str(round(timer() - ttime, 3)) + "s"
         time_total = str(round(timer() - start, 3)) + "s"
 
@@ -143,7 +143,7 @@ class InferenceEngine:
                     cnf_copy.add_evidence(evidence)
 
                 # do model counting with the evidence
-                results, _ = self.weighted_model_counter.evaluate_cnf(cnf_copy, print_steps=False)
+                results = self.weighted_model_counter.evaluate_cnf(cnf_copy, return_stats=False, print_steps=False)
                 for query, probability in results:
                     probability_sums[query] += probability
 
