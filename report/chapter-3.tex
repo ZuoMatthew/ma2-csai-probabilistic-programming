@@ -1,4 +1,4 @@
-We have extended the pipeline with limited support for parameter learning. For this functionality, our program expects a file containing tunable probabilities and another file containing values for all probabilities (the ground truth). The ground truth is necessary for generation of interpretations. The amount of interpretations to be generated can be set as well. More information about this feature can be found in \texttt{README.MD}.
+We have extended the pipeline with support for parameter learning. For this functionality, our program expects a file containing tunable probabilities and another file containing values for all probabilities (the ground truth). The ground truth is necessary for generation of interpretations. The amount of interpretations to be generated can be set as well. More information about this feature can be found in \texttt{README.MD}.
 
 \section{Generated interpretations}
 Four interpretations can be generated with the following command:
@@ -32,12 +32,61 @@ evidence(pollution("low")).
 \end{lstlisting}
 
 \section{Pipeline with interpretations}
+
 \subsection{Parameters with 10 interpretations}
+The following results were reached after 45 iterations. Our current implementation determines convergence is reached when all parameters change by less than 0.005.
+\begin{lstlisting}
+smoker              : 0.3757309044335211
+pollution("low")    : 0.6944157672162523
+pollution("high")   : 0.1
+p_cancer_0          : 1.7136773738417463e-05
+p_cancer_1          : 1.5696846453312893e-12
+p_cancer_2          : 0.05290598927777933
+p_cancer_3          : 0.07266786066467187
+p_xray("positive")_0: 0.9581146900452404
+p_xray("negative")_0: 0.25501789141868203
+p_xray("positive")_1: 0.0
+p_xray("negative")_1: 0.8571427918086106
+p_dyspnoea_0        : 0.15338511324535153
+p_dyspnoea_1        : 0.0
+\end{lstlisting}
 
 \subsection{Parameters with 100 interpretations}
+The pipeline was terminated after 1.5 hours at 39 iterations.
+\begin{lstlisting}
+smoker              : 0.3295379131986182
+pollution("low")    : 0.9041099224149188
+pollution("high")   : 0.09589007758508108
+p_cancer_0          : 0.1110126093038839
+p_cancer_1          : 0.00048335141926639366
+p_cancer_2          : 0.37732149668302517
+p_cancer_3          : 0.1502500596905257
+p_xray("positive")_0: 0.8927878392142493
+p_xray("negative")_0: 0.11856852583630233
+p_xray("positive")_1: 0.1408494511343412
+p_xray("negative")_1: 0.8749301634679101
+p_dyspnoea_0        : 0.09252183100200292
+p_dyspnoea_1        : 0.30160276817000836
+\end{lstlisting}
 
 \subsection{Parameters with 1000 interpretations}
-
+The pipeline was terminated after 1.5 hours at 3 iterations.
+\begin{lstlisting}
+probabilities after iteration 3:
+smoker              : 0.29233350800326574
+pollution("low")    : 0.9148055069262087
+pollution("high")   : 0.08519449307379132
+p_cancer_0          : 0.09403271863945559
+p_cancer_1          : 0.025426090633783687
+p_cancer_2          : 0.733743251011375
+p_cancer_3          : 0.3007407777225963
+p_xray("positive")_0: 0.3741545373041979
+p_xray("negative")_0: 0.8205193870361593
+p_xray("positive")_1: 0.22686346009032624
+p_xray("negative")_1: 0.773832837404553
+p_dyspnoea_0        : 0.23145524434562476
+p_dyspnoea_1        : 0.33029011323407503
+\end{lstlisting}
 
 \section{Observations for different number of interpretations}
 We notice that TODO \ldots

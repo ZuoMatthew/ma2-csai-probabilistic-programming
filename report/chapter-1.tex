@@ -373,17 +373,14 @@ Concerning the weighted model counters, we clearly see that Cachet is faster tha
 
 \section{Knowledge compilation}
 \subsubsection{Vtree with the most compact circuit}
-For this exercise we used both ``SDD'' and ``miniC2D''. the resulting vtree's and their sdd's can be found in the folder \textbf{1.4}.
-For each of these WMC we have added a folder. In this folder there are three different other folders. One for each different CNF.
-The file name in each of these folders follow the following convention:
-initial-vtree-type$[\_$minimize cardinality$]$\_$[$vtree $\vert$ sdd$]$
+For this task, we used both the SDD and MiniC2D packages to generate vtrees and SDDs. The resulting vtrees and their corresponding SDDs can be found under report/1.4/. Subdirectories have been made for each WMC's output for each of the CNFs. The file name in each of these directories follow the following naming convention: (SDD\_vtree\_type $\vert$ MiniC2D\_vtree\_method)[\_SDD\_minimize\_cardinality]\_(vtree $\vert$ sdd)
 \begin{itemize}
-    \item \textbf{ENC1}: The smallest vtree is given by using ``-t balanced [-m]''. The next best vtree that gives us the best sdd is the vtree created by miniC2D with the option ``-m 3''.
+    \item \textbf{ENC1}: SDD built the best vtree for the most compact circuit with the ``-t balanced -m'' flags. The next best circuit can be created via the vtree created by MiniC2D with ``-m 3'' (reverse elimination order).
   
-    \item \textbf{ENC2}: For this encoding we have different options that give us a quite shallow vtree. the options ``-t balanced'' from ``SDD'' and ``-m 3'' from miniC2D are again one of the best. Like for ENC1 the vtree created by SDD is better than the one from miniC2D. 
-    \item \textbf{Monty Hall}: Here we see that by using the option ``-t balanced [-m]'' we receive the most compact circuit and yet again closely followed by ``-m 3'' from miniC2D.
+    \item \textbf{ENC2}: For this encoding, we have different options that result in the best circuits. The options ``-t balanced'' for SDD and ``-m 3'' for MiniC2D are again one of the best. Like for ENC1, the vtree created by SDD is better than the one from MiniC2D.
+
+    \item \textbf{Monty Hall}: Here we see that by using the option ``-t balanced -m'', we receive the most compact circuit and yet again closely followed by ``-m 3'' from MiniC2D.
 \end{itemize}
 
-
 \subsubsection{Pattern for a good vtree}
-From our tests we've seen that a vtree that is quite shallow gives us the best circuit. As a vtree is a binary search tree this seems logical for us as with such a tree you also want it to be shallow.
+From our tests, we've noticed that vtrees that are more shallow result in the best circuits. This seems logical to us, since a vtree is a binary search tree, and with such a tree you also prefer it to be shallow.
