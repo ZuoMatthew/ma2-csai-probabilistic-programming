@@ -58,5 +58,8 @@ The following table shows parameters that were learned for varying amounts of in
 \end{table}
 
 \section{Observations for different number of interpretations}
-We notice that TODO \ldots
-Voorspelling: Met minder interpretaties zijn de iteraties sneller (logisch, want minder queries per iteratie) dan met meer interpretaties. Met meer interpretaties gebeurt de convergence wel in minder iteraties omdat de EM dan beter werkt. Wel ook de total runtime er bij zetten.
+For simpler parameters (the ones with fewer dependencies) like "smoker", "pollution(low)", "p\_dyspnoea\_1", etc., we notice that more interpretations causes the learned parameters to lie closer to the ground truth.
+
+For more complex parameters (cancer and xray), however, the results are not as clear. There is no value for m that consistently performs better than the others for the more complex parameters.
+
+We do note that the results listed above depend a lot on the random initialization of the EM algorithm. We would have had a better picture if we were able to restart the experiments many times and take averages, but as our implementation is quite slow, this wasn't feasible within the time frame for the project.
